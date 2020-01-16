@@ -1,18 +1,31 @@
 package err
 
 import (
+	"fmt"
+
 	bpluse "github.com/MenaEnergyVentures/bplus/err"
 )
 
 // It is recommended that each module define its own error file
 
-// MakeBplusError - returns a customized CAFUError for BPlus
-func MakeBplusError(e BPlusErrorCode) bpluse.CAFUError {
-	return bpluse.CAFUError{
+func internalMakeBplusError(ll bpluse.LogLevels, e BPlusErrorCode, args ...interface{}) bpluse.BPlusError {
+	return bpluse.BPlusError{
 		ErrorCode:    e,
-		ErrorMessage: ErrMessages[e],
-		LogLevel:     bpluse.Error,
+		ErrorMessage: fmt.Sprintf(ErrMessages[e], args...),
+		LogLevel:     ll,
 	}
+
+}
+
+// MakeBplusError - returns a customized CAFUError for BPlus
+func MakeBplusError(e BPlusErrorCode, args ...interface{}) bpluse.BPlusError {
+	return internalMakeBplusError(bpluse.Error, e, args...)
+
+}
+
+// MakeBplusWarning - returns a customized CAFUError for BPlus
+func MakeBplusWarning(e BPlusErrorCode, args ...interface{}) bpluse.BPlusError {
+	return internalMakeBplusError(bpluse.Warning, e, args...)
 
 }
 
@@ -21,10 +34,11 @@ type BPlusErrorCode = int
 
 // enumeration for B Plus Error codes
 const (
-	SERVICE_NOT_FOUND BPlusErrorCode = iota + 1000
+	ServiceNotFound BPlusErrorCode = iota + 1000
+	OperationNotFound
 )
 
 // ErrMessages - list of all messages corresponding to this code
 var ErrMessages = map[BPlusErrorCode]string{
-	SERVICE_NOT_FOUND: "Service %s is not found",
+	ServiceNotFound: "Service %s is not found",
 }

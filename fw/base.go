@@ -1,8 +1,10 @@
 package fw
 
-import "reflect"
+import (
+	"reflect"
 
-import "fmt"
+	e "github.com/MenaEnergyVentures/bplus/internal/err"
+)
 
 // PayloadMaker - makes a payload of a certain type
 type PayloadMaker func() interface{}
@@ -83,12 +85,12 @@ func (od OperationDescriptor) setupOperation() {
 func FindOperationDescriptor(serviceName string, opName string) (OperationDescriptor, error) {
 	sd := allServices[serviceName]
 	if sd == nil {
-		return OperationDescriptor{}, fmt.Errorf("Cannot find service %s", serviceName)
+		return OperationDescriptor{}, e.MakeBplusError(e.ServiceNotFound, serviceName)
 	}
 	for _, od := range sd.Operations {
 		if od.Name == opName {
 			return od, nil
 		}
 	}
-	return OperationDescriptor{}, fmt.Errorf("cannot find operation %s within service %s", opName, serviceName)
+	return OperationDescriptor{}, e.MakeBplusError(e.OperationNotFound, opName, serviceName)
 }
