@@ -19,7 +19,7 @@ func (str SubTypeRegistration) Process(context context.Context, stateEntityId st
 
 	stateEntity, err := str.StateEntityRepo.Retrieve(stateEntityId)
 	if err != nil {
-		fmt.Println(err)
+		return nil, fmt.Errorf("cannot make the state entity. error = %s", err.Error())
 	}
 	return str.doProcess(context, stateEntity, event, param)
 }
