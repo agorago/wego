@@ -3,9 +3,10 @@ package stm
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
+
+	e "github.com/MenaEnergyVentures/bplus/internal/err"
 )
 
 // Register a set of states and restrict the transitions only to valid events for each of them
@@ -27,6 +28,7 @@ type state struct {
 	meta      map[string]interface{}
 }
 
+// Action - all actions must implement this interface
 type Action interface {
 	Process(context.Context, StateTransitionInfo) error
 }
@@ -38,6 +40,8 @@ type AutomaticState interface {
 	Process(context.Context, StateEntity) (string, error)
 }
 
+// StateTransitionInfo - the structure that will be passed to all the actions.
+// It gives useful information about the state change that is currently happening
 type StateTransitionInfo struct {
 	OldState            string
 	NewState            string
@@ -47,14 +51,14 @@ type StateTransitionInfo struct {
 	// AffectedStateEntity interface{}
 }
 
-// The definition of the Stm structure
+// Stm - The definition of the Stm structure
 type Stm struct {
 	initialState  string
 	states        map[string]state
 	actionCatalog map[string]interface{}
 }
 
-// The State Entity against which the State machine operates
+// StateEntity - The State Entity against which the State machine operates
 type StateEntity interface {
 	GetState() string
 	SetState(newstate string)
@@ -67,7 +71,7 @@ func (stm *Stm) populate(bytes []byte) {
 	}
 }
 
-// Make a new State machine with the filename that contains the State Transition Diagram
+// MakeStm - Make a new State machine with the filename that contains the State Transition Diagram
 // and the action catalog
 func MakeStm(filename string, actionCatalog map[string]interface{}) (*Stm, error) {
 	stm := Stm{
@@ -76,8 +80,7 @@ func MakeStm(filename string, actionCatalog map[string]interface{}) (*Stm, error
 	}
 	dat, err := ioutil.ReadFile(filename)
 	if err != nil {
-		log.Fatalf("Cannot read file %s\n", filename)
-		return nil, err
+		return nil, e.MakeBplusError(e.CannotReadFile, filename, err.Error())
 	}
 	stm.populate(dat)
 	stm.actionCatalog = actionCatalog
@@ -101,13 +104,13 @@ func (stm Stm) Process(context context.Context, stateEntity StateEntity, event s
 	}
 	stateInfo, exists := stm.states[stateTransitionInfo.OldState]
 	if !exists {
-		return stateEntity, fmt.Errorf("Invalid state %s returned by the entity", stateTransitionInfo.OldState)
+		return stateEntity, e.MakeBplusError(e.InvalidState, stateTransitionInfo.OldState)
 	}
 
 	eventInfo, exists := stateInfo.Events[event]
 
 	if !exists {
-		return stateEntity, fmt.Errorf("invalid event %s for the current state %s", event, stateTransitionInfo.OldState)
+		return stateEntity, e.MakeBplusError(e.InvalidEvent, event, stateTransitionInfo.OldState)
 	}
 	stateTransitionInfo.NewState = eventInfo.NewStateID
 	return stm.doProcess(context, stateTransitionInfo)
@@ -135,18 +138,18 @@ func (stm Stm) checkIfAutomaticState(context context.Context, stateEntity StateE
 	currentState := stateEntity.GetState()
 	stateInfo, exists := stm.states[currentState]
 	if !exists {
-		return stateEntity, fmt.Errorf("invalid state %s returned by the entity", currentState)
+		return stateEntity, e.MakeBplusError(e.InvalidState, currentState)
 	}
 	if !stateInfo.Automatic {
 		return stateEntity, nil
 	}
 	autoStateProcessor := stm.lookupAutoState(currentState, AutomaticStateSuffix)
 	if autoStateProcessor == nil {
-		return stateEntity, fmt.Errorf("autostate %s is not configured in the action catalog", currentState)
+		return stateEntity, e.MakeBplusError(e.AutoStateNotConfigured, currentState)
 	}
 	event, err := autoStateProcessor.Process(context, stateEntity)
 	if err != nil {
-		return stateEntity, fmt.Errorf("automatic state for %s threw error %s", currentState, err.Error())
+		return stateEntity, e.MakeBplusError(e.ErrorInAutoState, currentState, err.Error())
 	}
 	return stm.Process(context, stateEntity, event, nil)
 }

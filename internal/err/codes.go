@@ -46,6 +46,11 @@ const (
 	CannotReadResponseBody
 	CannotMakeStateEntity
 	ErrorInDecoding
+	ErrorInAutoState
+	AutoStateNotConfigured
+	InvalidState
+	InvalidEvent
+	CannotReadFile
 )
 
 // ErrMessages - list of all messages corresponding to this code
@@ -62,4 +67,9 @@ var ErrMessages = map[BPlusErrorCode]string{
 	CannotReadResponseBody:              "cannot read response body err = %s",
 	CannotMakeStateEntity:               "cannot make the state entity. error = %s",
 	ErrorInDecoding:                     "Error in decoding request",
+	ErrorInAutoState:                    "automatic state for %s threw error %s",
+	AutoStateNotConfigured:              "autostate %s is not configured in the action catalog",
+	InvalidState:                        "invalid state %s returned by the entity",
+	InvalidEvent:                        "invalid event %s for the current state %s",
+	CannotReadFile:                      "Cannot read file %s. Erorr = %s",
 }
