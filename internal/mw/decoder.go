@@ -15,10 +15,10 @@ import (
 func decoder(ctx context.Context, chain *fw.MiddlewareChain) context.Context {
 
 	od := fw.GetOperationDescriptor(ctx)
-	if od.OpPayloadMaker == nil {
+	if od.OpRequestMaker == nil {
 		return chain.DoContinue(ctx)
 	}
-	var request = od.OpPayloadMaker()
+	var request, _ = od.OpRequestMaker(ctx)
 	r := bplusc.GetPayload(ctx).(io.ReadCloser)
 	if err := json.NewDecoder(r).Decode(&request); err != nil {
 		return bplusc.SetError(ctx, e.MakeBplusError(e.DecodingError, err.Error()))

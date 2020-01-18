@@ -32,13 +32,13 @@ type Service interface {
 	Process(context.Context, string, string, interface{}) (stm.StateEntity, error)
 }
 
-// Repo - the order repository
+// Repo - the state entity repository
 type Repo interface {
 	Create(stm.StateEntity) (stm.StateEntity, error)
 	Retrieve(ID string) (stm.StateEntity, error)
 }
 
-// RegisterSubType - all order sub types register here in their init()
+// RegisterSubType - all state entity sub types register here in their init()
 func RegisterSubType(str SubTypeRegistration) {
 	allSubTypes[str.Name] = str
 	str.setupStateEntityService()

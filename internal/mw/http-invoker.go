@@ -76,7 +76,7 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 		return nil, fmt.Errorf("status code returned is %d. Error = %s", resp.StatusCode, body)
 	}
 
-	var responsePayload = od.OpResponseMaker()
+	var responsePayload, _ = od.OpResponseMaker(ctx)
 	err = json.Unmarshal(body, &responsePayload)
 	if err != nil {
 		return nil, e.MakeBplusError(e.ResponseUnmarshalException, err.Error())

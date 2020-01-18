@@ -8,6 +8,7 @@ import (
 	"github.com/MenaEnergyVentures/bplus/stm"
 )
 
+// Create - the implementation of the Create method. This creates the state entity
 func (str SubTypeRegistration) Create(context context.Context, stateEntity stm.StateEntity) (stm.StateEntity, error) {
 	//fmt.Printf("State Entity received is %v\n", stateEntity)
 	stateEntity.SetState("")

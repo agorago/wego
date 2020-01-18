@@ -1,13 +1,14 @@
 package fw
 
 import (
+	"context"
 	"reflect"
 
 	e "github.com/MenaEnergyVentures/bplus/internal/err"
 )
 
 // PayloadMaker - makes a payload of a certain type
-type PayloadMaker func() interface{}
+type PayloadMaker func(context.Context) (interface{}, error)
 
 // Origin - defines a param type as int with a defined set of values
 type Origin int
@@ -33,7 +34,7 @@ type OperationDescriptor struct {
 	Description     string
 	Service         ServiceDescriptor
 	URL             string
-	OpPayloadMaker  PayloadMaker
+	OpRequestMaker  PayloadMaker
 	OpResponseMaker PayloadMaker
 	HTTPMethod      string
 	Params          []ParamDescriptor

@@ -6,13 +6,18 @@ import (
 
 	bplusc "github.com/MenaEnergyVentures/bplus/context"
 	fw "github.com/MenaEnergyVentures/bplus/fw"
+	e "github.com/MenaEnergyVentures/bplus/internal/err"
 	util "github.com/MenaEnergyVentures/bplus/util"
 )
 
 // since this is the last middleware we would not invoke the chain anymore
 func serviceInvoker(ctx context.Context, _ *fw.MiddlewareChain) context.Context {
 	od := fw.GetOperationDescriptor(ctx)
-	args := makeArgs(ctx, od)
+	args, err := makeArgs(ctx, od)
+	if err != nil {
+		ctx = bplusc.SetError(ctx, err)
+		return ctx
+	}
 	v, err := invoke(od.Service.ServiceToInvoke, od.Name, args)
 	ctx = bplusc.SetResponsePayload(ctx, v)
 	if err != nil {
@@ -21,24 +26,32 @@ func serviceInvoker(ctx context.Context, _ *fw.MiddlewareChain) context.Context 
 	return ctx
 }
 
-func makeArgs(ctx context.Context, od fw.OperationDescriptor) []interface{} {
+func makeArgs(ctx context.Context, od fw.OperationDescriptor) ([]interface{}, error) {
 	var args []interface{}
 	for _, pd := range od.Params {
-		args = append(args, makeArg(ctx, pd))
+		arg, err := makeArg(ctx, pd)
+		if err != nil {
+			return nil, err
+		}
+		args = append(args, arg)
 	}
-	return args
+	return args, nil
 }
 
-func makeArg(ctx context.Context, param fw.ParamDescriptor) interface{} {
+func makeArg(ctx context.Context, param fw.ParamDescriptor) (interface{}, error) {
 	switch param.ParamOrigin {
 	case fw.HEADER:
-		return util.ConvertFromString(bplusc.Value(ctx, param.Name).(string), param.ParamKind)
+		s, ok := bplusc.Value(ctx, param.Name).(string)
+		if !ok {
+			return nil, e.MakeBplusError(e.ParameterMissingInRequest, param.Name)
+		}
+		return util.ConvertFromString(s, param.ParamKind), nil
 	case fw.PAYLOAD:
-		return bplusc.GetPayload(ctx)
+		return bplusc.GetPayload(ctx), nil
 	case fw.CONTEXT:
-		return ctx
+		return ctx, nil
 	}
-	return nil
+	return nil, nil
 }
 
 func invoke(any interface{}, name string, args []interface{}) (interface{}, error) {

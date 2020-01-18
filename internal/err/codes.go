@@ -29,7 +29,7 @@ func MakeBplusWarning(e BPlusErrorCode, args ...interface{}) bpluse.BPlusError {
 
 }
 
-// BPlusErrorCode - A B Plus error code
+// BPlusErrorCode - A BPlus error code
 type BPlusErrorCode = int
 
 // enumeration for B Plus Error codes
@@ -51,6 +51,9 @@ const (
 	InvalidState
 	InvalidEvent
 	CannotReadFile
+	EventNotFoundInRequest
+	ParameterMissingInRequest
+	ErrorInObtainingSTM
 )
 
 // ErrMessages - list of all messages corresponding to this code
@@ -72,4 +75,7 @@ var ErrMessages = map[BPlusErrorCode]string{
 	InvalidState:                        "invalid state %s returned by the entity",
 	InvalidEvent:                        "invalid event %s for the current state %s",
 	CannotReadFile:                      "Cannot read file %s. Erorr = %s",
+	EventNotFoundInRequest:              "Cannot find event in the request.",
+	ParameterMissingInRequest:           "Parameter %s is missing in request",
+	ErrorInObtainingSTM:                 "Error in Obtaining STM",
 }

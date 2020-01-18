@@ -13,6 +13,8 @@ import (
 	httptransport "github.com/go-kit/kit/transport/http"
 )
 
+// This file contains DEAD CODE - Not used anymore. BPLUS exposes the transport
+// see state-entity-expose.go
 func (str SubTypeRegistration) makeCreateEndpoint() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(stm.StateEntity)
@@ -25,17 +27,18 @@ func (str SubTypeRegistration) makeCreateEndpoint() endpoint.Endpoint {
 	}
 }
 
-type processRequest struct {
-	OrderID string
-	EventID string
-	Param   interface{}
+// ProcessRequest - the request exposed by the Process() method
+type ProcessRequest struct {
+	EntityID string
+	EventID  string
+	Param    interface{}
 }
 
 func (str SubTypeRegistration) makeProcessEndpoint() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(processRequest)
+		req := request.(ProcessRequest)
 
-		order, err := str.Process(ctx, req.OrderID, req.EventID, req.Param)
+		order, err := str.Process(ctx, req.EntityID, req.EventID, req.Param)
 		if err != nil {
 			return order, err
 		}
@@ -56,9 +59,9 @@ func (str SubTypeRegistration) decodeCreateRequest(context context.Context, r *h
 
 func (str SubTypeRegistration) decodeProcessRequest(context context.Context, r *http.Request) (interface{}, error) {
 
-	var request processRequest
+	var request ProcessRequest
 
-	request.OrderID = r.Header.Get("orderId")
+	request.EntityID = r.Header.Get("orderId")
 	request.EventID = r.Header.Get("eventId")
 	var err error
 	// request.Param, err = ioutil.ReadAll(r.Body)
@@ -92,7 +95,7 @@ func encodeResponse(_ context.Context, w http.ResponseWriter, response interface
 }
 
 // setupOrderService - exposes the state entity service at the  end point
-func (str SubTypeRegistration) setupStateEntityService() {
+func (str SubTypeRegistration) setupStateEntityService1() {
 
 	createHandler := httptransport.NewServer(
 		str.makeCreateEndpoint(),
