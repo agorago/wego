@@ -36,9 +36,30 @@ type BPlusErrorCode = int
 const (
 	ServiceNotFound BPlusErrorCode = iota + 1000
 	OperationNotFound
+	DecodingError
+	CannotGenerateHTTPRequest
+	CannotGenerateHTTPRequest1
+	CannotGenerateHTTPRequestForPayload
+	ResponseUnmarshalException
+	ParamsNotExpected
+	HTTPCallFailed
+	CannotReadResponseBody
+	CannotMakeStateEntity
+	ErrorInDecoding
 )
 
 // ErrMessages - list of all messages corresponding to this code
 var ErrMessages = map[BPlusErrorCode]string{
-	ServiceNotFound: "Service %s is not found",
+	ServiceNotFound:                     "Service %s is not found",
+	OperationNotFound:                   "Operation %s in service %s not found",
+	DecodingError:                       "Error in decoding the request. error = %s",
+	CannotGenerateHTTPRequest:           "unable to generate HTTP request for param %#v. error is %s",
+	CannotGenerateHTTPRequest1:          "unable to generate HTTP request. error is %s",
+	CannotGenerateHTTPRequestForPayload: "Cannot construct the message from payload %s",
+	ResponseUnmarshalException:          "Unable to unmarshal response payload.Error = %s",
+	ParamsNotExpected:                   "#params passed does not match expected. Actual = %d. Expected = %d",
+	HTTPCallFailed:                      "http call failed. err = %s",
+	CannotReadResponseBody:              "cannot read response body err = %s",
+	CannotMakeStateEntity:               "cannot make the state entity. error = %s",
+	ErrorInDecoding:                     "Error in decoding request",
 }

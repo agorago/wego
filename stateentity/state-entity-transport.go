@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	bplusHTTP "github.com/MenaEnergyVentures/bplus/http"
+	e "github.com/MenaEnergyVentures/bplus/internal/err"
 	"github.com/MenaEnergyVentures/bplus/stm"
 	"github.com/go-kit/kit/endpoint"
 	httptransport "github.com/go-kit/kit/transport/http"
@@ -45,7 +46,7 @@ func (str SubTypeRegistration) makeProcessEndpoint() endpoint.Endpoint {
 func (str SubTypeRegistration) decodeCreateRequest(context context.Context, r *http.Request) (interface{}, error) {
 	request, err := str.StateEntitySubTypeMaker(context)
 	if err != nil {
-		fmt.Printf("Error in making a new type")
+		return nil, e.MakeBplusError(e.ErrorInDecoding)
 	}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return nil, err

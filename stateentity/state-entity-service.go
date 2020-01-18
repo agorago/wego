@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	e "github.com/MenaEnergyVentures/bplus/internal/err"
 	"github.com/MenaEnergyVentures/bplus/stm"
 )
 
@@ -19,7 +20,7 @@ func (str SubTypeRegistration) Process(context context.Context, stateEntityId st
 
 	stateEntity, err := str.StateEntityRepo.Retrieve(stateEntityId)
 	if err != nil {
-		return nil, fmt.Errorf("cannot make the state entity. error = %s", err.Error())
+		return nil, e.MakeBplusError(e.CannotMakeStateEntity, err.Error())
 	}
 	return str.doProcess(context, stateEntity, event, param)
 }

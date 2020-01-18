@@ -4,6 +4,7 @@ import (
 	"bytes"
 	bplusc "github.com/MenaEnergyVentures/bplus/context"
 	fw "github.com/MenaEnergyVentures/bplus/fw"
+	e "github.com/MenaEnergyVentures/bplus/internal/err"
 
 	"context"
 	"encoding/json"
@@ -30,8 +31,7 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 		if od.Params[0].ParamOrigin == fw.CONTEXT {
 			params = append([]interface{}{ctx}, params...)
 		} else {
-			return nil, fmt.Errorf("#params passed does not match expected. Actual = %d. Expected = %d",
-				len(params), len(od.Params))
+			return nil, e.MakeBplusError(e.ParamsNotExpected, len(params), len(od.Params))
 		}
 	}
 
@@ -45,13 +45,13 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 			req, err = createRequest(ctx, od.HTTPMethod, URL, param)
 		}
 		if err != nil {
-			return nil, fmt.Errorf("unable to generate HTTP request for param %#v. error is %s", param, err.Error())
+			return nil, e.MakeBplusError(e.CannotGenerateHTTPRequest, param, err.Error())
 		}
 	}
 	if req == nil {
 		req, err = createRequest(ctx, od.HTTPMethod, URL, nil)
 		if err != nil {
-			return nil, fmt.Errorf("unable to generate HTTP request. error is %s", err.Error())
+			return nil, e.MakeBplusError(e.CannotGenerateHTTPRequest1, err.Error())
 		}
 	}
 
@@ -64,12 +64,12 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 	resp, err := client.Do(req)
 
 	if err != nil {
-		return nil, fmt.Errorf("http call failed. err = %s", err.Error())
+		return nil, e.MakeBplusError(e.HTTPCallFailed, err.Error())
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read response body err = %s", err)
+		return nil, e.MakeBplusError(e.CannotReadResponseBody, err.Error())
 	}
 
 	if resp.StatusCode != 200 {
@@ -79,7 +79,7 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 	var responsePayload = od.OpResponseMaker()
 	err = json.Unmarshal(body, &responsePayload)
 	if err != nil {
-		return nil, fmt.Errorf("Unable to unmarshal response payload.Error = %s", err.Error())
+		return nil, e.MakeBplusError(e.ResponseUnmarshalException, err.Error())
 	}
 	return responsePayload, nil
 }
@@ -90,7 +90,7 @@ func createRequest(ctx context.Context, method string, URL string, payload inter
 
 	buf, err = constructBytes(payload)
 	if err != nil {
-		return nil, fmt.Errorf("Cannot construct the message from payload %s", payload)
+		return nil, e.MakeBplusError(e.CannotGenerateHTTPRequest, payload)
 	}
 
 	return http.NewRequestWithContext(ctx, method, URL, buf)
