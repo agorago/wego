@@ -20,21 +20,21 @@ func (str SubTypeRegistration) setupStateEntityService() {
 
 		stm, err := str.OrderSTMChooser(ctx)
 		if err != nil {
-			return nil, e.MakeBplusError(e.ErrorInObtainingSTM)
+			return nil, e.MakeBplusError(ctx, e.ErrorInObtainingSTM)
 		}
 		eventID := bplusc.Value(ctx, "Eventid")
 		if eventID == nil {
-			return nil, e.MakeBplusError(e.EventNotFoundInRequest)
+			return nil, e.MakeBplusError(ctx, e.EventNotFoundInRequest)
 		}
 
 		eID, ok := eventID.(string)
 		if !ok {
-			return nil, e.MakeBplusError(e.EventNotFoundInRequest)
+			return nil, e.MakeBplusError(ctx, e.EventNotFoundInRequest)
 		}
 
 		var ptm = stm.ParamTypeMaker(eID)
 		if ptm == nil {
-			return nil, e.MakeBplusError(e.EventNotFoundInRequest)
+			return nil, e.MakeBplusError(ctx, e.EventNotFoundInRequest)
 		}
 
 		return ptm.MakeParam(ctx)

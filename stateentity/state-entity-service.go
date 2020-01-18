@@ -2,7 +2,6 @@ package stateentity
 
 import (
 	"context"
-	"fmt"
 
 	e "github.com/MenaEnergyVentures/bplus/internal/err"
 	"github.com/MenaEnergyVentures/bplus/stm"
@@ -21,7 +20,7 @@ func (str SubTypeRegistration) Process(context context.Context, stateEntityId st
 
 	stateEntity, err := str.StateEntityRepo.Retrieve(stateEntityId)
 	if err != nil {
-		return nil, e.MakeBplusError(e.CannotMakeStateEntity, err.Error())
+		return nil, e.MakeBplusError(context, e.CannotMakeStateEntity, err.Error())
 	}
 	return str.doProcess(context, stateEntity, event, param)
 }
@@ -33,11 +32,7 @@ func (str SubTypeRegistration) doProcess(context context.Context, stateEntity st
 		return nil, err
 	}
 
-	stateEntity, err = machine.Process(context, stateEntity, event, param)
-	if err != nil {
-		fmt.Println(err)
-	}
-	return stateEntity, nil
+	return machine.Process(context, stateEntity, event, param)
 }
 
 func (str SubTypeRegistration) obtainSTM(context context.Context) (*stm.Stm, error) {

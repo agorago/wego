@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 
 	bplusc "github.com/MenaEnergyVentures/bplus/context"
+	bpluserr "github.com/MenaEnergyVentures/bplus/err"
 	fw "github.com/MenaEnergyVentures/bplus/fw"
 	mw "github.com/MenaEnergyVentures/bplus/internal/mw"
 
@@ -26,6 +27,11 @@ func init() {
 	HTTPHandler = mux.NewRouter()
 	// register the operation with BPlus as an extension
 	fw.RegisterOperations(setupOperation)
+}
+
+type httpGenericResponse struct {
+	resp interface{}
+	err  error
 }
 
 type httpod struct {
@@ -53,7 +59,9 @@ func (hod httpod) makeEndpoint() endpoint.Endpoint {
 		ctx = bplusc.Enhance(ctx, r)
 		ctx = bplusc.SetPayload(ctx, r.Body)
 
-		return mw.Entrypoint(ctx)
+		resp, err := mw.Entrypoint(ctx)
+		// fmt.Println("endpoint: error is ", err)
+		return httpGenericResponse{resp, err}, err
 	}
 }
 
@@ -62,5 +70,21 @@ func (hod httpod) decodeRequest(ctx context.Context, r *http.Request) (interface
 }
 
 func encodeGenericResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
-	return json.NewEncoder(w).Encode(response)
+	gresp := response.(httpGenericResponse)
+	if gresp.err != nil {
+		// fmt.Println("Handling error since resp.err not nil.", gresp.err)
+		return handleError(w, gresp.err)
+	}
+	return json.NewEncoder(w).Encode(gresp.resp)
+}
+
+func handleError(w http.ResponseWriter, err error) error {
+	bpluserr, ok := err.(bpluserr.BPlusError)
+	if ok {
+		w.WriteHeader(bpluserr.HTTPErrorCode)
+		w.Write([]byte(err.Error()))
+		return nil
+	}
+	w.Write([]byte(err.Error()))
+	return nil
 }

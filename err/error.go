@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 )
 
 // BPlusError - defines the error structure of all return values
@@ -11,17 +12,17 @@ type BPlusError struct {
 	ErrorCode     int
 	ErrorMessage  string
 	HTTPErrorCode int
-	LogLevel      LogLevels
+	LogLevel      LogLevel
 	TrajectoryID  string
 	UserID        string
 }
 
-// LogLevels - the different log levels
-type LogLevels int
+// LogLevel - the different log levels
+type LogLevel int
 
 // Values for log levels
 const (
-	Error LogLevels = iota + 1
+	Error LogLevel = iota + 1
 	Warning
 )
 
@@ -36,10 +37,15 @@ func Make403(code int, message string) BPlusError {
 }
 
 // MakeErr - Make a generic error
-func MakeErr(ctx context.Context, code int, message string, params ...interface{}) BPlusError {
+func MakeErr(ctx context.Context, ll LogLevel, code int, message string, params ...interface{}) BPlusError {
 	msg := message
 	if params != nil {
 		msg = fmt.Sprintf(message, params...)
 	}
-	return BPlusError{ErrorCode: code, ErrorMessage: msg, LogLevel: Error}
+	return BPlusError{
+		ErrorCode:     code,
+		ErrorMessage:  msg,
+		LogLevel:      ll,
+		HTTPErrorCode: http.StatusInternalServerError,
+	}
 }

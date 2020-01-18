@@ -1,31 +1,26 @@
 package err
 
 import (
-	"fmt"
+	"context"
 
 	bpluse "github.com/MenaEnergyVentures/bplus/err"
 )
 
 // It is recommended that each module define its own error file
 
-func internalMakeBplusError(ll bpluse.LogLevels, e BPlusErrorCode, args ...interface{}) bpluse.BPlusError {
-	return bpluse.BPlusError{
-		ErrorCode:    e,
-		ErrorMessage: fmt.Sprintf(ErrMessages[e], args...),
-		LogLevel:     ll,
-	}
-
+func internalMakeBplusError(ctx context.Context, ll bpluse.LogLevel, e BPlusErrorCode, args ...interface{}) bpluse.BPlusError {
+	return bpluse.MakeErr(ctx, ll, e, ErrMessages[e], args...)
 }
 
 // MakeBplusError - returns a customized CAFUError for BPlus
-func MakeBplusError(e BPlusErrorCode, args ...interface{}) bpluse.BPlusError {
-	return internalMakeBplusError(bpluse.Error, e, args...)
+func MakeBplusError(ctx context.Context, e BPlusErrorCode, args ...interface{}) bpluse.BPlusError {
+	return internalMakeBplusError(ctx, bpluse.Error, e, args...)
 
 }
 
 // MakeBplusWarning - returns a customized CAFUError for BPlus
-func MakeBplusWarning(e BPlusErrorCode, args ...interface{}) bpluse.BPlusError {
-	return internalMakeBplusError(bpluse.Warning, e, args...)
+func MakeBplusWarning(ctx context.Context, e BPlusErrorCode, args ...interface{}) bpluse.BPlusError {
+	return internalMakeBplusError(ctx, bpluse.Warning, e, args...)
 
 }
 

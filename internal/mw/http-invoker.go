@@ -31,7 +31,7 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 		if od.Params[0].ParamOrigin == fw.CONTEXT {
 			params = append([]interface{}{ctx}, params...)
 		} else {
-			return nil, e.MakeBplusError(e.ParamsNotExpected, len(params), len(od.Params))
+			return nil, e.MakeBplusError(ctx, e.ParamsNotExpected, len(params), len(od.Params))
 		}
 	}
 
@@ -45,13 +45,13 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 			req, err = createRequest(ctx, od.HTTPMethod, URL, param)
 		}
 		if err != nil {
-			return nil, e.MakeBplusError(e.CannotGenerateHTTPRequest, param, err.Error())
+			return nil, e.MakeBplusError(ctx, e.CannotGenerateHTTPRequest, param, err.Error())
 		}
 	}
 	if req == nil {
 		req, err = createRequest(ctx, od.HTTPMethod, URL, nil)
 		if err != nil {
-			return nil, e.MakeBplusError(e.CannotGenerateHTTPRequest1, err.Error())
+			return nil, e.MakeBplusError(ctx, e.CannotGenerateHTTPRequest1, err.Error())
 		}
 	}
 
@@ -64,12 +64,12 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 	resp, err := client.Do(req)
 
 	if err != nil {
-		return nil, e.MakeBplusError(e.HTTPCallFailed, err.Error())
+		return nil, e.MakeBplusError(ctx, e.HTTPCallFailed, err.Error())
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return nil, e.MakeBplusError(e.CannotReadResponseBody, err.Error())
+		return nil, e.MakeBplusError(ctx, e.CannotReadResponseBody, err.Error())
 	}
 
 	if resp.StatusCode != 200 {
@@ -79,7 +79,7 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 	var responsePayload, _ = od.OpResponseMaker(ctx)
 	err = json.Unmarshal(body, &responsePayload)
 	if err != nil {
-		return nil, e.MakeBplusError(e.ResponseUnmarshalException, err.Error())
+		return nil, e.MakeBplusError(ctx, e.ResponseUnmarshalException, err.Error())
 	}
 	return responsePayload, nil
 }
@@ -90,7 +90,7 @@ func createRequest(ctx context.Context, method string, URL string, payload inter
 
 	buf, err = constructBytes(payload)
 	if err != nil {
-		return nil, e.MakeBplusError(e.CannotGenerateHTTPRequest, payload)
+		return nil, e.MakeBplusError(ctx, e.CannotGenerateHTTPRequest, payload)
 	}
 
 	return http.NewRequestWithContext(ctx, method, URL, buf)

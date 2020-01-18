@@ -80,7 +80,7 @@ func MakeStm(filename string, actionCatalog map[string]interface{}) (*Stm, error
 	}
 	dat, err := ioutil.ReadFile(filename)
 	if err != nil {
-		return nil, e.MakeBplusError(e.CannotReadFile, filename, err.Error())
+		return nil, e.MakeBplusError(context.TODO(), e.CannotReadFile, filename, err.Error())
 	}
 	stm.populate(dat)
 	stm.actionCatalog = actionCatalog
@@ -88,7 +88,7 @@ func MakeStm(filename string, actionCatalog map[string]interface{}) (*Stm, error
 }
 
 // Process - called during run time to transition from one state to the next
-func (stm Stm) Process(context context.Context, stateEntity StateEntity, event string, param interface{}) (StateEntity, error) {
+func (stm Stm) Process(ctx context.Context, stateEntity StateEntity, event string, param interface{}) (StateEntity, error) {
 	stateTransitionInfo := StateTransitionInfo{
 		Param:               param,
 		AffectedStateEntity: stateEntity,
@@ -100,20 +100,20 @@ func (stm Stm) Process(context context.Context, stateEntity StateEntity, event s
 		// we need to initialize the entity for the first time.
 		stateTransitionInfo.Event = InitialEvent
 		stateTransitionInfo.NewState = stm.InitialState()
-		return stm.doProcess(context, stateTransitionInfo)
+		return stm.doProcess(ctx, stateTransitionInfo)
 	}
 	stateInfo, exists := stm.states[stateTransitionInfo.OldState]
 	if !exists {
-		return stateEntity, e.MakeBplusError(e.InvalidState, stateTransitionInfo.OldState)
+		return stateEntity, e.MakeBplusError(ctx, e.InvalidState, stateTransitionInfo.OldState)
 	}
 
 	eventInfo, exists := stateInfo.Events[event]
 
 	if !exists {
-		return stateEntity, e.MakeBplusError(e.InvalidEvent, event, stateTransitionInfo.OldState)
+		return nil, e.MakeBplusError(ctx, e.InvalidEvent, event, stateTransitionInfo.OldState)
 	}
 	stateTransitionInfo.NewState = eventInfo.NewStateID
-	return stm.doProcess(context, stateTransitionInfo)
+	return stm.doProcess(ctx, stateTransitionInfo)
 }
 
 func (stm Stm) doProcess(context context.Context, stateTransitionInfo StateTransitionInfo) (StateEntity, error) {
@@ -134,24 +134,24 @@ func (stm Stm) doProcess(context context.Context, stateTransitionInfo StateTrans
 	return stm.checkIfAutomaticState(context, stateTransitionInfo.AffectedStateEntity)
 }
 
-func (stm Stm) checkIfAutomaticState(context context.Context, stateEntity StateEntity) (StateEntity, error) {
+func (stm Stm) checkIfAutomaticState(ctx context.Context, stateEntity StateEntity) (StateEntity, error) {
 	currentState := stateEntity.GetState()
 	stateInfo, exists := stm.states[currentState]
 	if !exists {
-		return stateEntity, e.MakeBplusError(e.InvalidState, currentState)
+		return stateEntity, e.MakeBplusError(ctx, e.InvalidState, currentState)
 	}
 	if !stateInfo.Automatic {
 		return stateEntity, nil
 	}
 	autoStateProcessor := stm.lookupAutoState(currentState, AutomaticStateSuffix)
 	if autoStateProcessor == nil {
-		return stateEntity, e.MakeBplusError(e.AutoStateNotConfigured, currentState)
+		return stateEntity, e.MakeBplusError(ctx, e.AutoStateNotConfigured, currentState)
 	}
-	event, err := autoStateProcessor.Process(context, stateEntity)
+	event, err := autoStateProcessor.Process(ctx, stateEntity)
 	if err != nil {
-		return stateEntity, e.MakeBplusError(e.ErrorInAutoState, currentState, err.Error())
+		return stateEntity, e.MakeBplusError(ctx, e.ErrorInAutoState, currentState, err.Error())
 	}
-	return stm.Process(context, stateEntity, event, nil)
+	return stm.Process(ctx, stateEntity, event, nil)
 }
 
 // STM Constants

@@ -43,7 +43,7 @@ func makeArg(ctx context.Context, param fw.ParamDescriptor) (interface{}, error)
 	case fw.HEADER:
 		s, ok := bplusc.Value(ctx, param.Name).(string)
 		if !ok {
-			return nil, e.MakeBplusError(e.ParameterMissingInRequest, param.Name)
+			return nil, e.MakeBplusError(ctx, e.ParameterMissingInRequest, param.Name)
 		}
 		return util.ConvertFromString(s, param.ParamKind), nil
 	case fw.PAYLOAD:
@@ -62,6 +62,7 @@ func invoke(any interface{}, name string, args []interface{}) (interface{}, erro
 	x := reflect.ValueOf(any).MethodByName(name).Call(inputs)
 	retVal := x[0].Interface()
 	retErr := x[1].Interface()
+	// fmt.Printf("retErr is %#v\n", retErr)
 	if retErr == nil {
 		return retVal, nil
 	}

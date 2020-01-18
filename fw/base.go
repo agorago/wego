@@ -86,12 +86,12 @@ func (od OperationDescriptor) setupOperation() {
 func FindOperationDescriptor(serviceName string, opName string) (OperationDescriptor, error) {
 	sd := allServices[serviceName]
 	if sd == nil {
-		return OperationDescriptor{}, e.MakeBplusError(e.ServiceNotFound, serviceName)
+		return OperationDescriptor{}, e.MakeBplusError(context.TODO(), e.ServiceNotFound, serviceName)
 	}
 	for _, od := range sd.Operations {
 		if od.Name == opName {
 			return od, nil
 		}
 	}
-	return OperationDescriptor{}, e.MakeBplusError(e.OperationNotFound, opName, serviceName)
+	return OperationDescriptor{}, e.MakeBplusError(context.TODO(), e.OperationNotFound, opName, serviceName)
 }
