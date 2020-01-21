@@ -25,7 +25,7 @@ var HTTPHandler *mux.Router
 
 func init() {
 	HTTPHandler = mux.NewRouter()
-	// register the operation with BPlus as an extension
+	// register the HTTP registration with BPlus as an extension
 	fw.RegisterOperations(setupOperation)
 }
 
