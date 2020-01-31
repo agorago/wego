@@ -36,8 +36,10 @@ type OperationDescriptor struct {
 	URL             string
 	OpRequestMaker  PayloadMaker
 	OpResponseMaker PayloadMaker
-	HTTPMethod      string
-	Params          []ParamDescriptor
+	OpMiddleware    []Middleware // specific middleware required by this operation. These will be
+	// invoked before the operation is invoked by BPlus
+	HTTPMethod string
+	Params     []ParamDescriptor
 }
 
 // ServiceDescriptor - the root of the service registration.

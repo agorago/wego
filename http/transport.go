@@ -60,7 +60,6 @@ func (hod httpod) makeEndpoint() endpoint.Endpoint {
 		ctx = bplusc.SetPayload(ctx, r.Body)
 
 		resp, err := mw.Entrypoint(ctx)
-		// fmt.Println("endpoint: error is ", err)
 		return httpGenericResponse{resp, err}, err
 	}
 }
@@ -79,9 +78,9 @@ func encodeGenericResponse(_ context.Context, w http.ResponseWriter, response in
 }
 
 func handleError(w http.ResponseWriter, err error) error {
-	bpluserr, ok := err.(bpluserr.BPlusError)
+	e, ok := err.(bpluserr.BPlusError)
 	if ok {
-		w.WriteHeader(bpluserr.HTTPErrorCode)
+		w.WriteHeader(e.HTTPErrorCode)
 		w.Write([]byte(err.Error()))
 		return nil
 	}
