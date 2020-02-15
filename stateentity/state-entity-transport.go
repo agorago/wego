@@ -49,7 +49,7 @@ func (str SubTypeRegistration) makeProcessEndpoint() endpoint.Endpoint {
 func (str SubTypeRegistration) decodeCreateRequest(ctx context.Context, r *http.Request) (interface{}, error) {
 	request, err := str.StateEntitySubTypeMaker(ctx)
 	if err != nil {
-		return nil, e.MakeBplusError(ctx, e.ErrorInDecoding)
+		return nil, e.MakeBplusError(ctx, e.ErrorInDecoding, map[string]interface{}{})
 	}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return nil, err

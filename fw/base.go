@@ -88,12 +88,14 @@ func (od OperationDescriptor) setupOperation() {
 func FindOperationDescriptor(serviceName string, opName string) (OperationDescriptor, error) {
 	sd := allServices[serviceName]
 	if sd == nil {
-		return OperationDescriptor{}, e.MakeBplusError(context.TODO(), e.ServiceNotFound, serviceName)
+		return OperationDescriptor{}, e.MakeBplusError(context.TODO(), e.ServiceNotFound, map[string]interface{}{
+			"service": serviceName})
 	}
 	for _, od := range sd.Operations {
 		if od.Name == opName {
 			return od, nil
 		}
 	}
-	return OperationDescriptor{}, e.MakeBplusError(context.TODO(), e.OperationNotFound, opName, serviceName)
+	return OperationDescriptor{}, e.MakeBplusError(context.TODO(), e.OperationNotFound, map[string]interface{}{
+		"operation": opName, "service": serviceName})
 }

@@ -80,7 +80,9 @@ func MakeStm(filename string, actionCatalog map[string]interface{}) (*Stm, error
 	}
 	dat, err := ioutil.ReadFile(filename)
 	if err != nil {
-		return nil, e.MakeBplusError(context.TODO(), e.CannotReadFile, filename, err.Error())
+		return nil, e.MakeBplusError(context.TODO(), e.CannotReadFile,
+			map[string]interface{}{
+				"file": filename, "error": err.Error()})
 	}
 	stm.populate(dat)
 	stm.actionCatalog = actionCatalog
@@ -104,13 +106,15 @@ func (stm Stm) Process(ctx context.Context, stateEntity StateEntity, event strin
 	}
 	stateInfo, exists := stm.states[stateTransitionInfo.OldState]
 	if !exists {
-		return stateEntity, e.MakeBplusError(ctx, e.InvalidState, stateTransitionInfo.OldState)
+		return stateEntity, e.MakeBplusError(ctx, e.InvalidState, map[string]interface{}{
+			"state": stateTransitionInfo.OldState})
 	}
 
 	eventInfo, exists := stateInfo.Events[event]
 
 	if !exists {
-		return nil, e.MakeBplusError(ctx, e.InvalidEvent, event, stateTransitionInfo.OldState)
+		return nil, e.MakeBplusError(ctx, e.InvalidEvent, map[string]interface{}{
+			"event": event, "state": stateTransitionInfo.OldState})
 	}
 	stateTransitionInfo.NewState = eventInfo.NewStateID
 	return stm.doProcess(ctx, stateTransitionInfo)
@@ -138,18 +142,21 @@ func (stm Stm) checkIfAutomaticState(ctx context.Context, stateEntity StateEntit
 	currentState := stateEntity.GetState()
 	stateInfo, exists := stm.states[currentState]
 	if !exists {
-		return stateEntity, e.MakeBplusError(ctx, e.InvalidState, currentState)
+		return stateEntity, e.MakeBplusError(ctx, e.InvalidState, map[string]interface{}{
+			"state": currentState})
 	}
 	if !stateInfo.Automatic {
 		return stateEntity, nil
 	}
 	autoStateProcessor := stm.lookupAutoState(currentState, AutomaticStateSuffix)
 	if autoStateProcessor == nil {
-		return stateEntity, e.MakeBplusError(ctx, e.AutoStateNotConfigured, currentState)
+		return stateEntity, e.MakeBplusError(ctx, e.AutoStateNotConfigured, map[string]interface{}{
+			"state": currentState})
 	}
 	event, err := autoStateProcessor.Process(ctx, stateEntity)
 	if err != nil {
-		return stateEntity, e.MakeBplusError(ctx, e.ErrorInAutoState, currentState, err.Error())
+		return stateEntity, e.MakeBplusError(ctx, e.ErrorInAutoState, map[string]interface{}{
+			"state": currentState, "error": err.Error()})
 	}
 	return stm.Process(ctx, stateEntity, event, nil)
 }

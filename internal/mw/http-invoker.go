@@ -2,6 +2,7 @@ package mw
 
 import (
 	"bytes"
+
 	bplusc "github.com/MenaEnergyVentures/bplus/context"
 	fw "github.com/MenaEnergyVentures/bplus/fw"
 	e "github.com/MenaEnergyVentures/bplus/internal/err"
@@ -9,9 +10,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	util "github.com/MenaEnergyVentures/bplus/util"
 	"io/ioutil"
 	"net/http"
+
+	util "github.com/MenaEnergyVentures/bplus/util"
 )
 
 // HTTPInvoker - invokes the service via HTTP. The last middleware in the proxy
@@ -31,7 +33,8 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 		if od.Params[0].ParamOrigin == fw.CONTEXT {
 			params = append([]interface{}{ctx}, params...)
 		} else {
-			return nil, e.MakeBplusError(ctx, e.ParamsNotExpected, len(params), len(od.Params))
+			return nil, e.MakeBplusError(ctx, e.ParamsNotExpected, map[string]interface{}{
+				"actual": len(params), "expected": len(od.Params)})
 		}
 	}
 
@@ -45,13 +48,15 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 			req, err = createRequest(ctx, od.HTTPMethod, URL, param)
 		}
 		if err != nil {
-			return nil, e.MakeBplusError(ctx, e.CannotGenerateHTTPRequest, param, err.Error())
+			return nil, e.MakeBplusError(ctx, e.CannotGenerateHTTPRequest, map[string]interface{}{
+				"param": param, "error": err.Error()})
 		}
 	}
 	if req == nil {
 		req, err = createRequest(ctx, od.HTTPMethod, URL, nil)
 		if err != nil {
-			return nil, e.MakeBplusError(ctx, e.CannotGenerateHTTPRequest1, err.Error())
+			return nil, e.MakeBplusError(ctx, e.CannotGenerateHTTPRequest1, map[string]interface{}{
+				"error": err.Error()})
 		}
 	}
 
@@ -64,12 +69,14 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 	resp, err := client.Do(req)
 
 	if err != nil {
-		return nil, e.MakeBplusError(ctx, e.HTTPCallFailed, err.Error())
+		return nil, e.MakeBplusError(ctx, e.HTTPCallFailed, map[string]interface{}{
+			"error": err.Error()})
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return nil, e.MakeBplusError(ctx, e.CannotReadResponseBody, err.Error())
+		return nil, e.MakeBplusError(ctx, e.CannotReadResponseBody, map[string]interface{}{
+			"error": err.Error()})
 	}
 
 	if resp.StatusCode != 200 {
@@ -79,7 +86,8 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 	var responsePayload, _ = od.OpResponseMaker(ctx)
 	err = json.Unmarshal(body, &responsePayload)
 	if err != nil {
-		return nil, e.MakeBplusError(ctx, e.ResponseUnmarshalException, err.Error())
+		return nil, e.MakeBplusError(ctx, e.ResponseUnmarshalException, map[string]interface{}{
+			"error": err.Error()})
 	}
 	return responsePayload, nil
 }
@@ -90,7 +98,8 @@ func createRequest(ctx context.Context, method string, URL string, payload inter
 
 	buf, err = constructBytes(payload)
 	if err != nil {
-		return nil, e.MakeBplusError(ctx, e.CannotGenerateHTTPRequest, payload)
+		return nil, e.MakeBplusError(ctx, e.CannotGenerateHTTPRequest, map[string]interface{}{
+			"error": payload})
 	}
 
 	return http.NewRequestWithContext(ctx, method, URL, buf)

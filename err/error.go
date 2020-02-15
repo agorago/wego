@@ -3,8 +3,9 @@ package err
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
+
+	"github.com/MenaEnergyVentures/bplus/i18n"
 )
 
 // BPlusError - defines the error structure of all return values
@@ -37,15 +38,24 @@ func Make403(code int, message string) BPlusError {
 }
 
 // MakeErr - Make a generic error
-func MakeErr(ctx context.Context, ll LogLevel, code int, message string, params ...interface{}) BPlusError {
-	msg := message
-	if params != nil {
-		msg = fmt.Sprintf(message, params...)
+func MakeErr(ctx context.Context, ll LogLevel, code int, msgCode string, args map[string]interface{}) BPlusError {
+	return MakeErrWithHTTPCode(ctx, ll, code, msgCode, http.StatusInternalServerError, args)
+}
+
+// MakeErrWithHTTPCode - Make a generic error with http error code
+func MakeErrWithHTTPCode(ctx context.Context, ll LogLevel, code int, msgCode string, hTTPError int, args map[string]interface{}) BPlusError {
+	msg := msgCode
+	if args != nil {
+		//msg = fmt.Sprintf(message, params...)
+		m := i18n.Translate(ctx, msg, args)
+		if m != "" {
+			msg = m
+		}
 	}
 	return BPlusError{
 		ErrorCode:     code,
 		ErrorMessage:  msg,
 		LogLevel:      ll,
-		HTTPErrorCode: http.StatusInternalServerError,
+		HTTPErrorCode: hTTPError,
 	}
 }
