@@ -1,0 +1,5 @@
+hello = "hi"
+good_morning = "Good Morning"
+good_afternoon = "Good Afternoon"
+good_evening = "Good Evening"
+goodbye = "Good Bye {{.Name}}"

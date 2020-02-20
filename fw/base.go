@@ -89,7 +89,7 @@ func FindOperationDescriptor(serviceName string, opName string) (OperationDescri
 	sd := allServices[serviceName]
 	if sd == nil {
 		return OperationDescriptor{}, e.MakeBplusError(context.TODO(), e.ServiceNotFound, map[string]interface{}{
-			"service": serviceName})
+			"Service": serviceName})
 	}
 	for _, od := range sd.Operations {
 		if od.Name == opName {
@@ -97,5 +97,5 @@ func FindOperationDescriptor(serviceName string, opName string) (OperationDescri
 		}
 	}
 	return OperationDescriptor{}, e.MakeBplusError(context.TODO(), e.OperationNotFound, map[string]interface{}{
-		"operation": opName, "service": serviceName})
+		"Operation": opName, "Service": serviceName})
 }

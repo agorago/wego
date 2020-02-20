@@ -82,7 +82,7 @@ func MakeStm(filename string, actionCatalog map[string]interface{}) (*Stm, error
 	if err != nil {
 		return nil, e.MakeBplusError(context.TODO(), e.CannotReadFile,
 			map[string]interface{}{
-				"file": filename, "error": err.Error()})
+				"File": filename, "Error": err.Error()})
 	}
 	stm.populate(dat)
 	stm.actionCatalog = actionCatalog
@@ -107,14 +107,14 @@ func (stm Stm) Process(ctx context.Context, stateEntity StateEntity, event strin
 	stateInfo, exists := stm.states[stateTransitionInfo.OldState]
 	if !exists {
 		return stateEntity, e.MakeBplusError(ctx, e.InvalidState, map[string]interface{}{
-			"state": stateTransitionInfo.OldState})
+			"State": stateTransitionInfo.OldState})
 	}
 
 	eventInfo, exists := stateInfo.Events[event]
 
 	if !exists {
 		return nil, e.MakeBplusError(ctx, e.InvalidEvent, map[string]interface{}{
-			"event": event, "state": stateTransitionInfo.OldState})
+			"Event": event, "State": stateTransitionInfo.OldState})
 	}
 	stateTransitionInfo.NewState = eventInfo.NewStateID
 	return stm.doProcess(ctx, stateTransitionInfo)
@@ -143,7 +143,7 @@ func (stm Stm) checkIfAutomaticState(ctx context.Context, stateEntity StateEntit
 	stateInfo, exists := stm.states[currentState]
 	if !exists {
 		return stateEntity, e.MakeBplusError(ctx, e.InvalidState, map[string]interface{}{
-			"state": currentState})
+			"State": currentState})
 	}
 	if !stateInfo.Automatic {
 		return stateEntity, nil
@@ -151,12 +151,12 @@ func (stm Stm) checkIfAutomaticState(ctx context.Context, stateEntity StateEntit
 	autoStateProcessor := stm.lookupAutoState(currentState, AutomaticStateSuffix)
 	if autoStateProcessor == nil {
 		return stateEntity, e.MakeBplusError(ctx, e.AutoStateNotConfigured, map[string]interface{}{
-			"state": currentState})
+			"State": currentState})
 	}
 	event, err := autoStateProcessor.Process(ctx, stateEntity)
 	if err != nil {
 		return stateEntity, e.MakeBplusError(ctx, e.ErrorInAutoState, map[string]interface{}{
-			"state": currentState, "error": err.Error()})
+			"State": currentState, "Error": err.Error()})
 	}
 	return stm.Process(ctx, stateEntity, event, nil)
 }

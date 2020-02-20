@@ -9,7 +9,6 @@ import (
 
 	"context"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -34,7 +33,7 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 			params = append([]interface{}{ctx}, params...)
 		} else {
 			return nil, e.MakeBplusError(ctx, e.ParamsNotExpected, map[string]interface{}{
-				"actual": len(params), "expected": len(od.Params)})
+				"Actual": len(params), "Expected": len(od.Params)})
 		}
 	}
 
@@ -49,14 +48,14 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 		}
 		if err != nil {
 			return nil, e.MakeBplusError(ctx, e.CannotGenerateHTTPRequest, map[string]interface{}{
-				"param": param, "error": err.Error()})
+				"Param": param, "Error": err.Error()})
 		}
 	}
 	if req == nil {
 		req, err = createRequest(ctx, od.HTTPMethod, URL, nil)
 		if err != nil {
 			return nil, e.MakeBplusError(ctx, e.CannotGenerateHTTPRequest1, map[string]interface{}{
-				"error": err.Error()})
+				"Error": err.Error()})
 		}
 	}
 
@@ -70,24 +69,26 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 
 	if err != nil {
 		return nil, e.MakeBplusError(ctx, e.HTTPCallFailed, map[string]interface{}{
-			"error": err.Error()})
+			"Error": err.Error()})
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, e.MakeBplusError(ctx, e.CannotReadResponseBody, map[string]interface{}{
-			"error": err.Error()})
+			"Error": err.Error()})
 	}
 
 	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("status code returned is %d. Error = %s", resp.StatusCode, body)
+		return nil, e.MakeBplusError(ctx, e.Non200StatusCodeReturned, map[string]interface{}{
+			"StatusCode": resp.StatusCode, "Body": body,
+		})
 	}
 
 	var responsePayload, _ = od.OpResponseMaker(ctx)
 	err = json.Unmarshal(body, &responsePayload)
 	if err != nil {
 		return nil, e.MakeBplusError(ctx, e.ResponseUnmarshalException, map[string]interface{}{
-			"error": err.Error()})
+			"Error": err.Error()})
 	}
 	return responsePayload, nil
 }
@@ -99,7 +100,7 @@ func createRequest(ctx context.Context, method string, URL string, payload inter
 	buf, err = constructBytes(payload)
 	if err != nil {
 		return nil, e.MakeBplusError(ctx, e.CannotGenerateHTTPRequest, map[string]interface{}{
-			"error": payload})
+			"Error": payload})
 	}
 
 	return http.NewRequestWithContext(ctx, method, URL, buf)

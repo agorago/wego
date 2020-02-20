@@ -22,7 +22,7 @@ func decoder(ctx context.Context, chain *fw.MiddlewareChain) context.Context {
 	r := bplusc.GetPayload(ctx).(io.ReadCloser)
 	if err := json.NewDecoder(r).Decode(&request); err != nil {
 		return bplusc.SetError(ctx, e.MakeBplusError(ctx, e.DecodingError, map[string]interface{}{
-			"error": err.Error()}))
+			"Error": err.Error()}))
 	}
 
 	ctx = bplusc.SetPayload(ctx, request)

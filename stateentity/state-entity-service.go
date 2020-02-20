@@ -21,7 +21,7 @@ func (str SubTypeRegistration) Process(context context.Context, stateEntityId st
 	stateEntity, err := str.StateEntityRepo.Retrieve(stateEntityId)
 	if err != nil {
 		return nil, e.MakeBplusError(context, e.CannotMakeStateEntity, map[string]interface{}{
-			"error": err.Error()})
+			"Error": err.Error()})
 	}
 	return str.doProcess(context, stateEntity, event, param)
 }

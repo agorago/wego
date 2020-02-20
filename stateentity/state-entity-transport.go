@@ -57,7 +57,7 @@ func (str SubTypeRegistration) decodeCreateRequest(ctx context.Context, r *http.
 	return request, nil
 }
 
-func (str SubTypeRegistration) decodeProcessRequest(context context.Context, r *http.Request) (interface{}, error) {
+func (str SubTypeRegistration) decodeProcessRequest(ctx context.Context, r *http.Request) (interface{}, error) {
 
 	var request ProcessRequest
 
@@ -65,16 +65,18 @@ func (str SubTypeRegistration) decodeProcessRequest(context context.Context, r *
 	request.EventID = r.Header.Get("eventId")
 	var err error
 	// request.Param, err = ioutil.ReadAll(r.Body)
-	stm, err := str.OrderSTMChooser(context)
+	stm, err := str.OrderSTMChooser(ctx)
 	if err != nil {
-		fmt.Printf("Problem with obtaining stm\n")
+		return nil, e.MakeBplusError(ctx, e.ErrorInObtainingSTM, map[string]interface{}{
+			"Error": err.Error(),
+		})
 	}
 	var ptm = stm.ParamTypeMaker(request.EventID)
 	if ptm == nil {
 		return request, nil
 	}
 
-	obj, err := ptm.MakeParam(context)
+	obj, err := ptm.MakeParam(ctx)
 	//fmt.Printf("Got the following from ParamTypeMaker: %v. Type = %v\n", obj,
 	//	reflect.TypeOf(obj))
 	if err != nil {

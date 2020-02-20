@@ -35,6 +35,15 @@ func Add(ctx context.Context, key string, val interface{}) context.Context {
 	return context.WithValue(ctx, Key(key), val)
 }
 
+//GetAllKeys - get a list of all the keys in the given context
+func GetAllKeys(ctx context.Context) []string {
+	ret, ok := Value(ctx, allKeys).([]string)
+	if ok {
+		return ret
+	}
+	return nil
+}
+
 // Key - the key for storing information in the context
 type Key string
 

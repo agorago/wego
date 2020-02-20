@@ -49,6 +49,7 @@ const (
 	EventNotFoundInRequest
 	ParameterMissingInRequest
 	ErrorInObtainingSTM
+	Non200StatusCodeReturned
 )
 
 //go:generate stringer -type=BPlusErrorCode

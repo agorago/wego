@@ -44,7 +44,7 @@ func makeArg(ctx context.Context, param fw.ParamDescriptor) (interface{}, error)
 		s, ok := bplusc.Value(ctx, param.Name).(string)
 		if !ok {
 			return nil, e.MakeBplusError(ctx, e.ParameterMissingInRequest, map[string]interface{}{
-				"param": param.Name})
+				"Param": param.Name})
 		}
 		return util.ConvertFromString(s, param.ParamKind), nil
 	case fw.PAYLOAD:
