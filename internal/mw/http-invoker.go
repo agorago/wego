@@ -2,6 +2,7 @@ package mw
 
 import (
 	"bytes"
+	"fmt"
 
 	bplusc "github.com/MenaEnergyVentures/bplus/context"
 	fw "github.com/MenaEnergyVentures/bplus/fw"
@@ -64,6 +65,7 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 			enhanceRequest(param, od.Params[index], req)
 		}
 	}
+	bplusc.CopyHeadersToHTTPRequest(ctx, req)
 	client := &http.Client{}
 	resp, err := client.Do(req)
 
@@ -77,9 +79,10 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 		return nil, e.MakeBplusError(ctx, e.CannotReadResponseBody, map[string]interface{}{
 			"Error": err.Error()})
 	}
-
-	if resp.StatusCode != 200 {
-		return nil, e.MakeBplusError(ctx, e.Non200StatusCodeReturned, map[string]interface{}{
+	
+	if resp.StatusCode < 200 || resp.StatusCode > 299 {
+		fmt.Printf("The status code is %d.Body is %s\n",resp.StatusCode,body)
+		return nil, e.MakeBplusErrorWithErrorCode(ctx, resp.StatusCode,e.Non200StatusCodeReturned, map[string]interface{}{
 			"StatusCode": resp.StatusCode, "Body": body,
 		})
 	}

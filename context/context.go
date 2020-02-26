@@ -73,6 +73,17 @@ func Value(ctx context.Context, k string) interface{} {
 	return ctx.Value(Key(k))
 }
 
+// CopyHeadersToHTTPRequest - copy the context parameters to the http request as
+// headers
+func CopyHeadersToHTTPRequest(ctx context.Context, req *http.Request) {
+	for _, s := range GetAllKeys(ctx) {
+		val, ok := Value(ctx, s).(string)
+		if ok {
+			req.Header.Set(s, val)
+		}
+	}
+}
+
 // Enhance - enhance the context with things from HTTP request
 func Enhance(ctx context.Context, r *http.Request) context.Context {
 	ctx = copyPathParams(ctx, r)

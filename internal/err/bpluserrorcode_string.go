@@ -28,11 +28,12 @@ func _() {
 	_ = x[EventNotFoundInRequest-1017]
 	_ = x[ParameterMissingInRequest-1018]
 	_ = x[ErrorInObtainingSTM-1019]
+	_ = x[Non200StatusCodeReturned-1020]
 }
 
-const _BPlusErrorCode_name = "ServiceNotFoundOperationNotFoundDecodingErrorCannotGenerateHTTPRequestCannotGenerateHTTPRequest1CannotGenerateHTTPRequestForPayloadResponseUnmarshalExceptionParamsNotExpectedHTTPCallFailedCannotReadResponseBodyCannotMakeStateEntityErrorInDecodingErrorInAutoStateAutoStateNotConfiguredInvalidStateInvalidEventCannotReadFileEventNotFoundInRequestParameterMissingInRequestErrorInObtainingSTM"
+const _BPlusErrorCode_name = "ServiceNotFoundOperationNotFoundDecodingErrorCannotGenerateHTTPRequestCannotGenerateHTTPRequest1CannotGenerateHTTPRequestForPayloadResponseUnmarshalExceptionParamsNotExpectedHTTPCallFailedCannotReadResponseBodyCannotMakeStateEntityErrorInDecodingErrorInAutoStateAutoStateNotConfiguredInvalidStateInvalidEventCannotReadFileEventNotFoundInRequestParameterMissingInRequestErrorInObtainingSTMNon200StatusCodeReturned"
 
-var _BPlusErrorCode_index = [...]uint16{0, 15, 32, 45, 70, 96, 131, 157, 174, 188, 210, 231, 246, 262, 284, 296, 308, 322, 344, 369, 388}
+var _BPlusErrorCode_index = [...]uint16{0, 15, 32, 45, 70, 96, 131, 157, 174, 188, 210, 231, 246, 262, 284, 296, 308, 322, 344, 369, 388, 412}
 
 func (i BPlusErrorCode) String() string {
 	i -= 1000

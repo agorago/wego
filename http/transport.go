@@ -60,7 +60,7 @@ func (hod httpod) makeEndpoint() endpoint.Endpoint {
 		ctx = bplusc.SetPayload(ctx, r.Body)
 
 		resp, err := mw.Entrypoint(ctx)
-		return httpGenericResponse{resp, err}, err
+		return httpGenericResponse{resp, err}, nil
 	}
 }
 
@@ -71,7 +71,6 @@ func (hod httpod) decodeRequest(ctx context.Context, r *http.Request) (interface
 func encodeGenericResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
 	gresp := response.(httpGenericResponse)
 	if gresp.err != nil {
-		// fmt.Println("Handling error since resp.err not nil.", gresp.err)
 		return handleError(w, gresp.err)
 	}
 	return json.NewEncoder(w).Encode(gresp.resp)
@@ -84,6 +83,7 @@ func handleError(w http.ResponseWriter, err error) error {
 		w.Write([]byte(err.Error()))
 		return nil
 	}
+	w.WriteHeader(http.StatusInternalServerError)
 	w.Write([]byte(err.Error()))
 	return nil
 }
