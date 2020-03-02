@@ -42,27 +42,27 @@ type BPlusErrorCode int
 
 // enumeration for B Plus Error codes
 const (
-	ServiceNotFound BPlusErrorCode = iota + 1000
-	OperationNotFound
-	DecodingError
-	CannotGenerateHTTPRequest
-	CannotGenerateHTTPRequest1
-	CannotGenerateHTTPRequestForPayload
-	ResponseUnmarshalException
-	ParamsNotExpected
-	HTTPCallFailed
-	CannotReadResponseBody
-	CannotMakeStateEntity
-	ErrorInDecoding
-	ErrorInAutoState
-	AutoStateNotConfigured
-	InvalidState
-	InvalidEvent
-	CannotReadFile
-	EventNotFoundInRequest
-	ParameterMissingInRequest
-	ErrorInObtainingSTM
-	Non200StatusCodeReturned
+	ServiceNotFound BPlusErrorCode = iota + 1000 // bplus.errors.ServiceNotFound
+	OperationNotFound // bplus.errors.OperationNotFound
+	DecodingError  // bplus.errors.DecodingError
+	CannotGenerateHTTPRequest // bplus.errors.CannotGenerateHTTPRequest
+	CannotGenerateHTTPRequest1 // bplus.errors.CannotGenerateHTTPRequest1
+	CannotGenerateHTTPRequestForPayload // bplus.errors
+	ResponseUnmarshalException // bplus.errors.CannotGenerateHTTPRequestForPayload
+	ParamsNotExpected  // bplus.errors.ParamsNotExpected
+	HTTPCallFailed  // bplus.errors.HTTPCallFailed
+	CannotReadResponseBody // bplus.errors.CannotReadResponseBody
+	CannotMakeStateEntity // bplus.errors.CannotMakeStateEntity
+	ErrorInDecoding // bplus.errors.ErrorInDecoding
+	ErrorInAutoState // bplus.errors.ErrorInAutoState
+	AutoStateNotConfigured // bplus.errors.AutoStateNotConfigured
+	InvalidState // bplus.errors.InvalidState
+	InvalidEvent // bplus.errors.InvalidEvent
+	CannotReadFile // bplus.errors.CannotReadFile
+	EventNotFoundInRequest // bplus.errors.EventNotFoundInRequest
+	ParameterMissingInRequest // bplus.errors.ParameterMissingInRequest
+	ErrorInObtainingSTM // bplus.errors.ErrorInObtainingSTM
+	Non200StatusCodeReturned // bplus.errors.Non200StatusCodeReturned
 )
 
-//go:generate stringer -type=BPlusErrorCode
+//go:generate stringer -linecomment -type=BPlusErrorCode

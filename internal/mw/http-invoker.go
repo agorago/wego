@@ -83,7 +83,7 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		fmt.Printf("The status code is %d.Body is %s\n",resp.StatusCode,body)
 		return nil, e.MakeBplusErrorWithErrorCode(ctx, resp.StatusCode,e.Non200StatusCodeReturned, map[string]interface{}{
-			"StatusCode": resp.StatusCode, "Body": body,
+			"StatusCode": resp.StatusCode, "Body": fmt.Sprintf("%s",body),
 		})
 	}
 
