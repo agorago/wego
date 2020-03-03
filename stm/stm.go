@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 
-	e "github.com/MenaEnergyVentures/bplus/internal/err"
+	e "gitlab.intelligentb.com/devops/bplus/internal/err"
 )
 
 // Register a set of states and restrict the transitions only to valid events for each of them

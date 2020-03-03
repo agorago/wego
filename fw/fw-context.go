@@ -5,7 +5,7 @@ package fw
 // context package since that introduces a dependency on the fw package from there
 import (
 	"context"
-	bplusc "github.com/MenaEnergyVentures/bplus/context"
+	bplusc "gitlab.intelligentb.com/devops/bplus/context"
 )
 
 // GetOperationDescriptor - gets the operation descriptor from the context

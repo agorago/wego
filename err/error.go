@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/MenaEnergyVentures/bplus/i18n"
+	"gitlab.intelligentb.com/devops/bplus/i18n"
 )
 
 // BPlusError - defines the error structure of all return values

@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"net/http"
 
-	bplusHTTP "github.com/MenaEnergyVentures/bplus/http"
-	e "github.com/MenaEnergyVentures/bplus/internal/err"
-	"github.com/MenaEnergyVentures/bplus/stm"
+	bplusHTTP "gitlab.intelligentb.com/devops/bplus/http"
+	e "gitlab.intelligentb.com/devops/bplus/internal/err"
+	"gitlab.intelligentb.com/devops/bplus/stm"
 	"github.com/go-kit/kit/endpoint"
 	httptransport "github.com/go-kit/kit/transport/http"
 )

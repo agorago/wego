@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	bplusc "github.com/MenaEnergyVentures/bplus/context"
-	"github.com/MenaEnergyVentures/bplus/i18n"
+	bplusc "gitlab.intelligentb.com/devops/bplus/context"
+	"gitlab.intelligentb.com/devops/bplus/i18n"
 )
 
 func init() {

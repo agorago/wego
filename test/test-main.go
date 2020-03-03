@@ -7,8 +7,8 @@ import (
 
 	"github.com/DATA-DOG/godog"
 	"github.com/DATA-DOG/godog/colors"
-	"github.com/MenaEnergyVentures/bplus/cmd"
-	_ "github.com/MenaEnergyVentures/bplus/http" // ensure http is registered
+	"gitlab.intelligentb.com/devops/bplus/cmd"
+	_ "gitlab.intelligentb.com/devops/bplus/http" // ensure http is registered
 )
 
 var opt = godog.Options{

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"reflect"
 
-	bplusc "github.com/MenaEnergyVentures/bplus/context"
-	bplus "github.com/MenaEnergyVentures/bplus/fw"
-	e "github.com/MenaEnergyVentures/bplus/internal/err"
+	bplusc "gitlab.intelligentb.com/devops/bplus/context"
+	bplus "gitlab.intelligentb.com/devops/bplus/fw"
+	e "gitlab.intelligentb.com/devops/bplus/internal/err"
 )
 
 func (str SubTypeRegistration) setupStateEntityService() {
