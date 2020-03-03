@@ -4,16 +4,16 @@ import (
 	"bytes"
 	"fmt"
 
-	bplusc "github.com/MenaEnergyVentures/bplus/context"
-	fw "github.com/MenaEnergyVentures/bplus/fw"
-	e "github.com/MenaEnergyVentures/bplus/internal/err"
+	bplusc "gitlab.intelligentb.com/devops/bplus/context"
+	fw "gitlab.intelligentb.com/devops/bplus/fw"
+	e "gitlab.intelligentb.com/devops/bplus/internal/err"
 
 	"context"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
 
-	util "github.com/MenaEnergyVentures/bplus/util"
+	util "gitlab.intelligentb.com/devops/bplus/util"
 )
 
 // HTTPInvoker - invokes the service via HTTP. The last middleware in the proxy

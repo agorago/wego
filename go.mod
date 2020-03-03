@@ -1,4 +1,4 @@
-module github.com/MenaEnergyVentures/bplus
+module gitlab.intelligentb.com/devops/bplus
 
 go 1.13
 

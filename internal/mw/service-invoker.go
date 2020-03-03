@@ -4,10 +4,10 @@ import (
 	"context"
 	"reflect"
 
-	bplusc "github.com/MenaEnergyVentures/bplus/context"
-	fw "github.com/MenaEnergyVentures/bplus/fw"
-	e "github.com/MenaEnergyVentures/bplus/internal/err"
-	util "github.com/MenaEnergyVentures/bplus/util"
+	bplusc "gitlab.intelligentb.com/devops/bplus/context"
+	fw "gitlab.intelligentb.com/devops/bplus/fw"
+	e "gitlab.intelligentb.com/devops/bplus/internal/err"
+	util "gitlab.intelligentb.com/devops/bplus/util"
 )
 
 // since this is the last middleware we would not invoke the chain anymore

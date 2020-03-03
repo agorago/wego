@@ -4,7 +4,7 @@ import (
 	"context"
 	"reflect"
 
-	e "github.com/MenaEnergyVentures/bplus/internal/err"
+	e "gitlab.intelligentb.com/devops/bplus/internal/err"
 )
 
 // PayloadMaker - makes a payload of a certain type

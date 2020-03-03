@@ -3,8 +3,8 @@ package mw
 import (
 	"context"
 
-	bplusc "github.com/MenaEnergyVentures/bplus/context"
-	fw "github.com/MenaEnergyVentures/bplus/fw"
+	bplusc "gitlab.intelligentb.com/devops/bplus/context"
+	fw "gitlab.intelligentb.com/devops/bplus/fw"
 )
 
 // Entrypoint - The entry point for invoking any service registered in BPlus

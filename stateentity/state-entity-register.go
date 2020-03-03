@@ -3,7 +3,7 @@ package stateentity
 import (
 	"context"
 
-	"github.com/MenaEnergyVentures/bplus/stm"
+	"gitlab.intelligentb.com/devops/bplus/stm"
 )
 
 // STMChooser - this is a strategy that allows the sub type to choose an STM

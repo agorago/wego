@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	bplusHTTP "github.com/MenaEnergyVentures/bplus/http"
+	bplusHTTP "gitlab.intelligentb.com/devops/bplus/http"
 )
 
 // Serve - start a server for serving HTTP requests

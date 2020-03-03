@@ -8,10 +8,10 @@ import (
 
 	"github.com/gorilla/mux"
 
-	bplusc "github.com/MenaEnergyVentures/bplus/context"
-	bpluserr "github.com/MenaEnergyVentures/bplus/err"
-	fw "github.com/MenaEnergyVentures/bplus/fw"
-	mw "github.com/MenaEnergyVentures/bplus/internal/mw"
+	bplusc "gitlab.intelligentb.com/devops/bplus/context"
+	bpluserr "gitlab.intelligentb.com/devops/bplus/err"
+	fw "gitlab.intelligentb.com/devops/bplus/fw"
+	mw "gitlab.intelligentb.com/devops/bplus/internal/mw"
 
 	"github.com/go-kit/kit/endpoint"
 	httptransport "github.com/go-kit/kit/transport/http"

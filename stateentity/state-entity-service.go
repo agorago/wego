@@ -3,8 +3,8 @@ package stateentity
 import (
 	"context"
 
-	e "github.com/MenaEnergyVentures/bplus/internal/err"
-	"github.com/MenaEnergyVentures/bplus/stm"
+	e "gitlab.intelligentb.com/devops/bplus/internal/err"
+	"gitlab.intelligentb.com/devops/bplus/stm"
 )
 
 // Create - the implementation of the Create method. This creates the state entity

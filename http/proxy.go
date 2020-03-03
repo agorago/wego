@@ -7,9 +7,9 @@ import (
 	"runtime"
 	"time"
 
-	bplusc "github.com/MenaEnergyVentures/bplus/context"
-	fw "github.com/MenaEnergyVentures/bplus/fw"
-	mw "github.com/MenaEnergyVentures/bplus/internal/mw"
+	bplusc "gitlab.intelligentb.com/devops/bplus/context"
+	fw "gitlab.intelligentb.com/devops/bplus/fw"
+	mw "gitlab.intelligentb.com/devops/bplus/internal/mw"
 )
 
 // MakeProxy - Constructs a generic remote proxy based on the service descriptor

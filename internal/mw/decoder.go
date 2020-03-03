@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"io"
 
-	bplusc "github.com/MenaEnergyVentures/bplus/context"
-	fw "github.com/MenaEnergyVentures/bplus/fw"
-	e "github.com/MenaEnergyVentures/bplus/internal/err"
+	bplusc "gitlab.intelligentb.com/devops/bplus/context"
+	fw "gitlab.intelligentb.com/devops/bplus/fw"
+	e "gitlab.intelligentb.com/devops/bplus/internal/err"
 )
 
 // decodes a readcloser and makes it into a payload using the operation descriptor's payload maker
