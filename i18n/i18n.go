@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/BurntSushi/toml"
-	"github.com/MenaEnergyVentures/bplus/config"
-	bplusc "github.com/MenaEnergyVentures/bplus/context"
+	"gitlab.intelligentb.com/devops/bplus/config"
+	bplusc "gitlab.intelligentb.com/devops/bplus/context"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
