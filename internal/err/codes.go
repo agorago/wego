@@ -63,6 +63,7 @@ const (
 	ParameterMissingInRequest // bplus.errors.ParameterMissingInRequest
 	ErrorInObtainingSTM // bplus.errors.ErrorInObtainingSTM
 	Non200StatusCodeReturned // bplus.errors.Non200StatusCodeReturned
+	ValidationError // bplus.errors.ValidationError
 )
 
 //go:generate stringer -linecomment -type=BPlusErrorCode

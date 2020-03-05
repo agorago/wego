@@ -13,6 +13,7 @@ func Entrypoint(ctx context.Context) (interface{}, error) {
 	od := fw.GetOperationDescriptor(ctx)
 	chain := fw.MakeChain()
 	chain.Add(decoder)
+	chain.Add(v10validator)
 	if od.OpMiddleware != nil {
 		for _, mid := range od.OpMiddleware {
 			chain.Add(mid)
