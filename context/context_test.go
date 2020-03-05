@@ -27,7 +27,7 @@ func TestEiphenated(t *testing.T) {
 }
 
 func TestHttpRequestEnhance(t *testing.T) {
-	r := httptest.NewRequest("POST", "localhost:8080/path/to/url?abc=123", nil)
+	r := httptest.NewRequest("POST", "localhost:5000/path/to/url?abc=123", nil)
 	r.Header =
 		http.Header{
 			"x": []string{"y"},
@@ -41,7 +41,7 @@ func TestHttpRequestEnhance(t *testing.T) {
 }
 
 func TestHttpRequestEnhanceMux(t *testing.T) {
-	r := httptest.NewRequest("POST", "localhost:8080/path/to/url/123/345", nil)
+	r := httptest.NewRequest("POST", "localhost:5000/path/to/url/123/345", nil)
 	r.Header =
 		http.Header{
 			"x": []string{"y"},

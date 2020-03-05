@@ -9,5 +9,5 @@ import (
 
 // Serve - start a server for serving HTTP requests
 func Serve() {
-	log.Fatal(http.ListenAndServe(":8080", bplusHTTP.HTTPHandler))
+	log.Fatal(http.ListenAndServe(":5000", bplusHTTP.HTTPHandler))
 }
