@@ -34,6 +34,6 @@ func main() {
 	targetDirectory := os.Args[1] // get the target directory
 	fileName := os.Args[2:]       // to handle wildcard such as filename*.go
 
-	findFile(targetDirectory, fileName)
+	FindFiles(targetDirectory,fileName...)
 
 }

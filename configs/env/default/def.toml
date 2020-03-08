@@ -1,0 +1,5 @@
+[bplus]
+
+DEFAULTLANGUAGE="en-US"
+etcd_endpoint="localhost:2379"
+etcd_polling_delay=30

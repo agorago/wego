@@ -1,0 +1,3 @@
+[config_test]
+property3 = "prod-value3"
+property2 = "prod-value2"

@@ -1,0 +1,3 @@
+[config_test]
+property3 = "dev-value3"
+property2 = "dev-value2"

@@ -1,0 +1,3 @@
+[config_test]
+property1 = "default-value1"
+property2 = "default-value2"
