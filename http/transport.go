@@ -4,10 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"gitlab.intelligentb.com/devops/bplus/config"
-	"log"
 	"net/http"
-	"os"
 
 	"github.com/gorilla/mux"
 

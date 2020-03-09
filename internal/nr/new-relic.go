@@ -17,6 +17,6 @@ func init() {
 		newrelic.ConfigDistributedTracerEnabled(true),
 	)
 	if nil != err {
-		log.Println("Cannot create the new relic agent. Error = %s\n", err.Error())
+		log.Printf("Cannot create the new relic agent. Error = %s\n", err.Error())
 	}
 }

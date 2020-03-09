@@ -18,19 +18,22 @@ type A struct {
 
 func TestNoPayloadv10validator(t *testing.T) {
 	chain := fw.MakeChain()
-	chain.Add(dummy)
+	chain.Add(v10validator)
+	chain.Add(terminator)
 	ctx := context.Background()
 
-	ctx = v10validator(ctx, &chain)
+	ctx = chain.DoContinue(ctx)
 	err := bplusc.GetError(ctx)
 	assert.Equal(t, err, nil)
 }
+
 
 func TestValidv10validator(t *testing.T) {
 	var request A
 
 	chain := fw.MakeChain()
-	chain.Add(dummy)
+	chain.Add(v10validator)
+	chain.Add(terminator)
 	ctx := context.Background()
 	r := []byte(`{
     "b": 1,
@@ -38,7 +41,7 @@ func TestValidv10validator(t *testing.T) {
   }`)
 	json.Unmarshal(r, &request)
 	ctx = bplusc.SetPayload(ctx, request)
-	ctx = v10validator(ctx, &chain)
+	ctx = chain.DoContinue(ctx)
 	err := bplusc.GetError(ctx)
 	assert.Equal(t, err, nil)
 }
@@ -46,7 +49,8 @@ func TestValidv10validator(t *testing.T) {
 func TestInvalidv10validator(t *testing.T) {
 	var request A
 	chain := fw.MakeChain()
-	chain.Add(dummy)
+	chain.Add(v10validator)
+	chain.Add(terminator)
 	ctx := context.Background()
 
 	r := []byte(`{
@@ -54,11 +58,11 @@ func TestInvalidv10validator(t *testing.T) {
   }`)
 	json.Unmarshal(r, &request)
 	ctx = bplusc.SetPayload(ctx, request)
-	ctx = v10validator(ctx, &chain)
+	ctx = chain.DoContinue(ctx)
 	err := bplusc.GetError(ctx)
 	assert.Equal(t, err, e.MakeBplusError(ctx, e.ValidationError, map[string]interface{}{}))
 }
 
-func dummy(ctx context.Context, _ *fw.MiddlewareChain) context.Context {
+func terminator(ctx context.Context, _ *fw.MiddlewareChain) context.Context {
 	return ctx
 }
