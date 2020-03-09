@@ -4,7 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"gitlab.intelligentb.com/devops/bplus/config"
+	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 
@@ -12,9 +15,11 @@ import (
 	bpluserr "gitlab.intelligentb.com/devops/bplus/err"
 	fw "gitlab.intelligentb.com/devops/bplus/fw"
 	mw "gitlab.intelligentb.com/devops/bplus/internal/mw"
+	nr "gitlab.intelligentb.com/devops/bplus/internal/nr"
 
 	"github.com/go-kit/kit/endpoint"
 	httptransport "github.com/go-kit/kit/transport/http"
+	nrgorilla "github.com/newrelic/go-agent/v3/integrations/nrgorilla"
 )
 
 // http package allows the hooks to HTTP. It creates a transport from
@@ -23,8 +28,9 @@ import (
 // HTTPHandler - Grab hold of this to set up HTTP routes
 var HTTPHandler *mux.Router
 
-func init() {
+func init(){
 	HTTPHandler = mux.NewRouter()
+	HTTPHandler.Use(nrgorilla.Middleware(nr.NRApp))
 	// register the HTTP registration with BPlus as an extension
 	fw.RegisterOperations(setupOperation)
 }

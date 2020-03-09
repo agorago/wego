@@ -3,3 +3,7 @@
 DEFAULTLANGUAGE="en-US"
 etcd_endpoint="localhost:2379"
 etcd_polling_delay=30
+
+# These must be pushed to etcd or similar with crypt enabled
+application_name= "Gorilla App"
+new_relic_license_key = "NEW_RELIC_LICENSE_KEY"
