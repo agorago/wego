@@ -2,6 +2,7 @@ package context
 
 import (
 	"context"
+	"github.com/google/uuid"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -18,6 +19,15 @@ const (
 	proxyParams          = "BPLUS-PROXY-PARAMS"
 	proxyResponsePayload = "BPLUS-PROXY-RESPONSE-PAYLOAD"
 	proxyResponseError   = "BPLUS-PROXY-RESPONSE-ERROR"
+
+	RemoteAddr = "BPLUS-REMOTE-ADDRESS"
+	RequestURI = "BPLUS-REQUEST-URI"
+	URL = "BPLUS-URL"
+	Method = "BPLUS-METHOD"
+	TransferEncoding = "BPLUS-TRANSFER-ENCODING"
+	ContentLength = "BPLUS-CONTENT-LENGTH"
+	Host = "BPLUS-HOST"
+	TraceID = "BPLUS-TRACE_ID"
 
 	allKeys = "BPLUS-ALL-KEYS"
 )
@@ -89,7 +99,27 @@ func Enhance(ctx context.Context, r *http.Request) context.Context {
 	ctx = copyPathParams(ctx, r)
 	ctx = copyQueryParams(ctx, r)
 	ctx = copyHTTPHeaders(ctx, r)
+	ctx = copyStandardHTTPHeaders(ctx,r)
+	ctx = generateTraceID(ctx)
+	return ctx
+}
 
+func copyStandardHTTPHeaders(ctx context.Context, r *http.Request) context.Context {
+	ctx = Add(ctx,RemoteAddr,r.RemoteAddr)
+	ctx = Add(ctx,RequestURI,r.RequestURI)
+	ctx = Add(ctx,URL,r.URL)
+	ctx = Add(ctx,Method,r.Method)
+	ctx = Add(ctx,TransferEncoding,r.TransferEncoding)
+	ctx = Add(ctx,ContentLength,r.ContentLength)
+	ctx = Add(ctx,Host,r.Host)
+
+	return ctx
+}
+
+func generateTraceID(ctx context.Context)context.Context{
+	if Value(ctx,TraceID) == "" {
+		return Add(ctx,TraceID,uuid.New().String())
+	}
 	return ctx
 }
 

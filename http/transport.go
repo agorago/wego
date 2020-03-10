@@ -51,8 +51,9 @@ func setupOperation(od fw.OperationDescriptor) {
 		hod.decodeRequest,
 		encodeGenericResponse,
 	)
-	fmt.Printf("setting up the service for %s\n", od.URL)
-	HTTPHandler.Methods(od.HTTPMethod).Path(od.URL).Handler(handler)
+	url := fmt.Sprintf("%s/%s",od.Service.Name,od.URL)
+	fmt.Printf("setting up the service for %s\n", url)
+	HTTPHandler.Methods(od.HTTPMethod).Path(url).Handler(handler)
 }
 
 func (hod httpod) makeEndpoint() endpoint.Endpoint {
