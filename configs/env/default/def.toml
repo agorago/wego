@@ -5,5 +5,11 @@ etcd_endpoint="localhost:2379"
 etcd_polling_delay=30
 
 # These must be pushed to etcd or similar with crypt enabled
-application_name= "Gorilla App"
+application_name= "BPLUS"
 new_relic_license_key = "NEW_RELIC_LICENSE_KEY"
+
+# Logger settings
+log_level="debug"
+development_mode=true
+disable_caller=false
+disable_stacktrace=false

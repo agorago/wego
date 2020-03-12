@@ -11,7 +11,7 @@ var NRApp *newrelic.Application
 func init() {
 	var err error
 	NRApp, err = newrelic.NewApplication(
-		newrelic.ConfigAppName(config.Value("application_name")),
+		newrelic.ConfigAppName(config.GetApplicationName()),
 		newrelic.ConfigLicense(config.Value("new_relic_license_key")),
 		newrelic.ConfigDebugLogger(os.Stdout),
 		newrelic.ConfigDistributedTracerEnabled(true),

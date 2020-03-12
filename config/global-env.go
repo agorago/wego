@@ -45,4 +45,12 @@ func GetEnv() string{
 	return env
 }
 
+func GetApplicationName() string{
+	app := Value("application_name")
+	if app == "" {
+		return "bplus"
+	}
+	return app
+}
+
 
