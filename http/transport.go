@@ -25,7 +25,7 @@ import (
 // HTTPHandler - Grab hold of this to set up HTTP routes
 var HTTPHandler *mux.Router
 
-func init(){
+func init() {
 	HTTPHandler = mux.NewRouter()
 	HTTPHandler.Use(nrgorilla.Middleware(nr.NRApp))
 	// register the HTTP registration with BPlus as an extension
@@ -51,7 +51,7 @@ func setupOperation(od fw.OperationDescriptor) {
 		hod.decodeRequest,
 		encodeGenericResponse,
 	)
-	url := fmt.Sprintf("%s/%s",od.Service.Name,od.URL)
+	url := fmt.Sprintf("/%s%s", od.Service.Name, od.URL)
 	fmt.Printf("setting up the service for %s\n", url)
 	HTTPHandler.Methods(od.HTTPMethod).Path(url).Handler(handler)
 }
