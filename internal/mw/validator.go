@@ -2,6 +2,7 @@ package mw
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/go-playground/validator/v10"
 	bplusc "gitlab.intelligentb.com/devops/bplus/context"
@@ -18,7 +19,7 @@ func v10validator(ctx context.Context, chain *fw.MiddlewareChain) context.Contex
 	}
 
 	if errs := validateReq(request); errs != nil {
-		return bplusc.SetError(ctx, e.MakeBplusError(ctx, e.ValidationError, map[string]interface{}{
+		return bplusc.SetError(ctx, e.MakeBplusErrorWithErrorCode(ctx, http.StatusBadRequest, e.ValidationError, map[string]interface{}{
 			"Error": encodeV10Errors(errs.(validator.ValidationErrors))}))
 	}
 

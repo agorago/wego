@@ -25,7 +25,7 @@ import (
 // HTTPHandler - Grab hold of this to set up HTTP routes
 var HTTPHandler *mux.Router
 
-func init(){
+func init() {
 	HTTPHandler = mux.NewRouter()
 	HTTPHandler.Use(nrgorilla.Middleware(nr.NRApp))
 	// register the HTTP registration with BPlus as an extension
@@ -51,7 +51,7 @@ func setupOperation(od fw.OperationDescriptor) {
 		hod.decodeRequest,
 		encodeGenericResponse,
 	)
-	url := fmt.Sprintf("%s/%s",od.Service.Name,od.URL)
+	url := fmt.Sprintf("/%s%s", od.Service.Name, od.URL)
 	fmt.Printf("setting up the service for %s\n", url)
 	HTTPHandler.Methods(od.HTTPMethod).Path(url).Handler(handler)
 }
@@ -74,11 +74,18 @@ func (hod httpod) decodeRequest(ctx context.Context, r *http.Request) (interface
 
 func encodeGenericResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
 	w.Header().Set("Content-Type", "application/json")
+
 	gresp := response.(httpGenericResponse)
 	if gresp.err != nil {
 		return handleError(w, gresp.err)
 	}
-	return json.NewEncoder(w).Encode(gresp.resp)
+
+	if gresp.resp != nil {
+		return json.NewEncoder(w).Encode(gresp.resp)
+	} else {
+		w.WriteHeader(http.StatusNoContent)
+		return nil
+	}
 }
 
 func handleError(w http.ResponseWriter, err error) error {

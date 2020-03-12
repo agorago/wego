@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"io"
+	"net/http"
 
 	bplusc "gitlab.intelligentb.com/devops/bplus/context"
 	fw "gitlab.intelligentb.com/devops/bplus/fw"
@@ -21,7 +22,7 @@ func decoder(ctx context.Context, chain *fw.MiddlewareChain) context.Context {
 	var request, _ = od.OpRequestMaker(ctx)
 	r := bplusc.GetPayload(ctx).(io.ReadCloser)
 	if err := json.NewDecoder(r).Decode(&request); err != nil {
-		return bplusc.SetError(ctx, e.MakeBplusError(ctx, e.DecodingError, map[string]interface{}{
+		return bplusc.SetError(ctx, e.MakeBplusErrorWithErrorCode(ctx, http.StatusBadRequest, e.DecodingError, map[string]interface{}{
 			"Error": err.Error()}))
 	}
 
