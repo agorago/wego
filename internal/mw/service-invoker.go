@@ -12,6 +12,8 @@ import (
 
 // since this is the last middleware we would not invoke the chain anymore
 func serviceInvoker(ctx context.Context, _ *fw.MiddlewareChain) context.Context {
+	var hasResponse = false
+
 	od := fw.GetOperationDescriptor(ctx)
 	args, err := makeArgs(ctx, od)
 	if err != nil {
@@ -19,19 +21,12 @@ func serviceInvoker(ctx context.Context, _ *fw.MiddlewareChain) context.Context 
 		return ctx
 	}
 
-	var response bool
-
 	if od.OpResponseMaker != nil {
-		response = true
-	} else {
-		response = false
+		hasResponse = true
 	}
 
-	v, err := invoke(od.Service.ServiceToInvoke, od.Name, args, response)
-
-	if response {
-		ctx = bplusc.SetResponsePayload(ctx, v)
-	}
+	v, err := invoke(od.Service.ServiceToInvoke, od.Name, args, hasResponse)
+	ctx = bplusc.SetResponsePayload(ctx, v)
 
 	if err != nil {
 		ctx = bplusc.SetError(ctx, err)
@@ -68,23 +63,26 @@ func makeArg(ctx context.Context, param fw.ParamDescriptor) (interface{}, error)
 	return nil, nil
 }
 
-func invoke(any interface{}, name string, args []interface{}, response bool) (interface{}, error) {
+func invoke(any interface{}, name string, args []interface{}, hasResponse bool) (interface{}, error) {
 	inputs := make([]reflect.Value, len(args))
 	for i := range args {
 		inputs[i] = reflect.ValueOf(args[i])
 	}
 	x := reflect.ValueOf(any).MethodByName(name).Call(inputs)
-	var retVal interface{}
-	var retErr interface{}
+	return serviceResponse(x, hasResponse)
+}
 
-	if response {
+func serviceResponse(x []reflect.Value, hasResponse bool) (interface{}, error) {
+	var retVal, retErr interface{}
+
+	if hasResponse {
 		retVal = x[0].Interface()
 		retErr = x[1].Interface()
 	} else {
 		retVal = nil
 		retErr = x[0].Interface()
 	}
-	// fmt.Printf("retErr is %#v\n", retErr)
+
 	if retErr == nil {
 		return retVal, nil
 	}

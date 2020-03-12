@@ -83,6 +83,7 @@ func encodeGenericResponse(_ context.Context, w http.ResponseWriter, response in
 	if gresp.resp != nil {
 		return json.NewEncoder(w).Encode(gresp.resp)
 	} else {
+		w.WriteHeader(http.StatusNoContent)
 		return nil
 	}
 }
