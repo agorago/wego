@@ -25,6 +25,7 @@ func Entrypoint(ctx context.Context) (interface{}, error) {
 
 	// process responses
 	response := bplusc.GetResponsePayload(ctx)
+
 	err := bplusc.GetError(ctx)
 	if err != nil {
 		return response, err.(error)

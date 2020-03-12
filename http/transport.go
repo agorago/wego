@@ -74,11 +74,17 @@ func (hod httpod) decodeRequest(ctx context.Context, r *http.Request) (interface
 
 func encodeGenericResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
 	w.Header().Set("Content-Type", "application/json")
+
 	gresp := response.(httpGenericResponse)
 	if gresp.err != nil {
 		return handleError(w, gresp.err)
 	}
-	return json.NewEncoder(w).Encode(gresp.resp)
+
+	if gresp.resp != nil {
+		return json.NewEncoder(w).Encode(gresp.resp)
+	} else {
+		return nil
+	}
 }
 
 func handleError(w http.ResponseWriter, err error) error {

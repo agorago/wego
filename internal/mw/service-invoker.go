@@ -18,8 +18,21 @@ func serviceInvoker(ctx context.Context, _ *fw.MiddlewareChain) context.Context 
 		ctx = bplusc.SetError(ctx, err)
 		return ctx
 	}
-	v, err := invoke(od.Service.ServiceToInvoke, od.Name, args)
-	ctx = bplusc.SetResponsePayload(ctx, v)
+
+	var response bool
+
+	if od.OpResponseMaker != nil {
+		response = true
+	} else {
+		response = false
+	}
+
+	v, err := invoke(od.Service.ServiceToInvoke, od.Name, args, response)
+
+	if response {
+		ctx = bplusc.SetResponsePayload(ctx, v)
+	}
+
 	if err != nil {
 		ctx = bplusc.SetError(ctx, err)
 	}
@@ -55,14 +68,22 @@ func makeArg(ctx context.Context, param fw.ParamDescriptor) (interface{}, error)
 	return nil, nil
 }
 
-func invoke(any interface{}, name string, args []interface{}) (interface{}, error) {
+func invoke(any interface{}, name string, args []interface{}, response bool) (interface{}, error) {
 	inputs := make([]reflect.Value, len(args))
 	for i := range args {
 		inputs[i] = reflect.ValueOf(args[i])
 	}
 	x := reflect.ValueOf(any).MethodByName(name).Call(inputs)
-	retVal := x[0].Interface()
-	retErr := x[1].Interface()
+	var retVal interface{}
+	var retErr interface{}
+
+	if response {
+		retVal = x[0].Interface()
+		retErr = x[1].Interface()
+	} else {
+		retVal = nil
+		retErr = x[0].Interface()
+	}
 	// fmt.Printf("retErr is %#v\n", retErr)
 	if retErr == nil {
 		return retVal, nil
