@@ -2,7 +2,6 @@ package stateentity
 
 import (
 	"context"
-	"fmt"
 	"reflect"
 
 	bplusc "gitlab.intelligentb.com/devops/bplus/context"
@@ -73,7 +72,7 @@ func (str SubTypeRegistration) setupStateEntityService() {
 	var ods = []bplus.OperationDescriptor{
 		bplus.OperationDescriptor{
 			Name:            "Create",
-			URL:             fmt.Sprintf("/%s/create", str.URLPrefix),
+			URL:             "create",
 			HTTPMethod:      "POST",
 			OpRequestMaker:  subtypemaker,
 			OpResponseMaker: subtypemaker,
@@ -81,7 +80,7 @@ func (str SubTypeRegistration) setupStateEntityService() {
 		},
 		bplus.OperationDescriptor{
 			Name:            "Process",
-			URL:             fmt.Sprintf("/%s/process", str.URLPrefix),
+			URL:             "process",
 			HTTPMethod:      "POST",
 			OpRequestMaker:  processParamMaker,
 			OpResponseMaker: subtypemaker,

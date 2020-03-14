@@ -1,6 +1,7 @@
 package context
 
 import (
+	"fmt"
 	"context"
 	"github.com/google/uuid"
 	"net/http"
@@ -117,7 +118,10 @@ func copyStandardHTTPHeaders(ctx context.Context, r *http.Request) context.Conte
 }
 
 func generateTraceID(ctx context.Context)context.Context{
-	if Value(ctx,TraceID) == "" {
+	tr,ok := Value(ctx,TraceID).(string)
+	if tr == "" || !ok {
+		t := uuid.New().String()
+		fmt.Printf("Setting traceId to %s",t)
 		return Add(ctx,TraceID,uuid.New().String())
 	}
 	return ctx

@@ -2,6 +2,7 @@ package log
 
 import (
 	"context"
+	"fmt"
 	"gitlab.intelligentb.com/devops/bplus/config"
 	bplusc "gitlab.intelligentb.com/devops/bplus/context"
 	"go.uber.org/zap"
@@ -86,24 +87,48 @@ func encoderConfig() zapcore.EncoderConfig {
 	return encoderConfig
 }
 
+func Infof(ctx context.Context, message string, args ...interface{}){
+	Info(ctx,fmt.Sprintf(message,args...))
+}
+
 func Info(ctx context.Context, message string){
 	logger.Info(message,enhanceContext(ctx)...)
+}
+
+func Errorf(ctx context.Context, message string, args ...interface{}){
+	Error(ctx,fmt.Sprintf(message,args...))
 }
 
 func Error(ctx context.Context, message string){
 	logger.Error(message,enhanceContext(ctx)...)
 }
 
+func Warnf(ctx context.Context, message string, args ...interface{}){
+	Warn(ctx,fmt.Sprintf(message,args...))
+}
+
 func Warn(ctx context.Context, message string){
 	logger.Warn(message,enhanceContext(ctx)...)
+}
+
+func InfoWithFieldsf(ctx context.Context, fields map[string]string,message string, args ...interface{}){
+	InfoWithFields(ctx,fields,fmt.Sprintf(message,args...))
 }
 
 func InfoWithFields(ctx context.Context,fields map[string]string,  message string){
 	logger.Info(message,enhance(ctx,fields)...)
 }
 
+func ErrorWithFieldsf(ctx context.Context, fields map[string]string,message string, args ...interface{}){
+	ErrorWithFields(ctx,fields,fmt.Sprintf(message,args...))
+}
+
 func ErrorWithFields(ctx context.Context,fields map[string]string, message string){
 	logger.Error(message,enhance(ctx,fields)...)
+}
+
+func WarnWithFieldsf(ctx context.Context, fields map[string]string,message string, args ...interface{}){
+	WarnWithFields(ctx,fields,fmt.Sprintf(message,args...))
 }
 
 func WarnWithFields(ctx context.Context,fields map[string]string, message string,args ...interface{}){
@@ -119,7 +144,11 @@ func enhance(ctx context.Context,fields map[string]string) [] zap.Field{
 }
 
 func enhanceContext(ctx context.Context)[]zap.Field{
+	t,ok := bplusc.Value(ctx, bplusc.TraceID).(string)
+	if !ok {
+		t = "NO_TRACE_ID"
+	}
 	return []zap.Field{
-		zap.String("TraceID", bplusc.Value(ctx, bplusc.TraceID).(string)),
+		zap.String("TraceID",t ),
 	}
 }
