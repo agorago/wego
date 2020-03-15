@@ -1,18 +1,20 @@
 package nr
 
 import (
-	"github.com/newrelic/go-agent/v3/newrelic"
-	"gitlab.intelligentb.com/devops/bplus/config"
 	"log"
 	"os"
+
+	"github.com/newrelic/go-agent/v3/newrelic"
+	"gitlab.intelligentb.com/devops/bplus/config"
 )
 
 var NRApp *newrelic.Application
+
 func init() {
 	var err error
 	NRApp, err = newrelic.NewApplication(
 		newrelic.ConfigAppName(config.GetApplicationName()),
-		newrelic.ConfigLicense(config.Value("new_relic_license_key")),
+		newrelic.ConfigLicense(config.Value("bplus.new_relic_license_key")),
 		newrelic.ConfigDebugLogger(os.Stdout),
 		newrelic.ConfigDistributedTracerEnabled(true),
 	)
