@@ -47,6 +47,15 @@ $ git clone intelligentb.gitlab.com/bplus (get the actual git repo url)
 $ git clone intelligentb.gitlab.com/code-gen (get the actual git repo url)
 $ mkdir configs
 
+All included git projects within Intelligent B including BPlus will be under src. Reference to other Intelligent B 
+projects will be relative. For example, you will create a relative path to BPlus in your module by typing the 
+following:
+$ cd src/my-service
+$ go mod edit --alter intelligentb.gitlab.com/devops/bplus=../bplus
+
+This establishes the relative path to bplus from your service and allows changing of the bplus code without 
+requiring "go" to extract the latest code from gitlab.
+
 ## Project Types
 We would have three sets of projects that need to be developed. All these project templates are generated 
 automatically using code-gen. These include the following:
@@ -57,6 +66,8 @@ single deployable.
 chief difference between this and the service project is that this project is driven by a state machine.
 The code structuring is around the state machine. 
 
+#  Development & Test Process
 
+# Deployment Process
 
 

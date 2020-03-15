@@ -30,7 +30,7 @@ func initZap(){
 	}
 
 	var err error
-	logger, err = cfg.Build(zap.AddCallerSkip(1))
+	logger, err = cfg.Build(zap.AddCallerSkip(2))
 	if err != nil {
 		panic(err)
 	}
@@ -57,6 +57,8 @@ func determineLogLevel() zapcore.Level{
 		return zapcore.InfoLevel
 	case "warn":
 		return zapcore.WarnLevel
+	case "error":
+		return zapcore.ErrorLevel
 	default:
 		return zapcore.InfoLevel
 	}
@@ -95,6 +97,14 @@ func Info(ctx context.Context, message string){
 	logger.Info(message,enhanceContext(ctx)...)
 }
 
+func Debugf(ctx context.Context, message string, args ...interface{}){
+	Debug(ctx,fmt.Sprintf(message,args...))
+}
+
+func Debug(ctx context.Context, message string){
+	logger.Debug(message,enhanceContext(ctx)...)
+}
+
 func Errorf(ctx context.Context, message string, args ...interface{}){
 	Error(ctx,fmt.Sprintf(message,args...))
 }
@@ -117,6 +127,14 @@ func InfoWithFieldsf(ctx context.Context, fields map[string]string,message strin
 
 func InfoWithFields(ctx context.Context,fields map[string]string,  message string){
 	logger.Info(message,enhance(ctx,fields)...)
+}
+
+func DebugWithFieldsf(ctx context.Context, fields map[string]string,message string, args ...interface{}){
+	DebugWithFields(ctx,fields,fmt.Sprintf(message,args...))
+}
+
+func DebugWithFields(ctx context.Context,fields map[string]string,  message string){
+	logger.Debug(message,enhance(ctx,fields)...)
 }
 
 func ErrorWithFieldsf(ctx context.Context, fields map[string]string,message string, args ...interface{}){
