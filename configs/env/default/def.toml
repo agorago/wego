@@ -6,7 +6,7 @@ etcd_polling_delay=30
 
 # These must be pushed to etcd or similar with crypt enabled
 application_name= "BPLUS"
-new_relic_license_key = "NEW_RELIC_LICENSE_KEY"
+new_relic_license_key = "7aa28548d17b112983b08e9fb1a441bfd96fNRAL"
 
 # Logger settings
 log_level="debug"
