@@ -30,11 +30,12 @@ func _() {
 	_ = x[ErrorInObtainingSTM-1019]
 	_ = x[Non200StatusCodeReturned-1020]
 	_ = x[ValidationError-1021]
+	_ = x[UnparseableFile-1022]
 }
 
-const _BPlusErrorCode_name = "bplus.errors.ServiceNotFoundbplus.errors.OperationNotFoundbplus.errors.DecodingErrorbplus.errors.CannotGenerateHTTPRequestbplus.errors.CannotGenerateHTTPRequest1bplus.errorsbplus.errors.CannotGenerateHTTPRequestForPayloadbplus.errors.ParamsNotExpectedbplus.errors.HTTPCallFailedbplus.errors.CannotReadResponseBodybplus.errors.CannotMakeStateEntitybplus.errors.ErrorInDecodingbplus.errors.ErrorInAutoStatebplus.errors.AutoStateNotConfiguredbplus.errors.InvalidStatebplus.errors.InvalidEventbplus.errors.CannotReadFilebplus.errors.EventNotFoundInRequestbplus.errors.ParameterMissingInRequestbplus.errors.ErrorInObtainingSTMbplus.errors.Non200StatusCodeReturnedbplus.errors.ValidationError"
+const _BPlusErrorCode_name = "bplus.errors.ServiceNotFoundbplus.errors.OperationNotFoundbplus.errors.DecodingErrorbplus.errors.CannotGenerateHTTPRequestbplus.errors.CannotGenerateHTTPRequest1bplus.errorsbplus.errors.CannotGenerateHTTPRequestForPayloadbplus.errors.ParamsNotExpectedbplus.errors.HTTPCallFailedbplus.errors.CannotReadResponseBodybplus.errors.CannotMakeStateEntitybplus.errors.ErrorInDecodingbplus.errors.ErrorInAutoStatebplus.errors.AutoStateNotConfiguredbplus.errors.InvalidStatebplus.errors.InvalidEventbplus.errors.CannotReadFilebplus.errors.EventNotFoundInRequestbplus.errors.ParameterMissingInRequestbplus.errors.ErrorInObtainingSTMbplus.errors.Non200StatusCodeReturnedbplus.errors.ValidationErrorbplus.error.UnparseableFile"
 
-var _BPlusErrorCode_index = [...]uint16{0, 28, 58, 84, 122, 161, 173, 221, 251, 278, 313, 347, 375, 404, 439, 464, 489, 516, 551, 589, 621, 658, 686}
+var _BPlusErrorCode_index = [...]uint16{0, 28, 58, 84, 122, 161, 173, 221, 251, 278, 313, 347, 375, 404, 439, 464, 489, 516, 551, 589, 621, 658, 686, 713}
 
 func (i BPlusErrorCode) String() string {
 	i -= 1000

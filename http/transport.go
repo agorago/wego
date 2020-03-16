@@ -52,7 +52,7 @@ func setupOperation(od fw.OperationDescriptor) {
 		encodeGenericResponse,
 	)
 	log.Infof(context.Background(),"setting up the service for %s/%s\n", od.Service.Name,od.URL)
-	HTTPHandler.Methods(od.HTTPMethod).PathPrefix("/" + od.Service.Name).Path("/" + od.URL).Handler(handler)
+	HTTPHandler.Methods(od.HTTPMethod).PathPrefix("/" + od.Service.Name).Path(od.URL).Handler(handler)
 }
 
 func (hod httpod) makeEndpoint() endpoint.Endpoint {

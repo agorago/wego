@@ -64,6 +64,7 @@ const (
 	ErrorInObtainingSTM // bplus.errors.ErrorInObtainingSTM
 	Non200StatusCodeReturned // bplus.errors.Non200StatusCodeReturned
 	ValidationError // bplus.errors.ValidationError
+	UnparseableFile //bplus.error.UnparseableFile
 )
 
 //go:generate stringer -linecomment -type=BPlusErrorCode

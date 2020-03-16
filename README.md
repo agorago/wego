@@ -27,7 +27,7 @@ Besides integration with frameworks, BPlus accomplishes the following:
 * Facilitates rapid development using a code generator. For details see the 
 [discussion on code-gen](https://gitlab.intelligentb.com/devops/code-gen/README.md)
 * Implements a state machine. See [the BPlus State Machine](stm/README.md)
-* Provides a consistent way of handling Error Handling. See [Error Handling](err/README.md)
+* Provides a consistent way of handling Errors. See [Error Handling](err/README.md)
 * Provides the following functionalities as horizontal services. (a growing set)
     # Logging. See [BPlus Logging](log/README.md)
     # Auditing (not implemented yet)
@@ -81,7 +81,7 @@ However this file is necessary to accomplish the following objectives:
 
 * To enable developers to make changes in the dependency project  and seeing these changes immediately being 
 reflected in their code base without the need for doing a "git commit". This is accomplished by doing a 
-"go mod edit --alter dependency-project-url=../dependency-project-relaive-path"
+"go mod edit --alter dependency-project-url=../dependency-project-relative-path"
 This creates an entry in _go.mod_ for the relative path to this folder.
 * To copy the resource bundles from the dependent projects into a common area 
 * To copy environment settings from the dependent projects into a common area

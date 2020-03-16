@@ -1,0 +1,51 @@
+{
+  "created": {
+    "initial": true,
+    "events": {
+      "confirm": {
+        "newState": "confirmed"
+      },
+      "cancelCreatedOrder": {
+        "newState": "cancelled"
+      }
+    }
+  },
+  "confirmed": {
+    "events": {
+      "fulfil": {
+        "newState": "fulfilled"
+      },
+      "cancelConfirmedOrder": {
+        "newState": "cancelled"
+      }
+    }
+  },
+  "fulfilled": {
+    "events": {
+      "close": {
+        "newState": "closed"
+      }
+    }
+  },
+  "closed": {
+
+  },
+  "cancelled": {
+    "events": {
+      "closeCancelledOrder": {
+        "newState": "check-if-closeable"
+      }
+    }
+  },
+  "check-if-closeable": {
+    "automatic": true,
+    "events": {
+      "yes": {
+        "newState": "closed"
+      },
+      "no": {
+        "newState": "cancelled"
+      }
+    }
+  }
+}

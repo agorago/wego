@@ -3,10 +3,8 @@ package stm
 import (
 	"context"
 	"encoding/json"
-	"io/ioutil"
-	"log"
-
 	e "gitlab.intelligentb.com/devops/bplus/internal/err"
+	"io/ioutil"
 )
 
 // Register a set of states and restrict the transitions only to valid events for each of them
@@ -48,7 +46,6 @@ type StateTransitionInfo struct {
 	Event               string
 	Param               interface{}
 	AffectedStateEntity StateEntity
-	// AffectedStateEntity interface{}
 }
 
 // Stm - The definition of the Stm structure
@@ -64,11 +61,12 @@ type StateEntity interface {
 	SetState(newstate string)
 }
 
-func (stm *Stm) populate(bytes []byte) {
+func (stm *Stm) populate(bytes []byte) error{
 	stm.states = make(map[string]state)
 	if err := json.Unmarshal(bytes, &stm.states); err != nil {
-		log.Fatal(err)
+		return e.MakeBplusError(context.TODO(),e.UnparseableFile,nil)
 	}
+	return nil
 }
 
 // MakeStm - Make a new State machine with the filename that contains the State Transition Diagram
@@ -84,7 +82,10 @@ func MakeStm(filename string, actionCatalog map[string]interface{}) (*Stm, error
 			map[string]interface{}{
 				"File": filename, "Error": err.Error()})
 	}
-	stm.populate(dat)
+	err = stm.populate(dat)
+	if err != nil {
+		return nil, err
+	}
 	stm.actionCatalog = actionCatalog
 	return &stm, nil
 }
@@ -98,7 +99,7 @@ func (stm Stm) Process(ctx context.Context, stateEntity StateEntity, event strin
 		OldState:            stateEntity.GetState(),
 	}
 
-	if stateTransitionInfo.OldState == "" {
+	if stateTransitionInfo.OldState == "" || event == InitialEvent{
 		// we need to initialize the entity for the first time.
 		stateTransitionInfo.Event = InitialEvent
 		stateTransitionInfo.NewState = stm.InitialState()
