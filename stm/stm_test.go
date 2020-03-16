@@ -6,6 +6,7 @@ import (
 	"github.com/magiconair/properties/assert"
 	"gitlab.intelligentb.com/devops/bplus/err"
 	"gitlab.intelligentb.com/devops/bplus/i18n"
+	bpluse "gitlab.intelligentb.com/devops/bplus/internal/err"
 	"gitlab.intelligentb.com/devops/bplus/stm"
 	"os"
 	"testing"
@@ -176,7 +177,8 @@ func TestInvalidEvent(t *testing.T){
 		fmt.Fprintf(os.Stderr,"Error not castable to BPlusError!\n")
 		t.Fail()
 	}
-	assert.Equal(t,e.ErrorCode,1015)
+	code := int(bpluse.InvalidEvent)
+	assert.Equal(t,code,e.ErrorCode)
 }
 
 func TestInvalidState(t *testing.T){
@@ -191,8 +193,8 @@ func TestInvalidState(t *testing.T){
 		fmt.Fprintf(os.Stderr,"Error not castable to BPlusError!\n")
 		t.Fail()
 	}
-
-	assert.Equal(t,e.ErrorCode,1014)
+	code := int(bpluse.InvalidState)
+	assert.Equal(t,code,e.ErrorCode)
 }
 
 func TestInvalidFilename(t *testing.T){
@@ -202,7 +204,8 @@ func TestInvalidFilename(t *testing.T){
 		fmt.Fprintf(os.Stderr,"Error not castable to BPlusError!\n")
 		t.Fail()
 	}
-	assert.Equal(t,e.ErrorCode,1016)
+	code :=  int(bpluse.CannotReadFile)
+	assert.Equal(t,code,e.ErrorCode)
 }
 
 func TestUnparseableFilename(t *testing.T){
@@ -212,8 +215,8 @@ func TestUnparseableFilename(t *testing.T){
 		fmt.Fprintf(os.Stderr,"Error not castable to BPlusError!\n")
 		t.Fail()
 	}
-	fmt.Fprintf(os.Stderr,"error = %s\n",e)
-	assert.Equal(t,e.ErrorCode,1022)
+	code :=  int(bpluse.UnparseableFile)
+	assert.Equal(t,code,e.ErrorCode)
 }
 
 
