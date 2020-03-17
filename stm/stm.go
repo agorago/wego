@@ -7,22 +7,22 @@ import (
 	"io/ioutil"
 )
 
-// Register a set of states and restrict the transitions only to valid events for each of them
+// Register a set of States and restrict the transitions only to valid events for each of them
 
 // ParamTypeMaker - a function that allows to make a parameter type
 type ParamTypeMaker interface {
 	MakeParam(Context context.Context) (interface{}, error)
 }
 
-type event struct {
+type Event struct {
 	NewStateID string `json:"newState"`
 	meta       map[string]interface{}
 }
 
-type state struct {
-	Initial   bool // is this the initial state?
-	Automatic bool // does this state compute the event itself?
-	Events    map[string]event
+type State struct {
+	Initial   bool // is this the initial State?
+	Automatic bool // does this State compute the Event itself?
+	Events    map[string]Event
 	meta      map[string]interface{}
 }
 
@@ -31,15 +31,15 @@ type Action interface {
 	Process(context.Context, StateTransitionInfo) error
 }
 
-// AutomaticState - all auto states must implement this interface
+// AutomaticState - all auto States must implement this interface
 // the return value for the Process method is a string that denotes
-// the event
+// the Event
 type AutomaticState interface {
 	Process(context.Context, StateEntity) (string, error)
 }
 
 // StateTransitionInfo - the structure that will be passed to all the actions.
-// It gives useful information about the state change that is currently happening
+// It gives useful information about the State change that is currently happening
 type StateTransitionInfo struct {
 	OldState            string
 	NewState            string
@@ -51,7 +51,7 @@ type StateTransitionInfo struct {
 // Stm - The definition of the Stm structure
 type Stm struct {
 	initialState  string
-	states        map[string]state
+	States        map[string]State
 	actionCatalog map[string]interface{}
 }
 
@@ -62,8 +62,8 @@ type StateEntity interface {
 }
 
 func (stm *Stm) populate(bytes []byte) error{
-	stm.states = make(map[string]state)
-	if err := json.Unmarshal(bytes, &stm.states); err != nil {
+	stm.States = make(map[string]State)
+	if err := json.Unmarshal(bytes, &stm.States); err != nil {
 		return e.MakeBplusError(context.TODO(),e.UnparseableFile,nil)
 	}
 	return nil
@@ -73,7 +73,7 @@ func (stm *Stm) populate(bytes []byte) error{
 // and the action catalog
 func MakeStm(filename string, actionCatalog map[string]interface{}) (*Stm, error) {
 	stm := Stm{
-		states:        make(map[string]state),
+		States:        make(map[string]State),
 		actionCatalog: make(map[string]interface{}),
 	}
 	dat, err := ioutil.ReadFile(filename)
@@ -90,7 +90,7 @@ func MakeStm(filename string, actionCatalog map[string]interface{}) (*Stm, error
 	return &stm, nil
 }
 
-// Process - called during run time to transition from one state to the next
+// Process - called during run time to transition from one State to the next
 func (stm Stm) Process(ctx context.Context, stateEntity StateEntity, event string, param interface{}) (StateEntity, error) {
 	stateTransitionInfo := StateTransitionInfo{
 		Param:               param,
@@ -105,7 +105,7 @@ func (stm Stm) Process(ctx context.Context, stateEntity StateEntity, event strin
 		stateTransitionInfo.NewState = stm.InitialState()
 		return stm.doProcess(ctx, stateTransitionInfo)
 	}
-	stateInfo, exists := stm.states[stateTransitionInfo.OldState]
+	stateInfo, exists := stm.States[stateTransitionInfo.OldState]
 	if !exists {
 		return stateEntity, e.MakeBplusError(ctx, e.InvalidState, map[string]interface{}{
 			"State": stateTransitionInfo.OldState})
@@ -136,12 +136,13 @@ func (stm Stm) doProcess(context context.Context, stateTransitionInfo StateTrans
 	if preprocessor != nil {
 		preprocessor.Process(context, stateTransitionInfo)
 	}
-	return stm.checkIfAutomaticState(context, stateTransitionInfo.AffectedStateEntity)
+	return stm.checkIfAutomaticState(context, stateTransitionInfo)
 }
 
-func (stm Stm) checkIfAutomaticState(ctx context.Context, stateEntity StateEntity) (StateEntity, error) {
+func (stm Stm) checkIfAutomaticState(ctx context.Context, info StateTransitionInfo) (StateEntity, error) {
+	stateEntity := info.AffectedStateEntity
 	currentState := stateEntity.GetState()
-	stateInfo, exists := stm.states[currentState]
+	stateInfo, exists := stm.States[currentState]
 	if !exists {
 		return stateEntity, e.MakeBplusError(ctx, e.InvalidState, map[string]interface{}{
 			"State": currentState})
@@ -159,7 +160,7 @@ func (stm Stm) checkIfAutomaticState(ctx context.Context, stateEntity StateEntit
 		return stateEntity, e.MakeBplusError(ctx, e.ErrorInAutoState, map[string]interface{}{
 			"State": currentState, "Error": err.Error()})
 	}
-	return stm.Process(ctx, stateEntity, event, nil)
+	return stm.Process(ctx, stateEntity, event, info.Param)
 }
 
 // STM Constants
@@ -170,10 +171,10 @@ const (
 	TransitionActionSuffix = "TransitionAction"
 	ParamTypeMakerSuffix   = "ParamTypeMaker"
 	AutomaticStateSuffix   = "AutoState"
-	InitialEvent           = "InitialEvent" // Used for initializing the state entity. Call it the first event used to create the entity
+	InitialEvent           = "InitialEvent" // Used for initializing the State entity. Call it the first Event used to create the entity
 )
 
-// ParamTypeMaker - returns a param type maker for an event.
+// ParamTypeMaker - returns a param type maker for an Event.
 func (stm Stm) ParamTypeMaker(event string) ParamTypeMaker {
 	f := stm.lookup(event, ParamTypeMakerSuffix)
 	if f != nil {
@@ -208,10 +209,10 @@ func (stm Stm) lookup(prefix string, suffix string) interface{} {
 	return action
 }
 
-// InitialState - gives the initial state for the STM
+// InitialState - gives the initial State for the STM
 func (stm *Stm) InitialState() string {
 	if stm.initialState == "" {
-		for stateID, stateInfo := range stm.states {
+		for stateID, stateInfo := range stm.States {
 			if stateInfo.Initial {
 				stm.initialState = stateID
 				break

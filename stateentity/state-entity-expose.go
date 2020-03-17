@@ -72,7 +72,7 @@ func (str SubTypeRegistration) setupStateEntityService() {
 	var ods = []bplus.OperationDescriptor{
 		bplus.OperationDescriptor{
 			Name:            "Create",
-			URL:             "create",
+			URL:             "/create",
 			HTTPMethod:      "POST",
 			OpRequestMaker:  subtypemaker,
 			OpResponseMaker: subtypemaker,
@@ -80,7 +80,7 @@ func (str SubTypeRegistration) setupStateEntityService() {
 		},
 		bplus.OperationDescriptor{
 			Name:            "Process",
-			URL:             "process",
+			URL:             "/process",
 			HTTPMethod:      "POST",
 			OpRequestMaker:  processParamMaker,
 			OpResponseMaker: subtypemaker,

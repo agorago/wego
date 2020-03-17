@@ -12,10 +12,10 @@ import (
 	"testing"
 )
 // A test case where simple order details are captured.
-// The order progresses from one state to the next sequentially
+// The order progresses from one State to the next sequentially
 // Created -> Confirmed -> Fulfilled -> Closed
-// Order can be cancelled in Created and Confirmed states
-// Cancellation in confirmed state incurs penalties
+// Order can be cancelled in Created and Confirmed States
+// Cancellation in confirmed State incurs penalties
 type testOrder struct{
 	ID string
 	State string
@@ -113,16 +113,16 @@ func TestStateProgression(t *testing.T) {
 	initialize(t)
 	to := testOrder{State: ""}
 	ts := invoke(t,&to,"",nil).(*testOrder)
-	assert.Equal(t,ts.GetState(),"created","STM-TEST: state change not successful")
+	assert.Equal(t,ts.GetState(),"created","STM-TEST: State change not successful")
 	ts = invoke(t,ts,"confirm",nil).(*testOrder)
-	assert.Equal(t,ts.GetState(),"confirmed","STM-TEST: state change not successful")
+	assert.Equal(t,ts.GetState(),"confirmed","STM-TEST: State change not successful")
 	ts = invoke(t,ts,"fulfil",nil).(*testOrder)
-	assert.Equal(t,ts.GetState(),"fulfilled","STM-TEST: state change not successful")
+	assert.Equal(t,ts.GetState(),"fulfilled","STM-TEST: State change not successful")
 	ts = invoke(t,ts,"close",nil).(*testOrder)
-	assert.Equal(t,ts.GetState(),"closed","STM-TEST: state change not successful")
+	assert.Equal(t,ts.GetState(),"closed","STM-TEST: State change not successful")
 
 	assert.Equal(t,[]string{
-		"post","InitialEvent","precreated", // for the initial create there wont be an old state
+		"post","InitialEvent","precreated", // for the initial create there wont be an old State
 		"postcreated","confirm","preconfirmed",
 		"postconfirmed","fulfil","prefulfilled",
 		"postfulfilled","close","preclosed",
@@ -145,32 +145,32 @@ func TestCloseable(t *testing.T){
 	initialize(t)
 	to := testOrder{State: ""}
 	ts := invoke(t,&to,"",nil).(*testOrder)
-	assert.Equal(t,ts.GetState(),"created","STM-TEST: state change not successful")
+	assert.Equal(t,ts.GetState(),"created","STM-TEST: State change not successful")
 	ts = invoke(t,ts,"cancelCreatedOrder",nil).(*testOrder)
-	assert.Equal(t,ts.GetState(),"cancelled","STM-TEST: state change not successful")
+	assert.Equal(t,ts.GetState(),"cancelled","STM-TEST: State change not successful")
 	ts = invoke(t,ts,"closeCancelledOrder",nil).(*testOrder)
-	assert.Equal(t,ts.GetState(),"closed","STM-TEST: state change not successful")
+	assert.Equal(t,ts.GetState(),"closed","STM-TEST: State change not successful")
 }
 
 func TestNonCloseable(t *testing.T){
 	initialize(t)
 	to := testOrder{State: ""}
 	ts := invoke(t,&to,"",nil).(*testOrder)
-	assert.Equal(t,ts.GetState(),"created","STM-TEST: state change not successful")
+	assert.Equal(t,ts.GetState(),"created","STM-TEST: State change not successful")
 	ts = invoke(t,ts,"confirm",nil).(*testOrder)
-	assert.Equal(t,ts.GetState(),"confirmed","STM-TEST: state change not successful")
+	assert.Equal(t,ts.GetState(),"confirmed","STM-TEST: State change not successful")
 	ts = invoke(t,ts,"cancelConfirmedOrder",nil).(*testOrder)
-	assert.Equal(t,ts.GetState(),"cancelled","STM-TEST: state change not successful")
+	assert.Equal(t,ts.GetState(),"cancelled","STM-TEST: State change not successful")
 	ts = invoke(t,ts,"closeCancelledOrder",nil).(*testOrder)
-	// verify that the order remains in cancelled state since there are pending charges
-	assert.Equal(t,ts.GetState(),"cancelled","STM-TEST: state change not successful")
+	// verify that the order remains in cancelled State since there are pending charges
+	assert.Equal(t,ts.GetState(),"cancelled","STM-TEST: State change not successful")
 }
 
 func TestInvalidEvent(t *testing.T){
 	initialize(t)
 	to := testOrder{State: ""}
 	ts := invoke(t,&to,"",nil).(*testOrder)
-	assert.Equal(t,ts.GetState(),"created","STM-TEST: state change not successful")
+	assert.Equal(t,ts.GetState(),"created","STM-TEST: State change not successful")
 	_,er := fsm.Process(context.TODO(),ts,"close",nil)
 	e,ok := er.(err.BPlusError)
 	if !ok {
@@ -185,8 +185,8 @@ func TestInvalidState(t *testing.T){
 	initialize(t)
 	to := testOrder{State: ""}
 	ts := invoke(t,&to,"",nil).(*testOrder)
-	assert.Equal(t,ts.GetState(),"created","STM-TEST: state change not successful")
-	ts.SetState("INVALID") // set it to an invalid state
+	assert.Equal(t,ts.GetState(),"created","STM-TEST: State change not successful")
+	ts.SetState("INVALID") // set it to an invalid State
 	_,er := fsm.Process(context.TODO(),ts,"confirm",nil)
 	e,ok := er.(err.BPlusError)
 	if !ok {
