@@ -2,6 +2,7 @@ package mw
 
 import (
 	"context"
+	"gitlab.intelligentb.com/devops/bplus/log"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -19,8 +20,18 @@ func v10validator(ctx context.Context, chain *fw.MiddlewareChain) context.Contex
 	}
 
 	if errs := validateReq(request); errs != nil {
-		return bplusc.SetError(ctx, e.MakeBplusErrorWithErrorCode(ctx, http.StatusBadRequest, e.ValidationError, map[string]interface{}{
-			"Error": encodeV10Errors(errs.(validator.ValidationErrors))}))
+		er,ok := errs.(validator.ValidationErrors)
+		if !ok {
+			// if it is not validator errors then just log them and move on.
+			log.Infof(ctx,
+				"Error in validation - which are not of types validator.ValidationErrors. err = %#v",
+				errs)
+			ctx = chain.DoContinue(ctx)
+			return ctx
+		}
+		return bplusc.SetError(ctx, e.MakeBplusErrorWithErrorCode(ctx, http.StatusBadRequest, e.ValidationError,
+			map[string]interface{}{
+			"Error": encodeV10Errors(er)}))
 	}
 
 	ctx = chain.DoContinue(ctx)
