@@ -40,7 +40,7 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 
 	var req *http.Request
 	var err error
-	var URL = "http://localhost:5000" + od.URL
+	var URL = "http://localhost:5000/" + od.Service.Name + od.URL
 	// We need to loop thru the params twice. Once to create the request with payload and second time
 	// to enhance it with Headers.
 	for index, param := range params {
@@ -79,21 +79,24 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 		return nil, e.MakeBplusError(ctx, e.CannotReadResponseBody, map[string]interface{}{
 			"Error": err.Error()})
 	}
-	
+
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
-		fmt.Printf("The status code is %d.Body is %s\n",resp.StatusCode,body)
-		return nil, e.MakeBplusErrorWithErrorCode(ctx, resp.StatusCode,e.Non200StatusCodeReturned, map[string]interface{}{
-			"StatusCode": resp.StatusCode, "Body": fmt.Sprintf("%s",body),
+		fmt.Printf("The status code is %d.Body is %s\n", resp.StatusCode, body)
+		return nil, e.MakeBplusErrorWithErrorCode(ctx, resp.StatusCode, e.Non200StatusCodeReturned, map[string]interface{}{
+			"StatusCode": resp.StatusCode, "Body": fmt.Sprintf("%s", body),
 		})
 	}
 
-	var responsePayload, _ = od.OpResponseMaker(ctx)
-	err = json.Unmarshal(body, &responsePayload)
-	if err != nil {
-		return nil, e.MakeBplusError(ctx, e.ResponseUnmarshalException, map[string]interface{}{
-			"Error": err.Error()})
+	if od.OpResponseMaker != nil {
+		var responsePayload, _ = od.OpResponseMaker(ctx)
+		err = json.Unmarshal(body, &responsePayload)
+		if err != nil {
+			return nil, e.MakeBplusError(ctx, e.ResponseUnmarshalException, map[string]interface{}{
+				"Error": err.Error()})
+		}
+		return responsePayload, nil
 	}
-	return responsePayload, nil
+	return nil, nil
 }
 
 func createRequest(ctx context.Context, method string, URL string, payload interface{}) (*http.Request, error) {

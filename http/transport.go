@@ -3,8 +3,9 @@ package http
 import (
 	"context"
 	"encoding/json"
-	"gitlab.intelligentb.com/devops/bplus/log"
 	"net/http"
+
+	"gitlab.intelligentb.com/devops/bplus/log"
 
 	"github.com/gorilla/mux"
 
@@ -51,7 +52,7 @@ func setupOperation(od fw.OperationDescriptor) {
 		hod.decodeRequest,
 		encodeGenericResponse,
 	)
-	log.Infof(context.Background(),"setting up the service for %s/%s\n", od.Service.Name,od.URL)
+	log.Infof(context.Background(), "setting up the service for %s/%s\n", od.Service.Name, od.URL)
 	HTTPHandler.Methods(od.HTTPMethod).PathPrefix("/" + od.Service.Name).Path(od.URL).Handler(handler)
 }
 

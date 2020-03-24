@@ -93,6 +93,7 @@ func FindOperationDescriptor(serviceName string, opName string) (OperationDescri
 	}
 	for _, od := range sd.Operations {
 		if od.Name == opName {
+			od.Service = *sd
 			return od, nil
 		}
 	}
