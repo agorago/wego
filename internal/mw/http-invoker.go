@@ -3,6 +3,7 @@ package mw
 import (
 	"bytes"
 	"fmt"
+	"gitlab.intelligentb.com/devops/bplus/config"
 
 	bplusc "gitlab.intelligentb.com/devops/bplus/context"
 	fw "gitlab.intelligentb.com/devops/bplus/fw"
@@ -40,7 +41,7 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 
 	var req *http.Request
 	var err error
-	var URL = "http://localhost:5000/" + od.Service.Name + od.URL
+	var URL = "http://localhost:" + config.Value("bplus.port") + "/" + od.Service.Name + od.URL
 	// We need to loop thru the params twice. Once to create the request with payload and second time
 	// to enhance it with Headers.
 	for index, param := range params {

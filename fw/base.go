@@ -38,6 +38,8 @@ type OperationDescriptor struct {
 	URL             string
 	OpRequestMaker  PayloadMaker
 	OpResponseMaker PayloadMaker
+	RequestType     interface{}
+	ResponseType    interface{}
 	OpMiddleware    []Middleware // specific middleware required by this operation. These will be
 	// invoked before the operation is invoked by BPlus
 	HTTPMethod string
@@ -101,4 +103,14 @@ func FindOperationDescriptor(serviceName string, opName string) (OperationDescri
 	}
 	return OperationDescriptor{}, e.MakeBplusError(context.TODO(), e.OperationNotFound, map[string]interface{}{
 		"Operation": opName, "Service": serviceName})
+}
+
+// FindServiceDescriptor - find a service descriptor that has been registered with the name
+func FindServiceDescriptor(serviceName string)(*ServiceDescriptor,error){
+	sd := allServices[serviceName]
+	if sd == nil {
+		return nil, e.MakeBplusError(context.TODO(), e.ServiceNotFound, map[string]interface{}{
+			"Service": serviceName})
+	}
+	return sd,nil
 }
