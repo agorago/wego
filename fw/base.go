@@ -33,6 +33,8 @@ type OperationDescriptor struct {
 	Name            string
 	Description     string
 	Service         ServiceDescriptor
+	RequestDescription string // the description of the request - useful for swagger
+	ResponseDescription string // the description of the response
 	URL             string
 	OpRequestMaker  PayloadMaker
 	OpResponseMaker PayloadMaker
