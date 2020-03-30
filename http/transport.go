@@ -52,7 +52,7 @@ func setupOperation(od fw.OperationDescriptor) {
 		hod.decodeRequest,
 		encodeGenericResponse,
 	)
-	log.Infof(context.Background(), "setting up the service for %s/%s\n", od.Service.Name, od.URL)
+	log.Infof(context.Background(), "setting up the service for %s%s\n", od.Service.Name, od.URL)
 	HTTPHandler.Methods(od.HTTPMethod).PathPrefix("/" + od.Service.Name).Path(od.URL).Handler(handler)
 }
 
