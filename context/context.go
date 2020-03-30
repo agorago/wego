@@ -121,7 +121,7 @@ func generateTraceID(ctx context.Context)context.Context{
 	tr,ok := Value(ctx,TraceID).(string)
 	if tr == "" || !ok {
 		t := uuid.New().String()
-		fmt.Printf("Setting traceId to %s",t)
+		fmt.Printf("Setting traceId to %s\n",t)
 		return Add(ctx,TraceID,uuid.New().String())
 	}
 	return ctx
