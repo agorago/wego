@@ -21,14 +21,15 @@ const (
 	proxyResponsePayload = "BPLUS-PROXY-RESPONSE-PAYLOAD"
 	proxyResponseError   = "BPLUS-PROXY-RESPONSE-ERROR"
 
-	RemoteAddr = "BPLUS-REMOTE-ADDRESS"
-	RequestURI = "BPLUS-REQUEST-URI"
-	URL = "BPLUS-URL"
-	Method = "BPLUS-METHOD"
+	RemoteAddr       = "BPLUS-REMOTE-ADDRESS"
+	RequestURI       = "BPLUS-REQUEST-URI"
+	URL              = "BPLUS-URL"
+	Method           = "BPLUS-METHOD"
 	TransferEncoding = "BPLUS-TRANSFER-ENCODING"
-	ContentLength = "BPLUS-CONTENT-LENGTH"
-	Host = "BPLUS-HOST"
-	TraceID = "BPLUS-TRACE_ID"
+	ContentLength    = "BPLUS-CONTENT-LENGTH"
+	Host             = "BPLUS-HOST"
+	TraceID          = "BPLUS-TRACE_ID"
+	TrajectoryID     = "BPLUS-TRAJECTORY-ID"
 
 	allKeys = "BPLUS-ALL-KEYS"
 )
@@ -118,13 +119,41 @@ func copyStandardHTTPHeaders(ctx context.Context, r *http.Request) context.Conte
 }
 
 func generateTraceID(ctx context.Context)context.Context{
-	tr,ok := Value(ctx,TraceID).(string)
-	if tr == "" || !ok {
+	tr := GetTraceId(ctx)
+	if tr == ""  {
 		t := uuid.New().String()
-		fmt.Printf("Setting traceId to %s",t)
-		return Add(ctx,TraceID,uuid.New().String())
+		fmt.Printf("Setting traceId to %s\n",t)
+		return setTraceId(ctx,t)
 	}
 	return ctx
+}
+
+// GetTraceId - returns the trace ID stored in the context
+func GetTraceId(ctx context.Context) string{
+	tr,ok :=  Value(ctx,TraceID).(string)
+	if ok {
+		return tr
+	}
+	return ""
+}
+
+// setTraceId - returns a context with a traceID set
+func setTraceId(ctx context.Context,traceId string)context.Context{
+	return Add(ctx,TraceID,traceId)
+}
+
+// GetTrajectoryId - returns the trace ID stored in the context
+func GetTrajectoryID(ctx context.Context) string{
+	tr,ok :=  Value(ctx,TrajectoryID).(string)
+	if ok {
+		return tr
+	}
+	return ""
+}
+
+// setTraceId - returns a context with a traceID set
+func SetTrajectoryID(ctx context.Context,t string)context.Context{
+	return Add(ctx,TrajectoryID,t)
 }
 
 // SetError - sets the error into the context and returns the enhanced context

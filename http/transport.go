@@ -89,9 +89,9 @@ func encodeGenericResponse(_ context.Context, w http.ResponseWriter, response in
 }
 
 func handleError(w http.ResponseWriter, err error) error {
-	e, ok := err.(bpluserr.BPlusError)
+	e, ok := err.(bpluserr.HttpCodeProvider)
 	if ok {
-		w.WriteHeader(e.HTTPErrorCode)
+		w.WriteHeader(e.GetHttpCode())
 		w.Write([]byte(err.Error()))
 		return nil
 	}
