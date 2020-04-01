@@ -3,6 +3,7 @@ package mw
 import (
 	"context"
 	"encoding/json"
+	"net/http"
 	"testing"
 
 	bplusc "gitlab.intelligentb.com/devops/bplus/context"
@@ -60,7 +61,7 @@ func TestInvalidv10validator(t *testing.T) {
 	ctx = bplusc.SetPayload(ctx, request)
 	ctx = chain.DoContinue(ctx)
 	err := bplusc.GetError(ctx)
-	assert.Equal(t, err, e.MakeBplusError(ctx, e.ValidationError, map[string]interface{}{}))
+	assert.Equal(t, err, e.MakeBplusErrorWithErrorCode(ctx, http.StatusBadRequest, e.ValidationError, map[string]interface{}{}))
 }
 
 func terminator(ctx context.Context, _ *fw.MiddlewareChain) context.Context {
