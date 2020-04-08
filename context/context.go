@@ -123,11 +123,7 @@ func generateTraceID(ctx context.Context)context.Context{
 	if tr == ""  {
 		t := uuid.New().String()
 		fmt.Printf("Setting traceId to %s\n",t)
-<<<<<<< HEAD
 		return setTraceId(ctx,t)
-=======
-		return Add(ctx,TraceID,uuid.New().String())
->>>>>>> 3364188939acc5281aa3946ff0705c439ba01fd9
 	}
 	return ctx
 }
