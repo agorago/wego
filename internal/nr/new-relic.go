@@ -18,7 +18,7 @@ func init() {
 	NRApp, err = newrelic.NewApplication(
 		newrelic.ConfigAppName(config.GetApplicationName()),
 		newrelic.ConfigLicense(config.Value("bplus.new_relic_license_key")),
-		newrelic.ConfigDebugLogger(os.Stdout),
+		newrelic.ConfigInfoLogger(os.Stdout),
 		newrelic.ConfigDistributedTracerEnabled(true),
 	)
 	if nil != err {
