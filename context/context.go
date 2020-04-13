@@ -30,6 +30,7 @@ const (
 	Host             = "BPLUS-HOST"
 	TraceID          = "BPLUS-TRACE_ID"
 	TrajectoryID     = "BPLUS-TRAJECTORY-ID"
+	UserPrincipal    = "BPLUS-USER-PRINCIPAL"
 
 	allKeys = "BPLUS-ALL-KEYS"
 )
@@ -222,4 +223,18 @@ func GetProxyResponseError(ctx context.Context) error {
 		return err.(error)
 	}
 	return nil
+}
+
+// GetUser - gets the user login ID
+func GetUser(ctx context.Context)string {
+	user := Value(ctx, UserPrincipal)
+	if user != nil {
+		return user.(string)
+	}
+	return ""
+}
+
+// SetUser - sets a user in the context and returns the enhanced context
+func SetUser(ctx context.Context,u string)context.Context{
+	return Add(ctx,UserPrincipal,u)
 }
