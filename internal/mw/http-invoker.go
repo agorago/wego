@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"gitlab.intelligentb.com/devops/bplus/config"
+	"gitlab.intelligentb.com/devops/bplus/log"
 
 	bplusc "gitlab.intelligentb.com/devops/bplus/context"
 	fw "gitlab.intelligentb.com/devops/bplus/fw"
@@ -41,7 +42,11 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 
 	var req *http.Request
 	var err error
-	var URL = "http://localhost:" + config.Value("bplus.port") + "/" + od.Service.Name + od.URL
+	var URL = "http://localhost:" + config.Value("bplus.port")
+	if s := config.Value(od.Service.Name + "_hostname_port");  s != "" {
+		URL = "http://" + s
+	}
+	URL +=  "/" + od.Service.Name + od.URL
 	// We need to loop thru the params twice. Once to create the request with payload and second time
 	// to enhance it with Headers.
 	for index, param := range params {
@@ -82,7 +87,7 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 	}
 
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
-		fmt.Printf("The status code is %d.Body is %s\n", resp.StatusCode, body)
+		log.Warnf(ctx,"The status code is %d.Body is %s\n", resp.StatusCode, body)
 		return nil, e.MakeBplusErrorWithErrorCode(ctx, resp.StatusCode, e.Non200StatusCodeReturned, map[string]interface{}{
 			"StatusCode": resp.StatusCode, "Body": fmt.Sprintf("%s", body),
 		})
