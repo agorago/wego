@@ -2,32 +2,10 @@ package http
 
 import (
 	"context"
-	"fmt"
-	"reflect"
-	"runtime"
-	"time"
-
 	bplusc "gitlab.intelligentb.com/devops/bplus/context"
 	fw "gitlab.intelligentb.com/devops/bplus/fw"
 	mw "gitlab.intelligentb.com/devops/bplus/internal/mw"
 )
-
-// MakeProxy - Constructs a generic remote proxy based on the service descriptor
-func proxyFunc(f interface{}) interface{} {
-	rf := reflect.TypeOf(f)
-	if rf.Kind() != reflect.Func {
-		panic("expects a function")
-	}
-	vf := reflect.ValueOf(f)
-	wrapperF := reflect.MakeFunc(rf, func(in []reflect.Value) []reflect.Value {
-		start := time.Now()
-		out := vf.Call(in)
-		end := time.Now()
-		fmt.Printf("calling %s took %v\n", runtime.FuncForPC(vf.Pointer()).Name(), end.Sub(start))
-		return out
-	})
-	return wrapperF.Interface()
-}
 
 // doHttp - Given an operation descriptor invokes the
 // operation remotely using HTTP

@@ -65,7 +65,9 @@ func RegisterService(ID string, sd ServiceDescriptor) {
 func (sd *ServiceDescriptor) setupService() {
 	for _, od := range sd.Operations {
 		od.Service = *sd
-		od.setupOperation()
+		od.setupOperation(sd.ServiceToInvoke == nil) // if the service to invoke is null then
+		// all transports are disabled for this service registration. It is only used to
+		// update the local registry of available services. (useful to invoke using proxy etc.)
 	}
 }
 
@@ -82,7 +84,10 @@ func RegisterOperations(or OperationRegistration) {
 	operations.Operations = append(operations.Operations, or)
 }
 
-func (od OperationDescriptor) setupOperation() {
+func (od OperationDescriptor) setupOperation(disableTransport bool) {
+	if disableTransport{
+		return
+	}
 	for _, op := range operations.Operations {
 		op(od)
 	}
