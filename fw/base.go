@@ -43,6 +43,7 @@ type OperationDescriptor struct {
 	OpMiddleware    []Middleware // specific middleware required by this operation. These will be
 	// invoked before the operation is invoked by BPlus
 	HTTPMethod string
+	ProxyMiddleware []Middleware // this is only used on the proxy side and not on the server side.
 	Params     []ParamDescriptor
 }
 
