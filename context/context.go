@@ -17,9 +17,6 @@ const (
 	responseError        = "BPLUS-RESPONSE-ERROR"
 	requestPayload       = "BPLUS-REQUEST-PAYLOAD"
 	responsePayload      = "BPLUS-RESPONSE-PAYLOAD"
-	proxyParams          = "BPLUS-PROXY-PARAMS"
-	proxyResponsePayload = "BPLUS-PROXY-RESPONSE-PAYLOAD"
-	proxyResponseError   = "BPLUS-PROXY-RESPONSE-ERROR"
 
 	RemoteAddr       = "BPLUS-REMOTE-ADDRESS"
 	RequestURI       = "BPLUS-REQUEST-URI"
@@ -189,40 +186,6 @@ func GetResponsePayload(ctx context.Context) interface{} {
 // SetResponsePayload - sets the payload and returns the enhance context
 func SetResponsePayload(ctx context.Context, payload interface{}) context.Context {
 	return Add(ctx, responsePayload, payload)
-}
-
-// GetProxyRequestParams - gets the operation descriptor from the context
-func GetProxyRequestParams(ctx context.Context) []interface{} {
-	return Value(ctx, proxyParams).([]interface{})
-}
-
-// SetProxyRequestParams - sets the operation descriptor and returns the enhance context
-func SetProxyRequestParams(ctx context.Context, params []interface{}) context.Context {
-	return Add(ctx, proxyParams, params)
-}
-
-// GetProxyResponsePayload - gets the payload from the context
-func GetProxyResponsePayload(ctx context.Context) interface{} {
-	return Value(ctx, proxyResponsePayload)
-}
-
-// SetProxyResponsePayload - sets the payload and returns the enhance context
-func SetProxyResponsePayload(ctx context.Context, payload interface{}) context.Context {
-	return Add(ctx, proxyResponsePayload, payload)
-}
-
-// SetProxyResponseError - sets the error into the context and returns the enhanced context
-func SetProxyResponseError(ctx context.Context, err error) context.Context {
-	return Add(ctx, proxyResponseError, err)
-}
-
-// GetProxyResponseError - gets the error from the context
-func GetProxyResponseError(ctx context.Context) error {
-	err := Value(ctx, proxyResponseError)
-	if err != nil {
-		return err.(error)
-	}
-	return nil
 }
 
 // GetUser - gets the user login ID

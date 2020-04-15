@@ -21,25 +21,15 @@ import (
 // HTTPInvoker - invokes the service via HTTP. The last middleware in the proxy
 // middleware chain
 func HTTPInvoker(ctx context.Context, chain *fw.MiddlewareChain) context.Context {
-	od := fw.GetProxyOperationDescriptor(ctx)
-	params := bplusc.GetProxyRequestParams(ctx)
-	resp, err := httpInvoker(ctx, od, params)
+	od := fw.GetOperationDescriptor(ctx)
+	resp, err := httpInvoker(ctx, od)
 
-	ctx = bplusc.SetProxyResponsePayload(ctx, resp)
-	ctx = bplusc.SetProxyResponseError(ctx, err)
+	ctx = bplusc.SetResponsePayload(ctx, resp)
+	ctx = bplusc.SetError(ctx, err)
 	return ctx
 }
 
-func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interface{}) (interface{}, error) {
-	if len(params) != len(od.Params) {
-		if od.Params[0].ParamOrigin == fw.CONTEXT {
-			params = append([]interface{}{ctx}, params...)
-		} else {
-			return nil, e.MakeBplusError(ctx, e.ParamsNotExpected, map[string]interface{}{
-				"Actual": len(params), "Expected": len(od.Params)})
-		}
-	}
-
+func httpInvoker(ctx context.Context, od fw.OperationDescriptor) (interface{}, error) {
 	var req *http.Request
 	var err error
 	var URL = "http://localhost:" + config.Value("bplus.port")
@@ -47,29 +37,11 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 		URL = "http://" + s
 	}
 	URL +=  "/" + od.Service.Name + od.URL
-	// We need to loop thru the params twice. Once to create the request with payload and second time
-	// to enhance it with Headers.
-	for index, param := range params {
-		if od.Params[index].ParamOrigin == fw.PAYLOAD {
-			req, err = createRequest(ctx, od.HTTPMethod, URL, param)
-		}
-		if err != nil {
-			return nil, e.MakeBplusError(ctx, e.CannotGenerateHTTPRequest, map[string]interface{}{
-				"Param": param, "Error": err.Error()})
-		}
-	}
-	if req == nil {
-		req, err = createRequest(ctx, od.HTTPMethod, URL, nil)
-		if err != nil {
-			return nil, e.MakeBplusError(ctx, e.CannotGenerateHTTPRequest1, map[string]interface{}{
-				"Error": err.Error()})
-		}
-	}
-
-	for index, param := range params {
-		if od.Params[index].ParamOrigin != fw.PAYLOAD {
-			enhanceRequest(param, od.Params[index], req)
-		}
+	payload := bplusc.GetPayload(ctx)
+	req, err = createRequest(ctx, od.HTTPMethod, URL,payload)
+	if err != nil {
+		return nil, e.MakeBplusError(ctx, e.CannotGenerateHTTPRequest1, map[string]interface{}{
+			"Error": err.Error()})
 	}
 	bplusc.CopyHeadersToHTTPRequest(ctx, req)
 	client := &http.Client{}
@@ -104,7 +76,6 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor, params []interf
 	}
 	return nil, nil
 }
-
 func createRequest(ctx context.Context, method string, URL string, payload interface{}) (*http.Request, error) {
 	var buf *bytes.Buffer
 	var err error
