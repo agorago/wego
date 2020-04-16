@@ -8,6 +8,7 @@ require (
 	github.com/coreos/etcd v3.3.18+incompatible
 	github.com/go-kit/kit v0.9.0
 	github.com/go-logfmt/logfmt v0.5.0 // indirect
+	github.com/go-playground/assert/v2 v2.0.1
 	github.com/go-playground/validator/v10 v10.2.0
 	github.com/google/uuid v1.1.1
 	github.com/gorilla/mux v1.7.3
