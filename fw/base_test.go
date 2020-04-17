@@ -138,3 +138,12 @@ func TestRegisterServiceForClientSide(t *testing.T) {
 	}
 	assert.Equal(t,bpluserr.ErrorCode,int(e.OperationNotFound))
 }
+
+func TestFindServiceDescriptorService(t *testing.T) {
+	registerService(false)
+	_,err := fw.FindServiceDescriptor("xxx")
+	if err == nil {
+		log.Printf("It is not expected to find the xxx service\n")
+		t.Fail()
+	}
+}

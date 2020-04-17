@@ -1,10 +1,10 @@
 
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL := help
 
 ## gen-file-from-template: Build a file from a template file
 .PHONY: test
-test:
-	go test ./...
+test: create-bin
+	go test ./... -coverprofile=bin/coverage.txt -covermode=atomic
 
 ## copy-scripts: copies all scripts from the scripts folder to bin
 .PHONY: copy-scripts
@@ -19,6 +19,11 @@ create-bin:
 ## all: 
 .PHONY: all
 all: create-bin
+
+## coverage: Reports on the test coverage
+.PHONY: coverage
+coverage: test
+	go tool cover -html=bin/coverage.txt
 
 ## help: type for getting this help
 .PHONY: help
