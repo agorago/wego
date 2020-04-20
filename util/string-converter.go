@@ -36,7 +36,7 @@ func ConvertToString(i interface{}, kind reflect.Kind) string {
 	case reflect.String:
 		return i.(string)
 	case reflect.Bool:
-		b := fmt.Sprintf("%b", i)
+		b := fmt.Sprintf("%t", i)
 		return b
 	case reflect.Float32, reflect.Float64:
 		f := fmt.Sprintf("%f", i)
