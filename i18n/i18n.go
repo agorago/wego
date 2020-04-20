@@ -95,7 +95,7 @@ func Translate(ctx context.Context, s string, m map[string]interface{}) string {
 	// If you cannot translate s just return s and log an error
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "i18n: Missing message resource %s\n", s)
-		return s
+		return fmt.Sprintf("Missing resource %s. Args = %v\n",s,m)
 	}
 	return t
 }

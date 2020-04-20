@@ -3,12 +3,13 @@ package mw
 import (
 	"context"
 	"encoding/json"
+	bpluse "gitlab.intelligentb.com/devops/bplus/err"
+	"gitlab.intelligentb.com/devops/bplus/log"
 	"net/http"
 	"testing"
 
 	bplusc "gitlab.intelligentb.com/devops/bplus/context"
 	"gitlab.intelligentb.com/devops/bplus/fw"
-	e "gitlab.intelligentb.com/devops/bplus/internal/err"
 	"gopkg.in/go-playground/assert.v1"
 )
 
@@ -61,7 +62,13 @@ func TestInvalidv10validator(t *testing.T) {
 	ctx = bplusc.SetPayload(ctx, request)
 	ctx = chain.DoContinue(ctx)
 	err := bplusc.GetError(ctx)
-	assert.Equal(t, err, e.MakeBplusErrorWithErrorCode(ctx, http.StatusBadRequest, e.ValidationError, map[string]interface{}{}))
+	e1,ok := err.(bpluse.BPlusError)
+	if !ok {
+		log.Errorf(ctx,"Cannot cast the error into Bplus error. Err = %#v",err)
+		t.Fail()
+		return
+	}
+	assert.Equal(t, e1.HTTPErrorCode,http.StatusBadRequest)
 }
 
 func terminator(ctx context.Context, _ *fw.MiddlewareChain) context.Context {

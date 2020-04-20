@@ -65,6 +65,7 @@ const (
 	Non200StatusCodeReturned // bplus.errors.Non200StatusCodeReturned
 	ValidationError // bplus.errors.ValidationError
 	UnparseableFile //bplus.error.UnparseableFile
+	ErrorInInvokingService //bplus.error.ErrorInInvokingService
 )
 
 //go:generate stringer -linecomment -type=BPlusErrorCode

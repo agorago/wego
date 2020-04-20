@@ -19,7 +19,7 @@ func Entrypoint(ctx context.Context) (interface{}, error) {
 			chain.Add(mid)
 		}
 	}
-	chain.Add(serviceInvoker)
+	chain.Add(ServiceInvoker)
 	return startChain(ctx,chain)
 }
 
