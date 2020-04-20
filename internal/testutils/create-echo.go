@@ -81,3 +81,9 @@ func CreateEcho()fw.ServiceDescriptor{
 	}
 	return service
 }
+
+func StartServer(){
+	fw.RegisterService("EchoService",CreateEcho())
+
+
+}

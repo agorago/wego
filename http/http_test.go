@@ -17,14 +17,15 @@ import (
 
 func TestOperationSetup(t *testing.T) {
 	os.Setenv("BPLUS.PORT","5000")
+	defer func(){
+		os.Unsetenv("BPLUS.PORT")
+	}()
 	fw.RegisterService("EchoService",testutils.CreateEcho())
-
 	go func (){
 		a := ":" + config.Value("bplus.port")
 		log.Printf("Starting server at address %s\n",a)
 		http.ListenAndServe(a, HTTPHandler)
 	}()
-
 	// access the exposed service via proxy
 	ret,err := ProxyRequest(context.TODO(),"EchoService","Echo",&testutils.Input{In:"hello"})
 	if err != nil {

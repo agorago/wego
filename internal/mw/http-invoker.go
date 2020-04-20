@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"gitlab.intelligentb.com/devops/bplus/config"
+	bpluse "gitlab.intelligentb.com/devops/bplus/err"
 	"gitlab.intelligentb.com/devops/bplus/log"
 
 	bplusc "gitlab.intelligentb.com/devops/bplus/context"
@@ -14,13 +15,11 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-
-	util "gitlab.intelligentb.com/devops/bplus/util"
 )
 
 // HTTPInvoker - invokes the service via HTTP. The last middleware in the proxy
 // middleware chain
-func HTTPInvoker(ctx context.Context, chain *fw.MiddlewareChain) context.Context {
+func HTTPInvoker(ctx context.Context, _ *fw.MiddlewareChain) context.Context {
 	od := fw.GetOperationDescriptor(ctx)
 	resp, err := httpInvoker(ctx, od)
 
@@ -40,8 +39,7 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor) (interface{}, e
 	payload := bplusc.GetPayload(ctx)
 	req, err = createRequest(ctx, od.HTTPMethod, URL,payload)
 	if err != nil {
-		return nil, e.MakeBplusError(ctx, e.CannotGenerateHTTPRequest1, map[string]interface{}{
-			"Error": err.Error()})
+		return nil, err
 	}
 	bplusc.CopyHeadersToHTTPRequest(ctx, req)
 	client := &http.Client{}
@@ -60,9 +58,7 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor) (interface{}, e
 
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		log.Warnf(ctx,"The status code is %d.Body is %s\n", resp.StatusCode, body)
-		return nil, e.MakeBplusErrorWithErrorCode(ctx, resp.StatusCode, e.Non200StatusCodeReturned, map[string]interface{}{
-			"StatusCode": resp.StatusCode, "Body": fmt.Sprintf("%s", body),
-		})
+		return nil, extractErrorResponse(ctx,resp,body)
 	}
 
 	if od.OpResponseMaker != nil {
@@ -75,6 +71,18 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor) (interface{}, e
 		return responsePayload, nil
 	}
 	return nil, nil
+}
+
+func extractErrorResponse(ctx context.Context, resp *http.Response,body []byte)bpluse.BPlusError{
+	er := bpluse.BPlusError{}
+	uerr := json.Unmarshal(body,&er)
+	if uerr != nil {
+		// cannot unmarshal the body into a bplus err. So create an error.
+		return e.MakeBplusErrorWithErrorCode(ctx, resp.StatusCode, e.Non200StatusCodeReturned, map[string]interface{}{
+			"StatusCode": resp.StatusCode, "Body": fmt.Sprintf("%s", body),
+		})
+	}
+	return er
 }
 func createRequest(ctx context.Context, method string, URL string, payload interface{}) (*http.Request, error) {
 	var buf *bytes.Buffer
@@ -103,7 +111,3 @@ func constructBytes(payload interface{}) (*bytes.Buffer, error) {
 	return bytes.NewBuffer(buf), nil
 }
 
-func enhanceRequest(param interface{}, pd fw.ParamDescriptor, req *http.Request) {
-	// fmt.Printf("Setting header for %s to %#v\n", pd.Name, param)
-	req.Header.Set(pd.Name, util.ConvertToString(param, pd.ParamKind))
-}

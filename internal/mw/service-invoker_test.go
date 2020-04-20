@@ -64,7 +64,7 @@ func setupContextHeaderNoValueSet(testString string)context.Context{
 	return ctx
 }
 
-func TestHTTPInvoker(t *testing.T) {
+func TestServiceInvoker(t *testing.T) {
 	const testing = "testing"
 	ctx := setupContext(testing)
 	ctx = mw.ServiceInvoker(ctx,nil)
@@ -79,7 +79,7 @@ func TestHTTPInvoker(t *testing.T) {
 	assert.Equal(t,output.Out,testing)
 }
 
-func TestHTTPInvokerWithErrors(t *testing.T) {
+func TestServiceInvokerWithErrors(t *testing.T) {
 	const testing = "xxx"
 	ctx := setupContext(testing)
 	ctx = mw.ServiceInvoker(ctx,nil)
@@ -95,7 +95,7 @@ func TestHTTPInvokerWithErrors(t *testing.T) {
 	assert.Equal(t,err1.HTTPErrorCode,400)
 }
 
-func TestHTTPInvokerHeader(t *testing.T) {
+func TestServiceInvokerHeader(t *testing.T) {
 	const testing = "testing"
 	ctx := setupContextHeader(testing)
 	ctx = mw.ServiceInvoker(ctx,nil)
@@ -110,7 +110,7 @@ func TestHTTPInvokerHeader(t *testing.T) {
 	assert.Equal(t,output.Out,testing)
 }
 
-func TestHTTPInvokerHeaderNoValueSet(t *testing.T) {
+func TestServiceInvokerHeaderNoValueSet(t *testing.T) {
 	const testing = "testing"
 	ctx := setupContextHeaderNoValueSet(testing)
 	ctx = mw.ServiceInvoker(ctx,nil)
@@ -126,7 +126,7 @@ func TestHTTPInvokerHeaderNoValueSet(t *testing.T) {
 	assert.Equal(t,err1.HTTPErrorCode,400)
 }
 
-func TestHTTPInvokerWithBadMethodName(t *testing.T) {
+func TestServiceInvokerWithBadMethodName(t *testing.T) {
 	const testing = "testing"
 	ctx := setupContextWithBadMethodName(testing)
 	ctx = mw.ServiceInvoker(ctx,nil)
@@ -143,7 +143,7 @@ func TestHTTPInvokerWithBadMethodName(t *testing.T) {
 	assert.Equal(t,err1.HTTPErrorCode,500)
 }
 
-func TestHTTPInvokerWithInvalidPayload(t *testing.T) {
+func TestServiceInvokerWithInvalidPayload(t *testing.T) {
 	const testing = "testing"
 	ctx := setupContextWithInvalidPayload(testing)
 	ctx = mw.ServiceInvoker(ctx,nil)
