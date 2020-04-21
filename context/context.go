@@ -1,8 +1,8 @@
 package context
 
 import (
-	"fmt"
 	"context"
+	"fmt"
 	"github.com/google/uuid"
 	"net/http"
 
@@ -101,6 +101,7 @@ func Enhance(ctx context.Context, r *http.Request) context.Context {
 	ctx = copyHTTPHeaders(ctx, r)
 	ctx = copyStandardHTTPHeaders(ctx,r)
 	ctx = generateTraceID(ctx)
+	fmt.Printf("Request object %v\n", r)
 	return ctx
 }
 
