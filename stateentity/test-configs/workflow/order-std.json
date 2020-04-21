@@ -1,0 +1,33 @@
+{
+    "created":{
+        "initial": true,
+        "events":{
+            "startPaymentProcess":{
+                "newState": "pending-payment"
+            },
+            "cancelOrder":{
+                "newState": "cancelled"
+            }
+        }
+    },
+    "pending-payment":{
+        "events":{
+            "receivePayment":{
+                "newState": "completed"
+            }
+        }
+    },
+    "completed":{
+        "events": {
+            "closeOrder":{
+                "newState": "closed"
+            }
+        }
+    },
+    "closed":{
+
+    },
+    "cancelled":{
+
+    }
+}
