@@ -2,7 +2,6 @@ package context
 
 import (
 	"context"
-	"fmt"
 	"github.com/google/uuid"
 	"net/http"
 
@@ -101,7 +100,6 @@ func Enhance(ctx context.Context, r *http.Request) context.Context {
 	ctx = copyHTTPHeaders(ctx, r)
 	ctx = copyStandardHTTPHeaders(ctx,r)
 	ctx = generateTraceID(ctx)
-	fmt.Printf("Request object %v\n", r)
 	return ctx
 }
 
@@ -121,7 +119,6 @@ func generateTraceID(ctx context.Context)context.Context{
 	tr := GetTraceId(ctx)
 	if tr == ""  {
 		t := uuid.New().String()
-		fmt.Printf("Setting traceId to %s\n",t)
 		return setTraceId(ctx,t)
 	}
 	return ctx
