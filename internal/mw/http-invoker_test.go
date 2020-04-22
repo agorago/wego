@@ -3,11 +3,9 @@ package mw_test
 import (
 	"context"
 	"fmt"
-	"gitlab.intelligentb.com/devops/bplus/config"
 	bplusc "gitlab.intelligentb.com/devops/bplus/context"
 	bpluserr "gitlab.intelligentb.com/devops/bplus/err"
 	"gitlab.intelligentb.com/devops/bplus/fw"
-	bplushttp "gitlab.intelligentb.com/devops/bplus/http"
 	"gitlab.intelligentb.com/devops/bplus/internal/mw"
 	"gitlab.intelligentb.com/devops/bplus/internal/testutils"
 	"gopkg.in/go-playground/assert.v1"
@@ -20,13 +18,7 @@ import (
 func setupServer(testString string)context.Context{
 
 	sd := testutils.CreateEcho()
-	fw.RegisterService("EchoService",sd)
-	go func (){
-		a := ":" + config.Value("bplus.port")
-		log.Printf("Starting server at address %s\n",a)
-		http.ListenAndServe(a, bplushttp.HTTPHandler)
-	}()
-
+	testutils.StartServer()
 	ctx := context.TODO()
 
 	od := sd.Operations[0]

@@ -1,14 +1,12 @@
-package http
+package http_test
 
 import (
 	"context"
-	"gitlab.intelligentb.com/devops/bplus/config"
 	e "gitlab.intelligentb.com/devops/bplus/err"
-	"gitlab.intelligentb.com/devops/bplus/fw"
+	bplushttp "gitlab.intelligentb.com/devops/bplus/http"
 	"gitlab.intelligentb.com/devops/bplus/internal/testutils"
 	"gopkg.in/go-playground/assert.v1"
 	"log"
-	"net/http"
 	"os"
 	"testing"
 )
@@ -20,14 +18,10 @@ func TestOperationSetup(t *testing.T) {
 	defer func(){
 		os.Unsetenv("BPLUS.PORT")
 	}()
-	fw.RegisterService("EchoService",testutils.CreateEcho())
-	go func (){
-		a := ":" + config.Value("bplus.port")
-		log.Printf("Starting server at address %s\n",a)
-		http.ListenAndServe(a, HTTPHandler)
-	}()
+	testutils.StartServer()
+
 	// access the exposed service via proxy
-	ret,err := ProxyRequest(context.TODO(),"EchoService","Echo",&testutils.Input{In:"hello"})
+	ret,err := bplushttp.ProxyRequest(context.TODO(),"EchoService","Echo",&testutils.Input{In:"hello"})
 	if err != nil {
 		log.Printf("Error in issuing an Http request. Error = %s",err.Error())
 		t.Fail()
@@ -43,7 +37,7 @@ func TestOperationSetup(t *testing.T) {
 	assert.Equal(t,out.Out,"hello")
 
 	// give an error input
-	ret,err = ProxyRequest(context.TODO(),"EchoService","Echo",&testutils.Input{In:"xxx"})
+	ret,err = bplushttp.ProxyRequest(context.TODO(),"EchoService","Echo",&testutils.Input{In:"xxx"})
 	if err == nil {
 		log.Printf("Error in issuing an Http request. Error = %s",err.Error())
 		t.Fail()

@@ -2,8 +2,12 @@ package testutils
 
 import (
 	"context"
+	"gitlab.intelligentb.com/devops/bplus/config"
 	e "gitlab.intelligentb.com/devops/bplus/err"
 	"gitlab.intelligentb.com/devops/bplus/fw"
+	bplushttp "gitlab.intelligentb.com/devops/bplus/http"
+	"log"
+	"net/http"
 	"reflect"
 )
 
@@ -85,5 +89,10 @@ func CreateEcho()fw.ServiceDescriptor{
 func StartServer(){
 	fw.RegisterService("EchoService",CreateEcho())
 
+	go func (){
+		a := ":" + config.Value("bplus.port")
+		log.Printf("Starting server at address %s\n",a)
+		http.ListenAndServe(a, bplushttp.HTTPHandler)
+	}()
 
 }
