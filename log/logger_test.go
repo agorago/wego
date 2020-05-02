@@ -26,40 +26,39 @@ func TestError(t *testing.T) {
 */
 func TestErrorWithFields(t *testing.T) {
 	ctx := context.TODO()
-	ctx = bplusc.Add(ctx,bplusc.TraceID,"TRACEID123")
-	log.ErrorWithFields(ctx,map[string]string{
-		"foo":"bar",
-		}, "message",
+	ctx = bplusc.Add(ctx, bplusc.TraceID, "TRACEID123")
+	log.ErrorWithFields(ctx, map[string]string{
+		"foo": "bar",
+	}, "message",
 	)
 }
 
 func TestWarn(t *testing.T) {
 	ctx := context.TODO()
-	ctx = bplusc.Add(ctx,bplusc.TraceID,"TRACEID123")
-	log.Warn(ctx,"message")
+	ctx = bplusc.Add(ctx, bplusc.TraceID, "TRACEID123")
+	log.Warn(ctx, "message")
 }
 
 func TestWarnWithFields(t *testing.T) {
 	ctx := context.TODO()
-	ctx = bplusc.Add(ctx,bplusc.TraceID,"TRACEID123")
-	log.WarnWithFields(ctx,map[string]string{
-		"foo":"bar",
+	ctx = bplusc.Add(ctx, bplusc.TraceID, "TRACEID123")
+	log.WarnWithFields(ctx, map[string]string{
+		"foo": "bar",
 	}, "message",
 	)
 }
 
 func TestInfo(t *testing.T) {
 	ctx := context.TODO()
-	ctx = bplusc.Add(ctx,bplusc.TraceID,"TRACEID123")
-	log.Info(ctx,"message")
+	ctx = bplusc.Add(ctx, bplusc.TraceID, "TRACEID123")
+	log.Info(ctx, "message")
 }
 
 func TestInfoWithFields(t *testing.T) {
 	ctx := context.TODO()
-	ctx = bplusc.Add(ctx,bplusc.TraceID,"TRACEID123")
-	log.InfoWithFields(ctx,map[string]string{
-		"foo":"bar",
+	ctx = bplusc.Add(ctx, bplusc.TraceID, "TRACEID123")
+	log.InfoWithFields(ctx, map[string]string{
+		"foo": "bar",
 	}, "message",
 	)
 }
-

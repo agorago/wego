@@ -20,10 +20,10 @@ func Entrypoint(ctx context.Context) (interface{}, error) {
 		}
 	}
 	chain.Add(ServiceInvoker)
-	return startChain(ctx,chain)
+	return startChain(ctx, chain)
 }
 
-func startChain(ctx context.Context, chain fw.MiddlewareChain)(interface{},error){
+func startChain(ctx context.Context, chain fw.MiddlewareChain) (interface{}, error) {
 	// invoke it
 	ctx = chain.DoContinue(ctx)
 	// process responses
@@ -34,5 +34,5 @@ func startChain(ctx context.Context, chain fw.MiddlewareChain)(interface{},error
 		return response, err.(error)
 	}
 	return response, nil
-	return response,nil
+	return response, nil
 }

@@ -15,7 +15,7 @@ import (
 	"testing"
 )
 
-func setupServer(testString string)context.Context{
+func setupServer(testString string) context.Context {
 
 	sd := testutils.CreateEcho()
 	testutils.StartServer()
@@ -23,48 +23,48 @@ func setupServer(testString string)context.Context{
 
 	od := sd.Operations[0]
 	od.Service = sd
-	ctx = fw.SetOperationDescriptor(ctx,od)
+	ctx = fw.SetOperationDescriptor(ctx, od)
 
 	input := testutils.Input{In: testString}
-	ctx = bplusc.SetPayload(ctx,&input)
+	ctx = bplusc.SetPayload(ctx, &input)
 	return ctx
 }
 
 func TestHTTPInvoker(t *testing.T) {
-	os.Setenv("BPLUS.PORT","5000")
-	defer func(){
+	os.Setenv("BPLUS.PORT", "5000")
+	defer func() {
 		os.Unsetenv("BPLUS.PORT")
 	}()
 	const testing = "testing"
 	ctx := setupServer(testing)
-	ctx = mw.HTTPInvoker(ctx,nil)
+	ctx = mw.HTTPInvoker(ctx, nil)
 
 	o := bplusc.GetResponsePayload(ctx)
-	output,ok := o.(*testutils.Output)
+	output, ok := o.(*testutils.Output)
 	if !ok {
-		log.Printf("Error in casting the output to type Output. Type = %#v\n",o)
+		log.Printf("Error in casting the output to type Output. Type = %#v\n", o)
 		t.Fail()
 		return
 	}
-	assert.Equal(t,output.Out,testing)
+	assert.Equal(t, output.Out, testing)
 }
 
 func TestHTTPInvokerWithError(t *testing.T) {
-	os.Setenv("BPLUS.PORT","5000")
-	defer func(){
+	os.Setenv("BPLUS.PORT", "5000")
+	defer func() {
 		os.Unsetenv("BPLUS.PORT")
 	}()
 	const testing = "xxx"
 	ctx := setupServer(testing)
-	ctx = mw.HTTPInvoker(ctx,nil)
+	ctx = mw.HTTPInvoker(ctx, nil)
 
 	er := bplusc.GetError(ctx)
-	er1,ok := er.(bpluserr.BPlusError)
+	er1, ok := er.(bpluserr.BPlusError)
 	if !ok {
-		log.Printf("Error in casting the error to type BPlusError. Type = %#v\n",er)
+		log.Printf("Error in casting the error to type BPlusError. Type = %#v\n", er)
 		t.Fail()
 		return
 	}
-	fmt.Printf("%#v\n",er1)
-	assert.Equal(t,er1.HTTPErrorCode,http.StatusBadRequest)
+	fmt.Printf("%#v\n", er1)
+	assert.Equal(t, er1.HTTPErrorCode, http.StatusBadRequest)
 }

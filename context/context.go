@@ -13,9 +13,9 @@ import (
 // These should not used in the service or middleware
 // Instead use the associated convenience functions. Hence all of them are private
 const (
-	responseError        = "BPLUS-RESPONSE-ERROR"
-	requestPayload       = "BPLUS-REQUEST-PAYLOAD"
-	responsePayload      = "BPLUS-RESPONSE-PAYLOAD"
+	responseError   = "BPLUS-RESPONSE-ERROR"
+	requestPayload  = "BPLUS-REQUEST-PAYLOAD"
+	responsePayload = "BPLUS-RESPONSE-PAYLOAD"
 
 	RemoteAddr       = "BPLUS-REMOTE-ADDRESS"
 	RequestURI       = "BPLUS-REQUEST-URI"
@@ -98,35 +98,35 @@ func Enhance(ctx context.Context, r *http.Request) context.Context {
 	ctx = copyPathParams(ctx, r)
 	ctx = copyQueryParams(ctx, r)
 	ctx = copyHTTPHeaders(ctx, r)
-	ctx = copyStandardHTTPHeaders(ctx,r)
+	ctx = copyStandardHTTPHeaders(ctx, r)
 	ctx = generateTraceID(ctx)
 	return ctx
 }
 
 func copyStandardHTTPHeaders(ctx context.Context, r *http.Request) context.Context {
-	ctx = Add(ctx,RemoteAddr,r.RemoteAddr)
-	ctx = Add(ctx,RequestURI,r.RequestURI)
-	ctx = Add(ctx,URL,r.URL)
-	ctx = Add(ctx,Method,r.Method)
-	ctx = Add(ctx,TransferEncoding,r.TransferEncoding)
-	ctx = Add(ctx,ContentLength,r.ContentLength)
-	ctx = Add(ctx,Host,r.Host)
+	ctx = Add(ctx, RemoteAddr, r.RemoteAddr)
+	ctx = Add(ctx, RequestURI, r.RequestURI)
+	ctx = Add(ctx, URL, r.URL)
+	ctx = Add(ctx, Method, r.Method)
+	ctx = Add(ctx, TransferEncoding, r.TransferEncoding)
+	ctx = Add(ctx, ContentLength, r.ContentLength)
+	ctx = Add(ctx, Host, r.Host)
 
 	return ctx
 }
 
-func generateTraceID(ctx context.Context)context.Context{
+func generateTraceID(ctx context.Context) context.Context {
 	tr := GetTraceId(ctx)
-	if tr == ""  {
+	if tr == "" {
 		t := uuid.New().String()
-		return setTraceId(ctx,t)
+		return setTraceId(ctx, t)
 	}
 	return ctx
 }
 
 // GetTraceId - returns the trace ID stored in the context
-func GetTraceId(ctx context.Context) string{
-	tr,ok :=  Value(ctx,TraceID).(string)
+func GetTraceId(ctx context.Context) string {
+	tr, ok := Value(ctx, TraceID).(string)
 	if ok {
 		return tr
 	}
@@ -134,13 +134,13 @@ func GetTraceId(ctx context.Context) string{
 }
 
 // setTraceId - returns a context with a traceID set
-func setTraceId(ctx context.Context,traceId string)context.Context{
-	return Add(ctx,TraceID,traceId)
+func setTraceId(ctx context.Context, traceId string) context.Context {
+	return Add(ctx, TraceID, traceId)
 }
 
 // GetTrajectoryId - returns the trace ID stored in the context
-func GetTrajectoryID(ctx context.Context) string{
-	tr,ok :=  Value(ctx,TrajectoryID).(string)
+func GetTrajectoryID(ctx context.Context) string {
+	tr, ok := Value(ctx, TrajectoryID).(string)
 	if ok {
 		return tr
 	}
@@ -148,8 +148,8 @@ func GetTrajectoryID(ctx context.Context) string{
 }
 
 // setTraceId - returns a context with a traceID set
-func SetTrajectoryID(ctx context.Context,t string)context.Context{
-	return Add(ctx,TrajectoryID,t)
+func SetTrajectoryID(ctx context.Context, t string) context.Context {
+	return Add(ctx, TrajectoryID, t)
 }
 
 // SetError - sets the error into the context and returns the enhanced context
@@ -187,7 +187,7 @@ func SetResponsePayload(ctx context.Context, payload interface{}) context.Contex
 }
 
 // GetUser - gets the user login ID
-func GetUser(ctx context.Context)string {
+func GetUser(ctx context.Context) string {
 	user := Value(ctx, UserPrincipal)
 	if user != nil {
 		return user.(string)
@@ -196,6 +196,6 @@ func GetUser(ctx context.Context)string {
 }
 
 // SetUser - sets a user in the context and returns the enhanced context
-func SetUser(ctx context.Context,u string)context.Context{
-	return Add(ctx,UserPrincipal,u)
+func SetUser(ctx context.Context, u string) context.Context {
+	return Add(ctx, UserPrincipal, u)
 }

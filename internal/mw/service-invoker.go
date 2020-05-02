@@ -27,7 +27,7 @@ func ServiceInvoker(ctx context.Context, _ *fw.MiddlewareChain) context.Context 
 		hasResponse = true
 	}
 
-	v, err := invoke(ctx,od.Service.ServiceToInvoke, od.Name, args, hasResponse)
+	v, err := invoke(ctx, od.Service.ServiceToInvoke, od.Name, args, hasResponse)
 	ctx = bplusc.SetResponsePayload(ctx, v)
 
 	if err != nil {
@@ -55,7 +55,7 @@ func makeArg(ctx context.Context, param fw.ParamDescriptor) (interface{}, error)
 		if !ok {
 			return nil, e.MakeBplusErrorWithErrorCode(ctx, http.StatusBadRequest,
 				e.ParameterMissingInRequest, map[string]interface{}{
-				"Param": param.Name})
+					"Param": param.Name})
 		}
 		return util.ConvertFromString(s, param.ParamKind), nil
 	case fw.PAYLOAD:
@@ -73,12 +73,12 @@ func invoke(ctx context.Context, any interface{}, name string, args []interface{
 	for i := range args {
 		inputs[i] = reflect.ValueOf(args[i])
 	}
-	defer func(){
+	defer func() {
 		if r := recover(); r != nil {
-			log.Errorf(ctx,"Service Invocation Exception. Panic'ed during reflection.  Error = %#v\n",r)
+			log.Errorf(ctx, "Service Invocation Exception. Panic'ed during reflection.  Error = %#v\n", r)
 			retErr = e.MakeBplusErrorWithErrorCode(ctx, http.StatusInternalServerError,
 				e.ErrorInInvokingService, map[string]interface{}{
-					"OperationName": name, "Error":r})
+					"OperationName": name, "Error": r})
 		}
 	}()
 	x := reflect.ValueOf(any).MethodByName(name).Call(inputs)

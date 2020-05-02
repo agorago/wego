@@ -15,13 +15,13 @@ func internalMakeBplusError(ctx context.Context, ll bpluse.LogLevel, e BPlusErro
 
 // MakeBplusError - returns a customized CAFUError for BPlus
 func MakeBplusError(ctx context.Context, e BPlusErrorCode, args map[string]interface{}) bpluse.BPlusError {
-	return internalMakeBplusError(ctx, bpluse.Error, e, http.StatusInternalServerError,args)
+	return internalMakeBplusError(ctx, bpluse.Error, e, http.StatusInternalServerError, args)
 
 }
 
 // MakeBplusWarning - returns a customized CAFUError for BPlus
 func MakeBplusWarning(ctx context.Context, e BPlusErrorCode, args map[string]interface{}) bpluse.BPlusError {
-	return internalMakeBplusError(ctx, bpluse.Warning, e,http.StatusInternalServerError, args)
+	return internalMakeBplusError(ctx, bpluse.Warning, e, http.StatusInternalServerError, args)
 
 }
 
@@ -42,30 +42,30 @@ type BPlusErrorCode int
 
 // enumeration for B Plus Error codes
 const (
-	ServiceNotFound BPlusErrorCode = iota + 1000 // bplus.errors.ServiceNotFound
-	OperationNotFound // bplus.errors.OperationNotFound
-	DecodingError  // bplus.errors.DecodingError
-	CannotGenerateHTTPRequest // bplus.errors.CannotGenerateHTTPRequest
-	CannotGenerateHTTPRequest1 // bplus.errors.CannotGenerateHTTPRequest1
-	CannotGenerateHTTPRequestForPayload // bplus.errors
-	ResponseUnmarshalException // bplus.errors.CannotGenerateHTTPRequestForPayload
-	ParamsNotExpected  // bplus.errors.ParamsNotExpected
-	HTTPCallFailed  // bplus.errors.HTTPCallFailed
-	CannotReadResponseBody // bplus.errors.CannotReadResponseBody
-	CannotMakeStateEntity // bplus.errors.CannotMakeStateEntity
-	ErrorInDecoding // bplus.errors.ErrorInDecoding
-	ErrorInAutoState // bplus.errors.ErrorInAutoState
-	AutoStateNotConfigured // bplus.errors.AutoStateNotConfigured
-	InvalidState // bplus.errors.InvalidState
-	InvalidEvent // bplus.errors.InvalidEvent
-	CannotReadFile // bplus.errors.CannotReadFile
-	EventNotFoundInRequest // bplus.errors.EventNotFoundInRequest
-	ParameterMissingInRequest // bplus.errors.ParameterMissingInRequest
-	ErrorInObtainingSTM // bplus.errors.ErrorInObtainingSTM
-	Non200StatusCodeReturned // bplus.errors.Non200StatusCodeReturned
-	ValidationError // bplus.errors.ValidationError
-	UnparseableFile //bplus.error.UnparseableFile
-	ErrorInInvokingService //bplus.error.ErrorInInvokingService
+	ServiceNotFound                     BPlusErrorCode = iota + 1000 // bplus.errors.ServiceNotFound
+	OperationNotFound                                                // bplus.errors.OperationNotFound
+	DecodingError                                                    // bplus.errors.DecodingError
+	CannotGenerateHTTPRequest                                        // bplus.errors.CannotGenerateHTTPRequest
+	CannotGenerateHTTPRequest1                                       // bplus.errors.CannotGenerateHTTPRequest1
+	CannotGenerateHTTPRequestForPayload                              // bplus.errors
+	ResponseUnmarshalException                                       // bplus.errors.CannotGenerateHTTPRequestForPayload
+	ParamsNotExpected                                                // bplus.errors.ParamsNotExpected
+	HTTPCallFailed                                                   // bplus.errors.HTTPCallFailed
+	CannotReadResponseBody                                           // bplus.errors.CannotReadResponseBody
+	CannotMakeStateEntity                                            // bplus.errors.CannotMakeStateEntity
+	ErrorInDecoding                                                  // bplus.errors.ErrorInDecoding
+	ErrorInAutoState                                                 // bplus.errors.ErrorInAutoState
+	AutoStateNotConfigured                                           // bplus.errors.AutoStateNotConfigured
+	InvalidState                                                     // bplus.errors.InvalidState
+	InvalidEvent                                                     // bplus.errors.InvalidEvent
+	CannotReadFile                                                   // bplus.errors.CannotReadFile
+	EventNotFoundInRequest                                           // bplus.errors.EventNotFoundInRequest
+	ParameterMissingInRequest                                        // bplus.errors.ParameterMissingInRequest
+	ErrorInObtainingSTM                                              // bplus.errors.ErrorInObtainingSTM
+	Non200StatusCodeReturned                                         // bplus.errors.Non200StatusCodeReturned
+	ValidationError                                                  // bplus.errors.ValidationError
+	UnparseableFile                                                  //bplus.error.UnparseableFile
+	ErrorInInvokingService                                           //bplus.error.ErrorInInvokingService
 )
 
 //go:generate stringer -linecomment -type=BPlusErrorCode

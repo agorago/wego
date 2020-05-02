@@ -61,10 +61,10 @@ type StateEntity interface {
 	SetState(newstate string)
 }
 
-func (stm *Stm) populate(bytes []byte) error{
+func (stm *Stm) populate(bytes []byte) error {
 	stm.States = make(map[string]State)
 	if err := json.Unmarshal(bytes, &stm.States); err != nil {
-		return e.MakeBplusError(context.TODO(),e.UnparseableFile,nil)
+		return e.MakeBplusError(context.TODO(), e.UnparseableFile, nil)
 	}
 	return nil
 }
@@ -99,7 +99,7 @@ func (stm Stm) Process(ctx context.Context, stateEntity StateEntity, event strin
 		OldState:            stateEntity.GetState(),
 	}
 
-	if stateTransitionInfo.OldState == "" || event == InitialEvent{
+	if stateTransitionInfo.OldState == "" || event == InitialEvent {
 		// we need to initialize the entity for the first time.
 		stateTransitionInfo.Event = InitialEvent
 		stateTransitionInfo.NewState = stm.InitialState()

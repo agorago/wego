@@ -7,7 +7,7 @@ import (
 )
 
 func ExampleDevtest() {
-	os.Setenv(config.ENVVAR,"dev")
+	os.Setenv(config.ENVVAR, "dev")
 	config.InitConfig("test-configs/env")
 
 	fmt.Println(config.Value("config_test.property1"))
@@ -32,9 +32,9 @@ func ExampleProdtest() {
 }
 
 // ExampleEnvOverride - tests an environment override to the same property
-func ExampleEnvOverride(){
+func ExampleEnvOverride() {
 	os.Setenv(config.ENVVAR, "prod")
-	os.Setenv("CONFIG_TEST.PROPERTY2","env-value2")
+	os.Setenv("CONFIG_TEST.PROPERTY2", "env-value2")
 	config.InitConfig("test-configs/env")
 	fmt.Println(config.Value("config_test.property1"))
 	fmt.Println(config.Value("config_test.property2"))
@@ -65,5 +65,3 @@ func ExampleEtcdOverride(){
 	// etcd-value8
 }
 */
-
-

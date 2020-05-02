@@ -30,21 +30,21 @@ type ParamDescriptor struct {
 
 // OperationDescriptor - to describe the properties of the operation
 type OperationDescriptor struct {
-	Name            string
-	Description     string
-	Service         ServiceDescriptor
-	RequestDescription string // the description of the request - useful for swagger
+	Name                string
+	Description         string
+	Service             ServiceDescriptor
+	RequestDescription  string // the description of the request - useful for swagger
 	ResponseDescription string // the description of the response
-	URL             string
-	OpRequestMaker  PayloadMaker
-	OpResponseMaker PayloadMaker
-	RequestType     interface{}
-	ResponseType    interface{}
-	OpMiddleware    []Middleware // specific middleware required by this operation. These will be
+	URL                 string
+	OpRequestMaker      PayloadMaker
+	OpResponseMaker     PayloadMaker
+	RequestType         interface{}
+	ResponseType        interface{}
+	OpMiddleware        []Middleware // specific middleware required by this operation. These will be
 	// invoked before the operation is invoked by BPlus
-	HTTPMethod string
+	HTTPMethod      string
 	ProxyMiddleware []Middleware // this is only used on the proxy side and not on the server side.
-	Params     []ParamDescriptor
+	Params          []ParamDescriptor
 }
 
 // ServiceDescriptor - the root of the service registration.
@@ -86,7 +86,7 @@ func RegisterOperations(or OperationRegistration) {
 }
 
 func (od OperationDescriptor) setupOperation(disableTransport bool) {
-	if disableTransport{
+	if disableTransport {
 		return
 	}
 	for _, op := range operations.Operations {
@@ -112,11 +112,11 @@ func FindOperationDescriptor(serviceName string, opName string) (OperationDescri
 }
 
 // FindServiceDescriptor - find a service descriptor that has been registered with the name
-func FindServiceDescriptor(serviceName string)(*ServiceDescriptor,error){
+func FindServiceDescriptor(serviceName string) (*ServiceDescriptor, error) {
 	sd := allServices[serviceName]
 	if sd == nil {
 		return nil, e.MakeBplusError(context.TODO(), e.ServiceNotFound, map[string]interface{}{
 			"Service": serviceName})
 	}
-	return sd,nil
+	return sd, nil
 }

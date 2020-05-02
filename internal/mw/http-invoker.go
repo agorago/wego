@@ -32,12 +32,12 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor) (interface{}, e
 	var req *http.Request
 	var err error
 	var URL = "http://localhost:" + config.Value("bplus.port")
-	if s := config.Value(od.Service.Name + "_hostname_port");  s != "" {
+	if s := config.Value(od.Service.Name + "_hostname_port"); s != "" {
 		URL = "http://" + s
 	}
-	URL +=  "/" + od.Service.Name + od.URL
+	URL += "/" + od.Service.Name + od.URL
 	payload := bplusc.GetPayload(ctx)
-	req, err = createRequest(ctx, od.HTTPMethod, URL,payload)
+	req, err = createRequest(ctx, od.HTTPMethod, URL, payload)
 	if err != nil {
 		return nil, err
 	}
@@ -57,8 +57,8 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor) (interface{}, e
 	}
 
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
-		log.Warnf(ctx,"The status code is %d.Body is %s\n", resp.StatusCode, body)
-		return nil, extractErrorResponse(ctx,resp,body)
+		log.Warnf(ctx, "The status code is %d.Body is %s\n", resp.StatusCode, body)
+		return nil, extractErrorResponse(ctx, resp, body)
 	}
 
 	if od.OpResponseMaker != nil {
@@ -73,9 +73,9 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor) (interface{}, e
 	return nil, nil
 }
 
-func extractErrorResponse(ctx context.Context, resp *http.Response,body []byte)bpluse.BPlusError{
+func extractErrorResponse(ctx context.Context, resp *http.Response, body []byte) bpluse.BPlusError {
 	er := bpluse.BPlusError{}
-	uerr := json.Unmarshal(body,&er)
+	uerr := json.Unmarshal(body, &er)
 	if uerr != nil {
 		// cannot unmarshal the body into a bplus err. So create an error.
 		return e.MakeBplusErrorWithErrorCode(ctx, resp.StatusCode, e.Non200StatusCodeReturned, map[string]interface{}{
@@ -110,4 +110,3 @@ func constructBytes(payload interface{}) (*bytes.Buffer, error) {
 
 	return bytes.NewBuffer(buf), nil
 }
-

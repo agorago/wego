@@ -11,7 +11,7 @@ import (
 var NRApp *newrelic.Application
 
 func init() {
-	if !config.BoolValue("bplus.new_relic_enabled"){
+	if !config.BoolValue("bplus.new_relic_enabled") {
 		return
 	}
 	var err error

@@ -12,40 +12,43 @@ import (
 )
 
 // Set up a test echo service to facilitate testing of various components in BPlus
-type Service struct {}
+type Service struct{}
 type Input struct {
 	In string
 }
-func MakeInput(_ context.Context)(interface{},error){
-	return &Input{},nil
+
+func MakeInput(_ context.Context) (interface{}, error) {
+	return &Input{}, nil
 }
-func MakeOutput(_ context.Context)(interface{},error){
-	return &Output{},nil
+func MakeOutput(_ context.Context) (interface{}, error) {
+	return &Output{}, nil
 }
+
 type Output struct {
 	Out string
 }
-func (Service) Echo(ctx context.Context, input *Input)(Output,error){
-	if input.In == "xxx"{
-		return Output{},e.MakeErrWithHTTPCode(ctx,e.Error,12000,"Invalid string xxx",
-			400,nil)
+
+func (Service) Echo(ctx context.Context, input *Input) (Output, error) {
+	if input.In == "xxx" {
+		return Output{}, e.MakeErrWithHTTPCode(ctx, e.Error, 12000, "Invalid string xxx",
+			400, nil)
 	}
-	return Output{input.In},nil
+	return Output{input.In}, nil
 }
 
-func (Service) EchoString(_ context.Context, s string)(Output,error){
-	return Output{s},nil
+func (Service) EchoString(_ context.Context, s string) (Output, error) {
+	return Output{s}, nil
 }
 
 // the testing is internal (i.e. using the same http package) since the package does not expose public methods
-func CreateEcho()fw.ServiceDescriptor{
+func CreateEcho() fw.ServiceDescriptor {
 	od := fw.OperationDescriptor{
-		Name: "Echo",
+		Name:            "Echo",
 		URL:             "/echo",
 		OpRequestMaker:  MakeInput,
 		OpResponseMaker: MakeOutput,
 		HTTPMethod:      "GET",
-		Params:          []fw.ParamDescriptor{
+		Params: []fw.ParamDescriptor{
 			{
 				Name:        "ctx",
 				ParamOrigin: fw.CONTEXT,
@@ -59,11 +62,11 @@ func CreateEcho()fw.ServiceDescriptor{
 		},
 	}
 	odstring := fw.OperationDescriptor{
-		Name: "EchoString",
+		Name:            "EchoString",
 		URL:             "/echo-string",
 		OpResponseMaker: MakeOutput,
 		HTTPMethod:      "GET",
-		Params:          []fw.ParamDescriptor{
+		Params: []fw.ParamDescriptor{
 			{
 				Name:        "ctx",
 				ParamOrigin: fw.CONTEXT,
@@ -73,7 +76,7 @@ func CreateEcho()fw.ServiceDescriptor{
 				Name:        "Input",
 				ParamOrigin: fw.HEADER,
 				Description: "Request",
-				ParamKind: reflect.String,
+				ParamKind:   reflect.String,
 			},
 		},
 	}
@@ -81,17 +84,17 @@ func CreateEcho()fw.ServiceDescriptor{
 		Name:            "EchoService",
 		Description:     "Echoes input to output",
 		ServiceToInvoke: Service{},
-		Operations: []fw.OperationDescriptor{od,odstring},
+		Operations:      []fw.OperationDescriptor{od, odstring},
 	}
 	return service
 }
 
-func StartServer(){
-	fw.RegisterService("EchoService",CreateEcho())
+func StartServer() {
+	fw.RegisterService("EchoService", CreateEcho())
 
-	go func (){
+	go func() {
 		a := ":" + config.Value("bplus.port")
-		log.Printf("Starting server at address %s\n",a)
+		log.Printf("Starting server at address %s\n", a)
 		http.ListenAndServe(a, bplushttp.HTTPHandler)
 	}()
 

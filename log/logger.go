@@ -10,20 +10,21 @@ import (
 )
 
 var logger *zap.Logger
-func init(){
+
+func init() {
 	initZap()
 }
 
-func initZap(){
+func initZap() {
 	cfg := zap.Config{
-		Level:            zap.NewAtomicLevelAt(determineLogLevel()),
-		DisableCaller:    getDisableCaller(),
+		Level:             zap.NewAtomicLevelAt(determineLogLevel()),
+		DisableCaller:     getDisableCaller(),
 		DisableStacktrace: getDisableStackTrace(),
-		Development:getDevelopmentMode(),
-		Encoding:         "json",
-		EncoderConfig:    encoderConfig(),
-		OutputPaths:      []string{"stdout"},
-		ErrorOutputPaths: []string{"stderr"},
+		Development:       getDevelopmentMode(),
+		Encoding:          "json",
+		EncoderConfig:     encoderConfig(),
+		OutputPaths:       []string{"stdout"},
+		ErrorOutputPaths:  []string{"stderr"},
 		InitialFields: map[string]interface{}{
 			"application": config.GetApplicationName(),
 		},
@@ -40,17 +41,17 @@ func initZap(){
 
 }
 
-func Sync(){
+func Sync() {
 	logger.Sync()
 }
 
-func determineLogLevel() zapcore.Level{
+func determineLogLevel() zapcore.Level {
 	loglevel := config.Value("bplus.log_level")
 	if loglevel == "" {
 		return zapcore.InfoLevel
 	}
 
-	switch loglevel{
+	switch loglevel {
 	case "debug":
 		return zapcore.DebugLevel
 	case "info":
@@ -64,18 +65,17 @@ func determineLogLevel() zapcore.Level{
 	}
 }
 
-func getDisableCaller()bool {
+func getDisableCaller() bool {
 	return config.BoolValue("bplus.disable_caller")
 }
 
-func getDisableStackTrace()bool {
+func getDisableStackTrace() bool {
 	return config.BoolValue("bplus.disable_stacktrace")
 }
 
-func getDevelopmentMode()bool {
+func getDevelopmentMode() bool {
 	return config.BoolValue("bplus.development_mode")
 }
-
 
 func encoderConfig() zapcore.EncoderConfig {
 	encoderConfig := zap.NewProductionEncoderConfig()
@@ -89,84 +89,84 @@ func encoderConfig() zapcore.EncoderConfig {
 	return encoderConfig
 }
 
-func Infof(ctx context.Context, message string, args ...interface{}){
-	Info(ctx,fmt.Sprintf(message,args...))
+func Infof(ctx context.Context, message string, args ...interface{}) {
+	Info(ctx, fmt.Sprintf(message, args...))
 }
 
-func Info(ctx context.Context, message string){
-	logger.Info(message,enhanceContext(ctx)...)
+func Info(ctx context.Context, message string) {
+	logger.Info(message, enhanceContext(ctx)...)
 }
 
-func Debugf(ctx context.Context, message string, args ...interface{}){
-	Debug(ctx,fmt.Sprintf(message,args...))
+func Debugf(ctx context.Context, message string, args ...interface{}) {
+	Debug(ctx, fmt.Sprintf(message, args...))
 }
 
-func Debug(ctx context.Context, message string){
-	logger.Debug(message,enhanceContext(ctx)...)
+func Debug(ctx context.Context, message string) {
+	logger.Debug(message, enhanceContext(ctx)...)
 }
 
-func Errorf(ctx context.Context, message string, args ...interface{}){
-	Error(ctx,fmt.Sprintf(message,args...))
+func Errorf(ctx context.Context, message string, args ...interface{}) {
+	Error(ctx, fmt.Sprintf(message, args...))
 }
 
-func Error(ctx context.Context, message string){
-	logger.Error(message,enhanceContext(ctx)...)
+func Error(ctx context.Context, message string) {
+	logger.Error(message, enhanceContext(ctx)...)
 }
 
-func Warnf(ctx context.Context, message string, args ...interface{}){
-	Warn(ctx,fmt.Sprintf(message,args...))
+func Warnf(ctx context.Context, message string, args ...interface{}) {
+	Warn(ctx, fmt.Sprintf(message, args...))
 }
 
-func Warn(ctx context.Context, message string){
-	logger.Warn(message,enhanceContext(ctx)...)
+func Warn(ctx context.Context, message string) {
+	logger.Warn(message, enhanceContext(ctx)...)
 }
 
-func InfoWithFieldsf(ctx context.Context, fields map[string]string,message string, args ...interface{}){
-	InfoWithFields(ctx,fields,fmt.Sprintf(message,args...))
+func InfoWithFieldsf(ctx context.Context, fields map[string]string, message string, args ...interface{}) {
+	InfoWithFields(ctx, fields, fmt.Sprintf(message, args...))
 }
 
-func InfoWithFields(ctx context.Context,fields map[string]string,  message string){
-	logger.Info(message,enhance(ctx,fields)...)
+func InfoWithFields(ctx context.Context, fields map[string]string, message string) {
+	logger.Info(message, enhance(ctx, fields)...)
 }
 
-func DebugWithFieldsf(ctx context.Context, fields map[string]string,message string, args ...interface{}){
-	DebugWithFields(ctx,fields,fmt.Sprintf(message,args...))
+func DebugWithFieldsf(ctx context.Context, fields map[string]string, message string, args ...interface{}) {
+	DebugWithFields(ctx, fields, fmt.Sprintf(message, args...))
 }
 
-func DebugWithFields(ctx context.Context,fields map[string]string,  message string){
-	logger.Debug(message,enhance(ctx,fields)...)
+func DebugWithFields(ctx context.Context, fields map[string]string, message string) {
+	logger.Debug(message, enhance(ctx, fields)...)
 }
 
-func ErrorWithFieldsf(ctx context.Context, fields map[string]string,message string, args ...interface{}){
-	ErrorWithFields(ctx,fields,fmt.Sprintf(message,args...))
+func ErrorWithFieldsf(ctx context.Context, fields map[string]string, message string, args ...interface{}) {
+	ErrorWithFields(ctx, fields, fmt.Sprintf(message, args...))
 }
 
-func ErrorWithFields(ctx context.Context,fields map[string]string, message string){
-	logger.Error(message,enhance(ctx,fields)...)
+func ErrorWithFields(ctx context.Context, fields map[string]string, message string) {
+	logger.Error(message, enhance(ctx, fields)...)
 }
 
-func WarnWithFieldsf(ctx context.Context, fields map[string]string,message string, args ...interface{}){
-	WarnWithFields(ctx,fields,fmt.Sprintf(message,args...))
+func WarnWithFieldsf(ctx context.Context, fields map[string]string, message string, args ...interface{}) {
+	WarnWithFields(ctx, fields, fmt.Sprintf(message, args...))
 }
 
-func WarnWithFields(ctx context.Context,fields map[string]string, message string,args ...interface{}){
-	logger.Warn(message,enhance(ctx,fields)...)
+func WarnWithFields(ctx context.Context, fields map[string]string, message string, args ...interface{}) {
+	logger.Warn(message, enhance(ctx, fields)...)
 }
 
-func enhance(ctx context.Context,fields map[string]string) [] zap.Field{
+func enhance(ctx context.Context, fields map[string]string) []zap.Field {
 	ret := enhanceContext(ctx)
-	for n,v := range fields {
-		ret = append(ret,zap.String(n,v))
+	for n, v := range fields {
+		ret = append(ret, zap.String(n, v))
 	}
 	return ret
 }
 
-func enhanceContext(ctx context.Context)[]zap.Field{
-	t,ok := bplusc.Value(ctx, bplusc.TraceID).(string)
+func enhanceContext(ctx context.Context) []zap.Field {
+	t, ok := bplusc.Value(ctx, bplusc.TraceID).(string)
 	if !ok {
 		t = "NO_TRACE_ID"
 	}
 	return []zap.Field{
-		zap.String("TraceID",t ),
+		zap.String("TraceID", t),
 	}
 }

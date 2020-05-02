@@ -9,10 +9,10 @@ import (
 	"strings"
 
 	"github.com/BurntSushi/toml"
-	"gitlab.intelligentb.com/devops/bplus/config"
-	bplusc "gitlab.intelligentb.com/devops/bplus/context"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
+	"gitlab.intelligentb.com/devops/bplus/config"
+	bplusc "gitlab.intelligentb.com/devops/bplus/context"
 	"golang.org/x/text/language"
 )
 
@@ -95,7 +95,7 @@ func Translate(ctx context.Context, s string, m map[string]interface{}) string {
 	// If you cannot translate s just return s and log an error
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "i18n: Missing message resource %s\n", s)
-		return fmt.Sprintf("Missing resource %s. Args = %v\n",s,m)
+		return fmt.Sprintf("Missing resource %s. Args = %v\n", s, m)
 	}
 	return t
 }

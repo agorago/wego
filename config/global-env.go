@@ -6,13 +6,12 @@ import (
 
 // Constants for the variables used in this file
 const (
-	CONFIGPATHVAR      = "CONFIGPATH"
-	DEFAULTLANGUAGEVAR = "DEFAULTLANGUAGE"
-	ENVVAR = "ENV"
-	ETCD_ENDPOINTVAR="BPLUS.ETCD_ENDPOINT"
-	ETCD_POLLINGDELAYVAR="BPLUS.ETCD_POLLING_DELAY"
+	CONFIGPATHVAR        = "CONFIGPATH"
+	DEFAULTLANGUAGEVAR   = "DEFAULTLANGUAGE"
+	ENVVAR               = "ENV"
+	ETCD_ENDPOINTVAR     = "BPLUS.ETCD_ENDPOINT"
+	ETCD_POLLINGDELAYVAR = "BPLUS.ETCD_POLLING_DELAY"
 )
-
 
 func GetEtcdEndPoint() string {
 	return Value(ETCD_ENDPOINTVAR)
@@ -37,7 +36,7 @@ func GetDefaultLanguage() string {
 	return lang
 }
 
-func GetEnv() string{
+func GetEnv() string {
 	env := os.Getenv(ENVVAR)
 	if env == "" {
 		return "dev"
@@ -45,12 +44,10 @@ func GetEnv() string{
 	return env
 }
 
-func GetApplicationName() string{
+func GetApplicationName() string {
 	app := Value("application_name")
 	if app == "" {
 		return "bplus"
 	}
 	return app
 }
-
-

@@ -9,7 +9,7 @@ import (
 	"gitlab.intelligentb.com/devops/bplus/i18n"
 )
 
-type HttpCodeProvider interface{
+type HttpCodeProvider interface {
 	GetHttpCode() int
 }
 
@@ -21,7 +21,7 @@ type BPlusError struct {
 	LogLevel      LogLevel
 	TrajectoryID  string
 	UserID        string
-	TraceId string
+	TraceId       string
 }
 
 // LogLevel - the different log levels
@@ -56,18 +56,18 @@ func MakeErr(ctx context.Context, ll LogLevel, code int, msgCode string, args ma
 func MakeErrWithHTTPCode(ctx context.Context, ll LogLevel, code int, msgCode string, hTTPError int, args map[string]interface{}) BPlusError {
 	msg := msgCode
 
-		//msg = fmt.Sprintf(message, params...)
-		m := i18n.Translate(ctx, msg, args)
-		if m != "" {
-			msg = m
-		}
+	//msg = fmt.Sprintf(message, params...)
+	m := i18n.Translate(ctx, msg, args)
+	if m != "" {
+		msg = m
+	}
 
 	return BPlusError{
 		ErrorCode:     code,
 		ErrorMessage:  msg,
 		LogLevel:      ll,
 		HTTPErrorCode: hTTPError,
-		TraceId: bplusc.GetTraceId(ctx),
-		TrajectoryID: bplusc.GetTrajectoryID(ctx),
+		TraceId:       bplusc.GetTraceId(ctx),
+		TrajectoryID:  bplusc.GetTrajectoryID(ctx),
 	}
 }

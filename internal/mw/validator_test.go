@@ -29,7 +29,6 @@ func TestNoPayloadv10validator(t *testing.T) {
 	assert.Equal(t, err, nil)
 }
 
-
 func TestValidv10validator(t *testing.T) {
 	var request A
 
@@ -62,13 +61,13 @@ func TestInvalidv10validator(t *testing.T) {
 	ctx = bplusc.SetPayload(ctx, request)
 	ctx = chain.DoContinue(ctx)
 	err := bplusc.GetError(ctx)
-	e1,ok := err.(bpluse.BPlusError)
+	e1, ok := err.(bpluse.BPlusError)
 	if !ok {
-		log.Errorf(ctx,"Cannot cast the error into Bplus error. Err = %#v",err)
+		log.Errorf(ctx, "Cannot cast the error into Bplus error. Err = %#v", err)
 		t.Fail()
 		return
 	}
-	assert.Equal(t, e1.HTTPErrorCode,http.StatusBadRequest)
+	assert.Equal(t, e1.HTTPErrorCode, http.StatusBadRequest)
 }
 
 func terminator(ctx context.Context, _ *fw.MiddlewareChain) context.Context {
