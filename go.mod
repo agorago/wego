@@ -1,4 +1,4 @@
-module gitlab.intelligentb.com/devops/bplus
+module github.com/agorago/wego
 
 go 1.13
 

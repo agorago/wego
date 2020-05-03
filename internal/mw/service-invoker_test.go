@@ -3,11 +3,11 @@ package mw_test
 import (
 	"context"
 	"github.com/magiconair/properties/assert"
-	bplusc "gitlab.intelligentb.com/devops/bplus/context"
-	bpluserr "gitlab.intelligentb.com/devops/bplus/err"
-	"gitlab.intelligentb.com/devops/bplus/fw"
-	"gitlab.intelligentb.com/devops/bplus/internal/mw"
-	"gitlab.intelligentb.com/devops/bplus/internal/testutils"
+	bplusc "github.com/agorago/wego/context"
+	bpluserr "github.com/agorago/wego/err"
+	"github.com/agorago/wego/fw"
+	"github.com/agorago/wego/internal/mw"
+	"github.com/agorago/wego/internal/testutils"
 	"log"
 	"testing"
 )

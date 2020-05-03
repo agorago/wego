@@ -2,14 +2,14 @@ package mw
 
 import (
 	"context"
-	"gitlab.intelligentb.com/devops/bplus/log"
+	"github.com/agorago/wego/log"
 	"net/http"
 	"reflect"
 
-	bplusc "gitlab.intelligentb.com/devops/bplus/context"
-	fw "gitlab.intelligentb.com/devops/bplus/fw"
-	e "gitlab.intelligentb.com/devops/bplus/internal/err"
-	util "gitlab.intelligentb.com/devops/bplus/util"
+	wegocontext "github.com/agorago/wego/context"
+	fw "github.com/agorago/wego/fw"
+	e "github.com/agorago/wego/internal/err"
+	util "github.com/agorago/wego/util"
 )
 
 // since this is the last middleware we would not invoke the chain anymore
@@ -19,7 +19,7 @@ func ServiceInvoker(ctx context.Context, _ *fw.MiddlewareChain) context.Context 
 	od := fw.GetOperationDescriptor(ctx)
 	args, err := makeArgs(ctx, od)
 	if err != nil {
-		ctx = bplusc.SetError(ctx, err)
+		ctx = wegocontext.SetError(ctx, err)
 		return ctx
 	}
 
@@ -28,10 +28,10 @@ func ServiceInvoker(ctx context.Context, _ *fw.MiddlewareChain) context.Context 
 	}
 
 	v, err := invoke(ctx, od.Service.ServiceToInvoke, od.Name, args, hasResponse)
-	ctx = bplusc.SetResponsePayload(ctx, v)
+	ctx = wegocontext.SetResponsePayload(ctx, v)
 
 	if err != nil {
-		ctx = bplusc.SetError(ctx, err)
+		ctx = wegocontext.SetError(ctx, err)
 	}
 	return ctx
 }
@@ -51,7 +51,7 @@ func makeArgs(ctx context.Context, od fw.OperationDescriptor) ([]interface{}, er
 func makeArg(ctx context.Context, param fw.ParamDescriptor) (interface{}, error) {
 	switch param.ParamOrigin {
 	case fw.HEADER:
-		s, ok := bplusc.Value(ctx, param.Name).(string)
+		s, ok := wegocontext.Value(ctx, param.Name).(string)
 		if !ok {
 			return nil, e.MakeBplusErrorWithErrorCode(ctx, http.StatusBadRequest,
 				e.ParameterMissingInRequest, map[string]interface{}{
@@ -59,7 +59,7 @@ func makeArg(ctx context.Context, param fw.ParamDescriptor) (interface{}, error)
 		}
 		return util.ConvertFromString(s, param.ParamKind), nil
 	case fw.PAYLOAD:
-		return bplusc.GetPayload(ctx), nil
+		return wegocontext.GetPayload(ctx), nil
 	case fw.CONTEXT:
 		return ctx, nil
 	}

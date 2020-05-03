@@ -3,8 +3,8 @@ package stateentity
 import (
 	"context"
 
-	e "gitlab.intelligentb.com/devops/bplus/internal/err"
-	"gitlab.intelligentb.com/devops/bplus/stm"
+	e "github.com/agorago/wego/internal/err"
+	"github.com/agorago/wego/stm"
 )
 
 // Create - the implementation of the Create method. This creates the state entity

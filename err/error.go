@@ -3,10 +3,10 @@ package err
 import (
 	"context"
 	"encoding/json"
-	bplusc "gitlab.intelligentb.com/devops/bplus/context"
+	wegocontext "github.com/agorago/wego/context"
 	"net/http"
 
-	"gitlab.intelligentb.com/devops/bplus/i18n"
+	"github.com/agorago/wego/i18n"
 )
 
 type HttpCodeProvider interface {
@@ -67,7 +67,7 @@ func MakeErrWithHTTPCode(ctx context.Context, ll LogLevel, code int, msgCode str
 		ErrorMessage:  msg,
 		LogLevel:      ll,
 		HTTPErrorCode: hTTPError,
-		TraceId:       bplusc.GetTraceId(ctx),
-		TrajectoryID:  bplusc.GetTrajectoryID(ctx),
+		TraceId:       wegocontext.GetTraceId(ctx),
+		TrajectoryID:  wegocontext.GetTrajectoryID(ctx),
 	}
 }

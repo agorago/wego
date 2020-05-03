@@ -2,16 +2,16 @@ package cmd
 
 import (
 	"fmt"
-	"gitlab.intelligentb.com/devops/bplus/config"
+	"github.com/agorago/wego/config"
 	"log"
 	"net/http"
 
-	bplusHTTP "gitlab.intelligentb.com/devops/bplus/http"
+	wegohttp "github.com/agorago/wego/http"
 )
 
 // Serve - start a server for serving HTTP requests
 func Serve() {
 	a := fmt.Sprintf(":%s", config.Value("bplus.port"))
 	log.Printf("Starting server at address %s", a)
-	log.Fatal(http.ListenAndServe(a, bplusHTTP.HTTPHandler))
+	log.Fatal(http.ListenAndServe(a, wegohttp.HTTPHandler))
 }

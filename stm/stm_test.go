@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 	"github.com/magiconair/properties/assert"
-	"gitlab.intelligentb.com/devops/bplus/err"
-	"gitlab.intelligentb.com/devops/bplus/i18n"
-	bpluse "gitlab.intelligentb.com/devops/bplus/internal/err"
-	"gitlab.intelligentb.com/devops/bplus/stm"
+	"github.com/agorago/wego/err"
+	"github.com/agorago/wego/i18n"
+	wegoe "github.com/agorago/wego/internal/err"
+	"github.com/agorago/wego/stm"
 	"os"
 	"testing"
 )
@@ -187,7 +187,7 @@ func TestInvalidEvent(t *testing.T) {
 		fmt.Fprintf(os.Stderr, "Error not castable to BPlusError!\n")
 		t.Fail()
 	}
-	code := int(bpluse.InvalidEvent)
+	code := int(wegoe.InvalidEvent)
 	assert.Equal(t, code, e.ErrorCode)
 }
 
@@ -203,7 +203,7 @@ func TestInvalidState(t *testing.T) {
 		fmt.Fprintf(os.Stderr, "Error not castable to BPlusError!\n")
 		t.Fail()
 	}
-	code := int(bpluse.InvalidState)
+	code := int(wegoe.InvalidState)
 	assert.Equal(t, code, e.ErrorCode)
 }
 
@@ -214,7 +214,7 @@ func TestInvalidFilename(t *testing.T) {
 		fmt.Fprintf(os.Stderr, "Error not castable to BPlusError!\n")
 		t.Fail()
 	}
-	code := int(bpluse.CannotReadFile)
+	code := int(wegoe.CannotReadFile)
 	assert.Equal(t, code, e.ErrorCode)
 }
 
@@ -225,6 +225,6 @@ func TestUnparseableFilename(t *testing.T) {
 		fmt.Fprintf(os.Stderr, "Error not castable to BPlusError!\n")
 		t.Fail()
 	}
-	code := int(bpluse.UnparseableFile)
+	code := int(wegoe.UnparseableFile)
 	assert.Equal(t, code, e.ErrorCode)
 }

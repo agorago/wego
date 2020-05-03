@@ -2,8 +2,8 @@ package log_test
 
 import (
 	"context"
-	bplusc "gitlab.intelligentb.com/devops/bplus/context"
-	log "gitlab.intelligentb.com/devops/bplus/log"
+	bplusc "github.com/agorago/wego/context"
+	log "github.com/agorago/wego/log"
 	"testing"
 )
 

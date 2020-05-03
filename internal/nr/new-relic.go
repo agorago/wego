@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/newrelic/go-agent/v3/newrelic"
-	"gitlab.intelligentb.com/devops/bplus/config"
+	"github.com/agorago/wego/config"
 )
 
 var NRApp *newrelic.Application

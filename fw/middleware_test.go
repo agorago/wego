@@ -3,8 +3,8 @@ package fw_test
 import (
 	"context"
 	"github.com/magiconair/properties/assert"
-	bplusc "gitlab.intelligentb.com/devops/bplus/context"
-	"gitlab.intelligentb.com/devops/bplus/fw"
+	wegoc "github.com/agorago/wego/context"
+	"github.com/agorago/wego/fw"
 	"testing"
 )
 
@@ -18,9 +18,9 @@ func generatMiddleware(s string) fw.Middleware {
 }
 
 func addString(ctx context.Context, s string) context.Context {
-	arr, _ := bplusc.Value(ctx, "STACK").([]string)
+	arr, _ := wegoc.Value(ctx, "STACK").([]string)
 	arr = append(arr, s)
-	return bplusc.Add(ctx, "STACK", arr)
+	return wegoc.Add(ctx, "STACK", arr)
 }
 
 func TestChain(t *testing.T) {
@@ -32,5 +32,5 @@ func TestChain(t *testing.T) {
 	})
 	ctx := chain.DoContinue(context.TODO())
 	expected := []string{"pre_mw1", "pre_mw2", "dest", "post_mw2", "post_mw1"}
-	assert.Equal(t, bplusc.Value(ctx, "STACK"), expected)
+	assert.Equal(t, wegoc.Value(ctx, "STACK"), expected)
 }

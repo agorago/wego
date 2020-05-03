@@ -3,8 +3,8 @@ package mw
 import (
 	"context"
 
-	bplusc "gitlab.intelligentb.com/devops/bplus/context"
-	fw "gitlab.intelligentb.com/devops/bplus/fw"
+	wegoc "github.com/agorago/wego/context"
+	fw "github.com/agorago/wego/fw"
 )
 
 // Entrypoint - The server-side entry point for invoking any service registered in BPlus
@@ -27,9 +27,9 @@ func startChain(ctx context.Context, chain fw.MiddlewareChain) (interface{}, err
 	// invoke it
 	ctx = chain.DoContinue(ctx)
 	// process responses
-	response := bplusc.GetResponsePayload(ctx)
+	response := wegoc.GetResponsePayload(ctx)
 
-	err := bplusc.GetError(ctx)
+	err := wegoc.GetError(ctx)
 	if err != nil {
 		return response, err.(error)
 	}

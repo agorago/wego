@@ -3,8 +3,8 @@ package log
 import (
 	"context"
 	"fmt"
-	"gitlab.intelligentb.com/devops/bplus/config"
-	bplusc "gitlab.intelligentb.com/devops/bplus/context"
+	"github.com/agorago/wego/config"
+	wegocontext "github.com/agorago/wego/context"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -162,7 +162,7 @@ func enhance(ctx context.Context, fields map[string]string) []zap.Field {
 }
 
 func enhanceContext(ctx context.Context) []zap.Field {
-	t, ok := bplusc.Value(ctx, bplusc.TraceID).(string)
+	t, ok := wegocontext.Value(ctx, wegocontext.TraceID).(string)
 	if !ok {
 		t = "NO_TRACE_ID"
 	}

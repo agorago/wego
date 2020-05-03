@@ -3,13 +3,13 @@ package mw
 import (
 	"bytes"
 	"fmt"
-	"gitlab.intelligentb.com/devops/bplus/config"
-	bpluse "gitlab.intelligentb.com/devops/bplus/err"
-	"gitlab.intelligentb.com/devops/bplus/log"
+	"github.com/agorago/wego/config"
+	bpluse "github.com/agorago/wego/err"
+	"github.com/agorago/wego/log"
 
-	bplusc "gitlab.intelligentb.com/devops/bplus/context"
-	fw "gitlab.intelligentb.com/devops/bplus/fw"
-	e "gitlab.intelligentb.com/devops/bplus/internal/err"
+	bplusc "github.com/agorago/wego/context"
+	fw "github.com/agorago/wego/fw"
+	e "github.com/agorago/wego/internal/err"
 
 	"context"
 	"encoding/json"

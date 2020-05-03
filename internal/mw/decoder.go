@@ -6,9 +6,9 @@ import (
 	"io"
 	"net/http"
 
-	bplusc "gitlab.intelligentb.com/devops/bplus/context"
-	fw "gitlab.intelligentb.com/devops/bplus/fw"
-	e "gitlab.intelligentb.com/devops/bplus/internal/err"
+	bplusc "github.com/agorago/wego/context"
+	fw "github.com/agorago/wego/fw"
+	e "github.com/agorago/wego/internal/err"
 )
 
 // decodes a readcloser and makes it into a payload using the operation descriptor's payload maker

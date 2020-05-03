@@ -2,7 +2,7 @@ package config_test
 
 import (
 	"fmt"
-	"gitlab.intelligentb.com/devops/bplus/config"
+	"github.com/agorago/wego/config"
 	"os"
 )
 

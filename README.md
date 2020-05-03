@@ -1,14 +1,20 @@
-# BPlus
-The framework for Intelligent B
+# WEGO
+
+A Micro Services Framework 
 
 # Introduction
 
-BPlus is a framework that is suitable for rapid development of micro services. It has been tuned towards the 
-requirements of Intelligent B but has nothing specific hard coded inside it. It can easily be used as a framework for creating
-developing micro services anywhere.
+WEGO is a flexible (yet opinionated) framework that is suitable for rapid development of micro services. The 
+GOLANG architect has a few important responsibilities:
+1. Make a choice from various frameworks that exist in the GO LANG ecosystem.
+2. Standardize them and 
 
-The chief benefit of BPlus is that it comes integrated with different frameworks that have been standardized across
-Intelligent B such as 
+GOLANG has a nice ecosystem of packages that solves specific problems very well. When it comes to writing
+Micro services, the developer has the onus of stitching them all together to make them perform the work. This 
+presents a few challenges:
+1. The author has to decide  
+
+The chief benefit of WEGO is that it comes integrated with different frameworks that have been standardized such as: 
 - gorilla MUX (for HTTP)
 - Uber zap (for logging)
 - New Relic (for monitoring)

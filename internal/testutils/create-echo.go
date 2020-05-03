@@ -2,10 +2,10 @@ package testutils
 
 import (
 	"context"
-	"gitlab.intelligentb.com/devops/bplus/config"
-	e "gitlab.intelligentb.com/devops/bplus/err"
-	"gitlab.intelligentb.com/devops/bplus/fw"
-	bplushttp "gitlab.intelligentb.com/devops/bplus/http"
+	"github.com/agorago/wego/config"
+	e "github.com/agorago/wego/err"
+	"github.com/agorago/wego/fw"
+	wegohttp "github.com/agorago/wego/http"
 	"log"
 	"net/http"
 	"reflect"
@@ -95,7 +95,7 @@ func StartServer() {
 	go func() {
 		a := ":" + config.Value("bplus.port")
 		log.Printf("Starting server at address %s\n", a)
-		http.ListenAndServe(a, bplushttp.HTTPHandler)
+		http.ListenAndServe(a, wegohttp.HTTPHandler)
 	}()
 
 }

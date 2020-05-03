@@ -2,9 +2,9 @@ package testutils
 
 import (
 	"context"
-	"gitlab.intelligentb.com/devops/bplus/log"
-	"gitlab.intelligentb.com/devops/bplus/stateentity"
-	"gitlab.intelligentb.com/devops/bplus/stm"
+	"github.com/agorago/wego/log"
+	"github.com/agorago/wego/stateentity"
+	"github.com/agorago/wego/stm"
 	"path/filepath"
 )
 

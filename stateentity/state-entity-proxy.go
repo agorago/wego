@@ -2,8 +2,8 @@ package stateentity
 
 import (
 	"context"
-	bplusHTTP "gitlab.intelligentb.com/devops/bplus/http"
-	"gitlab.intelligentb.com/devops/bplus/stm"
+	bplusHTTP "github.com/agorago/wego/http"
+	"github.com/agorago/wego/stm"
 )
 
 type StateEntityProxy struct{}

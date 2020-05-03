@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/coreos/etcd/clientv3"
 	"github.com/coreos/etcd/embed"
-	"gitlab.intelligentb.com/devops/bplus/config"
+	"github.com/agorago/wego/config"
 	"log"
 	"os"
 	"time"

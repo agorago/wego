@@ -4,9 +4,10 @@ import (
 	"context"
 	"reflect"
 
-	e "gitlab.intelligentb.com/devops/bplus/internal/err"
+	e "github.com/agorago/wego/internal/err"
 )
-
+// The chief framework for WEGO starts here.
+// This provides two ty
 // PayloadMaker - makes a payload of a certain type
 type PayloadMaker func(context.Context) (interface{}, error)
 

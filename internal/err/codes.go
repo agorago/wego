@@ -4,68 +4,68 @@ import (
 	"context"
 	"net/http"
 
-	bpluse "gitlab.intelligentb.com/devops/bplus/err"
+	wegoe "github.com/agorago/wego/err"
 )
 
 // It is recommended that each module define its own error file
 
-func internalMakeBplusError(ctx context.Context, ll bpluse.LogLevel, e BPlusErrorCode, httpErrorCode int, args map[string]interface{}) bpluse.BPlusError {
-	return bpluse.MakeErrWithHTTPCode(ctx, ll, int(e), e.String(), httpErrorCode, args)
+func internalMakeWegoError(ctx context.Context, ll wegoe.LogLevel, e WegoErrorCode, httpErrorCode int, args map[string]interface{}) wegoe.BPlusError {
+	return wegoe.MakeErrWithHTTPCode(ctx, ll, int(e), e.String(), httpErrorCode, args)
 }
 
 // MakeBplusError - returns a customized CAFUError for BPlus
-func MakeBplusError(ctx context.Context, e BPlusErrorCode, args map[string]interface{}) bpluse.BPlusError {
-	return internalMakeBplusError(ctx, bpluse.Error, e, http.StatusInternalServerError, args)
+func MakeBplusError(ctx context.Context, e WegoErrorCode, args map[string]interface{}) wegoe.BPlusError {
+	return internalMakeWegoError(ctx, wegoe.Error, e, http.StatusInternalServerError, args)
 
 }
 
 // MakeBplusWarning - returns a customized CAFUError for BPlus
-func MakeBplusWarning(ctx context.Context, e BPlusErrorCode, args map[string]interface{}) bpluse.BPlusError {
-	return internalMakeBplusError(ctx, bpluse.Warning, e, http.StatusInternalServerError, args)
+func MakeBplusWarning(ctx context.Context, e WegoErrorCode, args map[string]interface{}) wegoe.BPlusError {
+	return internalMakeWegoError(ctx, wegoe.Warning, e, http.StatusInternalServerError, args)
 
 }
 
 // MakeBplusErrorWithErrorCode - returns a customized CAFUError for BPlus
-func MakeBplusErrorWithErrorCode(ctx context.Context, httpErrorCode int, e BPlusErrorCode, args map[string]interface{}) bpluse.BPlusError {
-	return internalMakeBplusError(ctx, bpluse.Error, e, httpErrorCode, args)
+func MakeBplusErrorWithErrorCode(ctx context.Context, httpErrorCode int, e WegoErrorCode, args map[string]interface{}) wegoe.BPlusError {
+	return internalMakeWegoError(ctx, wegoe.Error, e, httpErrorCode, args)
 
 }
 
 // MakeBplusWarningWithErrorCode - returns a customized CAFUError for BPlus
-func MakeBplusWarningWithErrorCode(ctx context.Context, httpErrorCode int, e BPlusErrorCode, args map[string]interface{}) bpluse.BPlusError {
-	return internalMakeBplusError(ctx, bpluse.Warning, e, httpErrorCode, args)
+func MakeBplusWarningWithErrorCode(ctx context.Context, httpErrorCode int, e WegoErrorCode, args map[string]interface{}) wegoe.BPlusError {
+	return internalMakeWegoError(ctx, wegoe.Warning, e, httpErrorCode, args)
 
 }
 
-// BPlusErrorCode - A BPlus error code
-type BPlusErrorCode int
+// WegoErrorCode - A BPlus error code
+type WegoErrorCode int
 
 // enumeration for B Plus Error codes
 const (
-	ServiceNotFound                     BPlusErrorCode = iota + 1000 // bplus.errors.ServiceNotFound
-	OperationNotFound                                                // bplus.errors.OperationNotFound
-	DecodingError                                                    // bplus.errors.DecodingError
-	CannotGenerateHTTPRequest                                        // bplus.errors.CannotGenerateHTTPRequest
-	CannotGenerateHTTPRequest1                                       // bplus.errors.CannotGenerateHTTPRequest1
-	CannotGenerateHTTPRequestForPayload                              // bplus.errors
-	ResponseUnmarshalException                                       // bplus.errors.CannotGenerateHTTPRequestForPayload
-	ParamsNotExpected                                                // bplus.errors.ParamsNotExpected
-	HTTPCallFailed                                                   // bplus.errors.HTTPCallFailed
-	CannotReadResponseBody                                           // bplus.errors.CannotReadResponseBody
-	CannotMakeStateEntity                                            // bplus.errors.CannotMakeStateEntity
-	ErrorInDecoding                                                  // bplus.errors.ErrorInDecoding
-	ErrorInAutoState                                                 // bplus.errors.ErrorInAutoState
-	AutoStateNotConfigured                                           // bplus.errors.AutoStateNotConfigured
-	InvalidState                                                     // bplus.errors.InvalidState
-	InvalidEvent                                                     // bplus.errors.InvalidEvent
-	CannotReadFile                                                   // bplus.errors.CannotReadFile
-	EventNotFoundInRequest                                           // bplus.errors.EventNotFoundInRequest
-	ParameterMissingInRequest                                        // bplus.errors.ParameterMissingInRequest
-	ErrorInObtainingSTM                                              // bplus.errors.ErrorInObtainingSTM
-	Non200StatusCodeReturned                                         // bplus.errors.Non200StatusCodeReturned
-	ValidationError                                                  // bplus.errors.ValidationError
-	UnparseableFile                                                  //bplus.error.UnparseableFile
-	ErrorInInvokingService                                           //bplus.error.ErrorInInvokingService
+	ServiceNotFound                     WegoErrorCode = iota + 1000 // wego.errors.ServiceNotFound
+	OperationNotFound                                               // wego.errors.OperationNotFound
+	DecodingError                                                   // wego.errors.DecodingError
+	CannotGenerateHTTPRequest                                       // wego.errors.CannotGenerateHTTPRequest
+	CannotGenerateHTTPRequest1                                      // wego.errors.CannotGenerateHTTPRequest1
+	CannotGenerateHTTPRequestForPayload                             // wego.errors
+	ResponseUnmarshalException                                      // wego.errors.CannotGenerateHTTPRequestForPayload
+	ParamsNotExpected                                               // wego.errors.ParamsNotExpected
+	HTTPCallFailed                                                  // wego.errors.HTTPCallFailed
+	CannotReadResponseBody                                          // wego.errors.CannotReadResponseBody
+	CannotMakeStateEntity                                           // wego.errors.CannotMakeStateEntity
+	ErrorInDecoding                                                 // wego.errors.ErrorInDecoding
+	ErrorInAutoState                                                // wego.errors.ErrorInAutoState
+	AutoStateNotConfigured                                          // wego.errors.AutoStateNotConfigured
+	InvalidState                                                    // wego.errors.InvalidState
+	InvalidEvent                                                    // wego.errors.InvalidEvent
+	CannotReadFile                                                  // wego.errors.CannotReadFile
+	EventNotFoundInRequest                                          // wego.errors.EventNotFoundInRequest
+	ParameterMissingInRequest                                       // wego.errors.ParameterMissingInRequest
+	ErrorInObtainingSTM                                             // wego.errors.ErrorInObtainingSTM
+	Non200StatusCodeReturned                                        // wego.errors.Non200StatusCodeReturned
+	ValidationError                                                 // wego.errors.ValidationError
+	UnparseableFile                                                 //wego.error.UnparseableFile
+	ErrorInInvokingService                                          //wego.error.ErrorInInvokingService
 )
 
-//go:generate stringer -linecomment -type=BPlusErrorCode
+//go:generate stringer -linecomment -type=WegoErrorCode

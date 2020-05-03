@@ -1,7 +1,21 @@
-# The BPLUS Framework package
+# The WEGO Framework package
+WEGO is at its core, a framework that invokes a service (more precisely it invokes an operation in a
+service). For this to happen, it needs the following:
+1. It needs to know the services that exist.
+2. It needs to know their dependencies as defined in a makeService()
+3. It needs to know about the interfaces exposed by the service (so that it can potentially mock the
+service for testing purposes).
+4. It needs to know the transports that the service decides to expose so that WEGO can provide the 
+transport.
+5. It needs to know what middlewares that the service wants to have before it. The middlewares can be
+at the client side or the server side. 
 
-BPlus is at its core, a framework that invokes an operation in a service. The operation is invoked in 
+
+The operation is invoked in 
 response to a request at a transport layer. The core framework package provides the following features:
+0. Instantiate the framework along with a DI bean factory. DI in GO has thus far been provided by 
+wiring frameworks that There is no core bean factory within GO. Hence
+it becomes difficult to do things like Auto-wiring in the style of th
 1. The ability for a service to register itself with the framework.
 2. The ability for a transport such as HTTP to register an operation in order to expose it to the 
 outside world.

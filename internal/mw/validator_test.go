@@ -3,13 +3,13 @@ package mw
 import (
 	"context"
 	"encoding/json"
-	bpluse "gitlab.intelligentb.com/devops/bplus/err"
-	"gitlab.intelligentb.com/devops/bplus/log"
+	wegoe "github.com/agorago/wego/err"
+	"github.com/agorago/wego/log"
 	"net/http"
 	"testing"
 
-	bplusc "gitlab.intelligentb.com/devops/bplus/context"
-	"gitlab.intelligentb.com/devops/bplus/fw"
+	wegocontext "github.com/agorago/wego/context"
+	"github.com/agorago/wego/fw"
 	"gopkg.in/go-playground/assert.v1"
 )
 
@@ -25,7 +25,7 @@ func TestNoPayloadv10validator(t *testing.T) {
 	ctx := context.Background()
 
 	ctx = chain.DoContinue(ctx)
-	err := bplusc.GetError(ctx)
+	err := wegocontext.GetError(ctx)
 	assert.Equal(t, err, nil)
 }
 
@@ -41,9 +41,9 @@ func TestValidv10validator(t *testing.T) {
     "c": "abc"
   }`)
 	json.Unmarshal(r, &request)
-	ctx = bplusc.SetPayload(ctx, request)
+	ctx = wegocontext.SetPayload(ctx, request)
 	ctx = chain.DoContinue(ctx)
-	err := bplusc.GetError(ctx)
+	err := wegocontext.GetError(ctx)
 	assert.Equal(t, err, nil)
 }
 
@@ -58,10 +58,10 @@ func TestInvalidv10validator(t *testing.T) {
     "b": 1
   }`)
 	json.Unmarshal(r, &request)
-	ctx = bplusc.SetPayload(ctx, request)
+	ctx = wegocontext.SetPayload(ctx, request)
 	ctx = chain.DoContinue(ctx)
-	err := bplusc.GetError(ctx)
-	e1, ok := err.(bpluse.BPlusError)
+	err := wegocontext.GetError(ctx)
+	e1, ok := err.(wegoe.BPlusError)
 	if !ok {
 		log.Errorf(ctx, "Cannot cast the error into Bplus error. Err = %#v", err)
 		t.Fail()

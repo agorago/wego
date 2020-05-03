@@ -3,7 +3,7 @@ package stm
 import (
 	"context"
 	"encoding/json"
-	e "gitlab.intelligentb.com/devops/bplus/internal/err"
+	e "github.com/agorago/wego/internal/err"
 	"io/ioutil"
 )
 

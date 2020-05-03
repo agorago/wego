@@ -3,9 +3,9 @@ package fw_test
 import (
 	"context"
 	"github.com/go-playground/assert/v2"
-	bpluse "gitlab.intelligentb.com/devops/bplus/err"
-	"gitlab.intelligentb.com/devops/bplus/fw"
-	e "gitlab.intelligentb.com/devops/bplus/internal/err"
+	wegoe "github.com/agorago/wego/err"
+	"github.com/agorago/wego/fw"
+	e "github.com/agorago/wego/internal/err"
 	"log"
 	"testing"
 )
@@ -130,7 +130,7 @@ func TestRegisterServiceForClientSide(t *testing.T) {
 		log.Printf("It is not expected to find the foo method\n")
 		t.Fail()
 	}
-	bpluserr, ok := err.(bpluse.BPlusError)
+	bpluserr, ok := err.(wegoe.BPlusError)
 	if !ok {
 		log.Printf("Error returned is expected to be of type BPlusError\n")
 		t.Fail()

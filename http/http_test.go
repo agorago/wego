@@ -2,9 +2,9 @@ package http_test
 
 import (
 	"context"
-	e "gitlab.intelligentb.com/devops/bplus/err"
-	bplushttp "gitlab.intelligentb.com/devops/bplus/http"
-	"gitlab.intelligentb.com/devops/bplus/internal/testutils"
+	e "github.com/agorago/wego/err"
+	wegohttp "github.com/agorago/wego/http"
+	"github.com/agorago/wego/internal/testutils"
 	"gopkg.in/go-playground/assert.v1"
 	"log"
 	"os"
@@ -19,7 +19,7 @@ func TestOperationSetup(t *testing.T) {
 	testutils.StartServer()
 
 	// access the exposed service via proxy
-	ret, err := bplushttp.ProxyRequest(context.TODO(), "EchoService", "Echo", &testutils.Input{In: "hello"})
+	ret, err := wegohttp.ProxyRequest(context.TODO(), "EchoService", "Echo", &testutils.Input{In: "hello"})
 	if err != nil {
 		log.Printf("Error in issuing an Http request. Error = %s", err.Error())
 		t.Fail()
@@ -35,7 +35,7 @@ func TestOperationSetup(t *testing.T) {
 	assert.Equal(t, out.Out, "hello")
 
 	// give an error input
-	ret, err = bplushttp.ProxyRequest(context.TODO(), "EchoService", "Echo", &testutils.Input{In: "xxx"})
+	ret, err = wegohttp.ProxyRequest(context.TODO(), "EchoService", "Echo", &testutils.Input{In: "xxx"})
 	if err == nil {
 		log.Printf("Error in issuing an Http request. Error = %s", err.Error())
 		t.Fail()

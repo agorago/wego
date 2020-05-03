@@ -4,9 +4,9 @@ import (
 	"context"
 	"reflect"
 
-	bplusc "gitlab.intelligentb.com/devops/bplus/context"
-	bplus "gitlab.intelligentb.com/devops/bplus/fw"
-	e "gitlab.intelligentb.com/devops/bplus/internal/err"
+	wegocontext "github.com/agorago/wego/context"
+	fw "github.com/agorago/wego/fw"
+	e "github.com/agorago/wego/internal/err"
 )
 
 func (str SubTypeRegistration) setupStateEntityService() {
@@ -21,7 +21,7 @@ func (str SubTypeRegistration) setupStateEntityService() {
 		if err != nil {
 			return nil, e.MakeBplusError(ctx, e.ErrorInObtainingSTM, map[string]interface{}{})
 		}
-		eventID := bplusc.Value(ctx, "Eventid")
+		eventID := wegocontext.Value(ctx, "Eventid")
 		if eventID == nil {
 			return nil, e.MakeBplusError(ctx, e.EventNotFoundInRequest, map[string]interface{}{})
 		}
@@ -38,39 +38,39 @@ func (str SubTypeRegistration) setupStateEntityService() {
 
 		return ptm.MakeParam(ctx)
 	}
-	var pdcreate = []bplus.ParamDescriptor{
-		bplus.ParamDescriptor{
+	var pdcreate = []fw.ParamDescriptor{
+		fw.ParamDescriptor{
 			Name:        "ctx",
-			ParamOrigin: bplus.CONTEXT,
+			ParamOrigin: fw.CONTEXT,
 		},
-		bplus.ParamDescriptor{
+		fw.ParamDescriptor{
 			Name:        "request",
-			ParamOrigin: bplus.PAYLOAD,
+			ParamOrigin: fw.PAYLOAD,
 		},
 	}
-	var pdprocess = []bplus.ParamDescriptor{
-		bplus.ParamDescriptor{
+	var pdprocess = []fw.ParamDescriptor{
+		fw.ParamDescriptor{
 			Name:        "ctx",
-			ParamOrigin: bplus.CONTEXT,
+			ParamOrigin: fw.CONTEXT,
 		},
-		bplus.ParamDescriptor{
+		fw.ParamDescriptor{
 			Name:        "Orderid",
-			ParamOrigin: bplus.HEADER,
+			ParamOrigin: fw.HEADER,
 			ParamKind:   reflect.String,
 		},
-		bplus.ParamDescriptor{
+		fw.ParamDescriptor{
 			Name:        "Eventid",
-			ParamOrigin: bplus.HEADER,
+			ParamOrigin: fw.HEADER,
 			ParamKind:   reflect.String,
 		},
-		bplus.ParamDescriptor{
+		fw.ParamDescriptor{
 			Name:        "param",
-			ParamOrigin: bplus.PAYLOAD,
+			ParamOrigin: fw.PAYLOAD,
 		},
 	}
 
-	var ods = []bplus.OperationDescriptor{
-		bplus.OperationDescriptor{
+	var ods = []fw.OperationDescriptor{
+		fw.OperationDescriptor{
 			Name:            "Create",
 			URL:             "/create",
 			HTTPMethod:      "POST",
@@ -78,7 +78,7 @@ func (str SubTypeRegistration) setupStateEntityService() {
 			OpResponseMaker: subtypemaker,
 			Params:          pdcreate,
 		},
-		bplus.OperationDescriptor{
+		fw.OperationDescriptor{
 			Name:            "Process",
 			URL:             "/process",
 			HTTPMethod:      "POST",
@@ -88,10 +88,10 @@ func (str SubTypeRegistration) setupStateEntityService() {
 		},
 	}
 
-	var sd = bplus.ServiceDescriptor{
+	var sd = fw.ServiceDescriptor{
 		ServiceToInvoke: str,
 		Name:            str.Name,
 		Operations:      ods,
 	}
-	bplus.RegisterService(str.Name, sd)
+	fw.RegisterService(str.Name, sd)
 }

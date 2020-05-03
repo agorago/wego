@@ -7,10 +7,10 @@ import (
 	"strings"
 
 	"github.com/go-playground/validator/v10"
-	bplusc "gitlab.intelligentb.com/devops/bplus/context"
-	"gitlab.intelligentb.com/devops/bplus/fw"
-	e "gitlab.intelligentb.com/devops/bplus/internal/err"
-	"gitlab.intelligentb.com/devops/bplus/log"
+	wegocontext "github.com/agorago/wego/context"
+	"github.com/agorago/wego/fw"
+	e "github.com/agorago/wego/internal/err"
+	"github.com/agorago/wego/log"
 )
 
 var VALIDATE = validator.New()
@@ -32,7 +32,7 @@ func init() {
 }
 
 func v10validator(ctx context.Context, chain *fw.MiddlewareChain) context.Context {
-	request := bplusc.GetPayload(ctx)
+	request := wegocontext.GetPayload(ctx)
 	if request == nil {
 		return chain.DoContinue(ctx)
 	}
@@ -47,7 +47,7 @@ func v10validator(ctx context.Context, chain *fw.MiddlewareChain) context.Contex
 			ctx = chain.DoContinue(ctx)
 			return ctx
 		}
-		return bplusc.SetError(ctx, e.MakeBplusErrorWithErrorCode(ctx, http.StatusBadRequest, e.ValidationError,
+		return wegocontext.SetError(ctx, e.MakeBplusErrorWithErrorCode(ctx, http.StatusBadRequest, e.ValidationError,
 			map[string]interface{}{
 				"Error": encodeV10Errors(er)}))
 	}

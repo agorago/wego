@@ -2,7 +2,7 @@ package util_test
 
 import (
 	"fmt"
-	"gitlab.intelligentb.com/devops/bplus/util"
+	"github.com/agorago/wego/util"
 	"reflect"
 )
 

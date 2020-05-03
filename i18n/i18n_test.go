@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	bplusc "gitlab.intelligentb.com/devops/bplus/context"
-	"gitlab.intelligentb.com/devops/bplus/i18n"
+	wegoc "github.com/agorago/wego/context"
+	"github.com/agorago/wego/i18n"
 )
 
 func init() {
@@ -14,8 +14,8 @@ func init() {
 
 func ExampleEnglish() {
 	ctx := context.Background()
-	ctx = bplusc.Add(ctx, "lang", "en-US")
-	ctx = bplusc.Add(ctx, "Accept-Language", "en-US")
+	ctx = wegoc.Add(ctx, "lang", "en-US")
+	ctx = wegoc.Add(ctx, "Accept-Language", "en-US")
 
 	fmt.Println(i18n.Translate(ctx, "good_morning", nil))
 	fmt.Println(i18n.Translate(ctx, "good_afternoon", nil))
@@ -28,7 +28,7 @@ func ExampleEnglish() {
 
 func ExampleSpanish() {
 	ctx := context.Background()
-	ctx = bplusc.Add(ctx, "lang", "es")
+	ctx = wegoc.Add(ctx, "lang", "es")
 
 	fmt.Println(i18n.Translate(ctx, "good_morning", nil))
 	fmt.Println(i18n.Translate(ctx, "good_afternoon", nil))
@@ -41,7 +41,7 @@ func ExampleSpanish() {
 
 func ExampleSpanishWithParam() {
 	ctx := context.Background()
-	ctx = bplusc.Add(ctx, "lang", "es")
+	ctx = wegoc.Add(ctx, "lang", "es")
 
 	fmt.Println(i18n.Translate(ctx, "goodbye", map[string]interface{}{
 		"Name": "Gopher",
@@ -53,8 +53,8 @@ func ExampleSpanishWithParam() {
 
 func ExampleSpanishWithParamOverride() {
 	ctx := context.Background()
-	ctx = bplusc.Add(ctx, "lang", "es")
-	ctx = bplusc.Add(ctx, "Accept-Language", "en-US")
+	ctx = wegoc.Add(ctx, "lang", "es")
+	ctx = wegoc.Add(ctx, "Accept-Language", "en-US")
 
 	fmt.Println(i18n.Translate(ctx, "goodbye", map[string]interface{}{
 		"Name": "Gopher",
@@ -67,7 +67,7 @@ func ExampleSpanishWithParamOverride() {
 func ExampleEnglishWithParamAcceptLanguage() {
 	ctx := context.Background()
 
-	ctx = bplusc.Add(ctx, "Accept-Language", "en-US")
+	ctx = wegoc.Add(ctx, "Accept-Language", "en-US")
 
 	fmt.Println(i18n.Translate(ctx, "goodbye", map[string]interface{}{
 		"Name": "Gopher",

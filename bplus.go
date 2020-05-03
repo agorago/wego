@@ -1,7 +1,7 @@
 package bplus
 
 import (
-	_ "gitlab.intelligentb.com/devops/bplus/config" // init config functions
-	_ "gitlab.intelligentb.com/devops/bplus/http"   // init http functions
-	_ "gitlab.intelligentb.com/devops/bplus/i18n"   // init i18n functions
+	_ "github.com/agorago/wego/config" // init config functions
+	_ "github.com/agorago/wego/http"   // init http functions
+	_ "github.com/agorago/wego/i18n"   // init i18n functions
 )

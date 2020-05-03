@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"gitlab.intelligentb.com/devops/bplus/fw"
+	"github.com/agorago/wego/fw"
 	"log"
 	"os"
 	"text/template"

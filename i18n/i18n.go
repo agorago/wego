@@ -3,6 +3,7 @@ package i18n
 import (
 	"context"
 	"fmt"
+	"github.com/agorago/wego/log"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -11,8 +12,8 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
-	"gitlab.intelligentb.com/devops/bplus/config"
-	bplusc "gitlab.intelligentb.com/devops/bplus/context"
+	"github.com/agorago/wego/config"
+	wegoc "github.com/agorago/wego/context"
 	"golang.org/x/text/language"
 )
 
@@ -66,8 +67,8 @@ func substring(s string, ind ...int) string {
 // lang overrides accept (if it exists)
 // If both headers dont exist then default it to the default language of the bundle
 func getLocalizer(ctx context.Context) *goi18n.Localizer {
-	lang, oklang := bplusc.Value(ctx, "lang").(string)
-	accept, okaccept := bplusc.Value(ctx, "Accept-Language").(string)
+	lang, oklang := wegoc.Value(ctx, "lang").(string)
+	accept, okaccept := wegoc.Value(ctx, "Accept-Language").(string)
 	defaultLanguage := config.GetDefaultLanguage()
 	if oklang {
 		if okaccept {
@@ -94,7 +95,7 @@ func Translate(ctx context.Context, s string, m map[string]interface{}) string {
 	)
 	// If you cannot translate s just return s and log an error
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "i18n: Missing message resource %s\n", s)
+		log.Warnf(ctx, "i18n: Missing message resource %s. Args=%#v\n", s,m)
 		return fmt.Sprintf("Missing resource %s. Args = %v\n", s, m)
 	}
 	return t

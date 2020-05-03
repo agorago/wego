@@ -2,8 +2,8 @@ package err_test
 
 import (
 	"context"
+	"github.com/agorago/wego/err"
 	"github.com/magiconair/properties/assert"
-	"gitlab.intelligentb.com/devops/bplus/err"
 	"net/http"
 	"testing"
 )

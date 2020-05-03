@@ -2,9 +2,9 @@ package mw
 
 import (
 	"context"
-	bplusc "gitlab.intelligentb.com/devops/bplus/context"
-	"gitlab.intelligentb.com/devops/bplus/fw"
-	"gitlab.intelligentb.com/devops/bplus/util"
+	bplusc "github.com/agorago/wego/context"
+	"github.com/agorago/wego/fw"
+	"github.com/agorago/wego/util"
 )
 
 // ProxyEntryPoint - Provides an entry point for all the proxies.

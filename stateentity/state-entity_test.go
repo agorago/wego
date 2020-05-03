@@ -3,11 +3,11 @@ package stateentity_test
 import (
 	"context"
 	"fmt"
+	"github.com/agorago/wego/config"
+	wegohttp "github.com/agorago/wego/http"
+	"github.com/agorago/wego/internal/testutils"
+	"github.com/agorago/wego/stateentity"
 	"github.com/magiconair/properties/assert"
-	"gitlab.intelligentb.com/devops/bplus/config"
-	bplushttp "gitlab.intelligentb.com/devops/bplus/http"
-	"gitlab.intelligentb.com/devops/bplus/internal/testutils"
-	"gitlab.intelligentb.com/devops/bplus/stateentity"
 	"log"
 	"net/http"
 	"os"
@@ -20,7 +20,7 @@ func TestRegisterSubType(t *testing.T) {
 	go func() {
 		a := ":" + config.Value("bplus.port")
 		log.Printf("Starting server at address %s\n", a)
-		http.ListenAndServe(a, bplushttp.HTTPHandler)
+		http.ListenAndServe(a, wegohttp.HTTPHandler)
 	}()
 	sep := stateentity.MakeStateEntityProxy()
 	ctx := context.TODO()

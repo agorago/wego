@@ -5,15 +5,15 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"gitlab.intelligentb.com/devops/bplus/log"
+	"github.com/agorago/wego/log"
 
 	"github.com/gorilla/mux"
 
-	bplusc "gitlab.intelligentb.com/devops/bplus/context"
-	bpluserr "gitlab.intelligentb.com/devops/bplus/err"
-	fw "gitlab.intelligentb.com/devops/bplus/fw"
-	mw "gitlab.intelligentb.com/devops/bplus/internal/mw"
-	nr "gitlab.intelligentb.com/devops/bplus/internal/nr"
+	wegoc "github.com/agorago/wego/context"
+	wegoe "github.com/agorago/wego/err"
+	fw "github.com/agorago/wego/fw"
+	mw "github.com/agorago/wego/internal/mw"
+	nr "github.com/agorago/wego/internal/nr"
 
 	"github.com/go-kit/kit/endpoint"
 	httptransport "github.com/go-kit/kit/transport/http"
@@ -60,8 +60,8 @@ func (hod httpod) makeEndpoint() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		r := request.(*http.Request)
 		ctx = fw.SetOperationDescriptor(ctx, hod.Od)
-		ctx = bplusc.Enhance(ctx, r)
-		ctx = bplusc.SetPayload(ctx, r.Body)
+		ctx = wegoc.Enhance(ctx, r)
+		ctx = wegoc.SetPayload(ctx, r.Body)
 
 		resp, err := mw.Entrypoint(ctx)
 		return httpGenericResponse{resp, err}, nil
@@ -89,7 +89,7 @@ func encodeGenericResponse(_ context.Context, w http.ResponseWriter, response in
 }
 
 func handleError(w http.ResponseWriter, err error) error {
-	e, ok := err.(bpluserr.HttpCodeProvider)
+	e, ok := err.(wegoe.HttpCodeProvider)
 	if ok {
 		w.WriteHeader(e.GetHttpCode())
 		w.Write([]byte(err.Error()))

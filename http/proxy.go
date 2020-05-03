@@ -2,8 +2,8 @@ package http
 
 import (
 	"context"
-	fw "gitlab.intelligentb.com/devops/bplus/fw"
-	"gitlab.intelligentb.com/devops/bplus/internal/mw"
+	fw "github.com/agorago/wego/fw"
+	"github.com/agorago/wego/internal/mw"
 )
 
 // ProxyRequest - create a proxy that invokes the service and operation remotely.
