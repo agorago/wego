@@ -2,17 +2,21 @@ package stateentity
 
 import (
 	"context"
-	bplusHTTP "github.com/agorago/wego/http"
+	wegohttp "github.com/agorago/wego/http"
 	"github.com/agorago/wego/stm"
 )
 
-type StateEntityProxy struct{}
-
-func MakeStateEntityProxy() StateEntityProxy {
-	return StateEntityProxy{}
+type StateEntityProxy struct{
+	proxy wegohttp.ProxyService
 }
-func doProcess(ctx context.Context, entityName string, op string, args ...interface{}) (stm.StateEntity, error) {
-	ent, err1 := bplusHTTP.ProxyRequest(ctx, entityName, op, args...)
+
+func MakeStateEntityProxy(service wegohttp.ProxyService) StateEntityProxy {
+	return StateEntityProxy{
+		proxy: service,
+	}
+}
+func (proxy StateEntityProxy)doProcess(ctx context.Context, entityName string, op string, args ...interface{}) (stm.StateEntity, error) {
+	ent, err1 := proxy.proxy.ProxyRequest(ctx, entityName, op, args...)
 	if err1 != nil {
 		return nil, err1
 	}
@@ -20,10 +24,10 @@ func doProcess(ctx context.Context, entityName string, op string, args ...interf
 	return en, nil
 }
 
-func (StateEntityProxy) Create(ctx context.Context, entityName string, entity stm.StateEntity) (stm.StateEntity, error) {
-	return doProcess(ctx, entityName, "Create", entity)
+func (proxy StateEntityProxy) Create(ctx context.Context, entityName string, entity stm.StateEntity) (stm.StateEntity, error) {
+	return proxy.doProcess(ctx, entityName, "Create", entity)
 }
 
-func (StateEntityProxy) Process(ctx context.Context, entityName, id, eventID string, param interface{}) (stm.StateEntity, error) {
-	return doProcess(ctx, entityName, "Process", id, eventID, param)
+func (proxy StateEntityProxy) Process(ctx context.Context, entityName, id, eventID string, param interface{}) (stm.StateEntity, error) {
+	return proxy.doProcess(ctx, entityName, "Process", id, eventID, param)
 }

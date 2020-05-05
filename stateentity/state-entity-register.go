@@ -2,6 +2,7 @@ package stateentity
 
 import (
 	"context"
+	"github.com/agorago/wego/fw"
 
 	"github.com/agorago/wego/stm"
 )
@@ -22,6 +23,7 @@ type SubTypeRegistration struct {
 	URLPrefix               string // can be the same as the Name
 	StateEntityRepo         Repo
 	OrderSTMChooser         STMChooser
+	WegoRegistrationService fw.RegistrationService
 }
 
 var allSubTypes = make(map[string]SubTypeRegistration)
@@ -39,7 +41,7 @@ type Repo interface {
 }
 
 // RegisterSubType - all state entity sub types register here in their init()
-func RegisterSubType(str SubTypeRegistration) {
+func (sers stateEntityRegistrationServiceImpl)RegisterSubType(str SubTypeRegistration) {
 	allSubTypes[str.Name] = str
-	str.setupStateEntityService()
+	sers.setupStateEntityService(str)
 }

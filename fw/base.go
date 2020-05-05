@@ -7,7 +7,8 @@ import (
 	e "github.com/agorago/wego/internal/err"
 )
 // The chief framework for WEGO starts here.
-// This provides two ty
+// This provides the registration functionality for new commands.
+
 // PayloadMaker - makes a payload of a certain type
 type PayloadMaker func(context.Context) (interface{}, error)
 
@@ -50,17 +51,31 @@ type OperationDescriptor struct {
 
 // ServiceDescriptor - the root of the service registration.
 type ServiceDescriptor struct {
-	Name            string
-	Description     string
-	ServiceToInvoke interface{}
-	Operations      []OperationDescriptor
+	Name            string      // The name of the service.
+	Description     string      // description of the service
+	ServiceToInvoke interface{} // a pointer to the actual service to invoke
+	Operations      []OperationDescriptor // All operations exposed by the service
 }
 
-var allServices = make(map[string]*ServiceDescriptor)
+type RegistrationService interface{
+	RegisterService(ID string, sd ServiceDescriptor)
+	FindOperationDescriptor(serviceName string, opName string) (OperationDescriptor, error)
+	FindServiceDescriptor(serviceName string) (*ServiceDescriptor, error)
+}
+
+type RegistrationServiceImpl struct{
+	AllServices map[string]*ServiceDescriptor
+}
+
+func MakeRegistrationService() RegistrationService{
+	return &RegistrationServiceImpl{
+		 make(map[string]*ServiceDescriptor),
+	}
+}
 
 // RegisterService - call this function to register a service with an ID
-func RegisterService(ID string, sd ServiceDescriptor) {
-	allServices[ID] = &sd
+func (rsimpl *RegistrationServiceImpl)RegisterService(ID string, sd ServiceDescriptor) {
+	rsimpl.AllServices[ID] = &sd
 	sd.setupService()
 }
 
@@ -96,8 +111,8 @@ func (od OperationDescriptor) setupOperation(disableTransport bool) {
 }
 
 // FindOperationDescriptor - find an op within a service
-func FindOperationDescriptor(serviceName string, opName string) (OperationDescriptor, error) {
-	sd := allServices[serviceName]
+func (rsimpl *RegistrationServiceImpl)FindOperationDescriptor(serviceName string, opName string) (OperationDescriptor, error) {
+	sd := rsimpl.AllServices[serviceName]
 	if sd == nil {
 		return OperationDescriptor{}, e.MakeBplusError(context.TODO(), e.ServiceNotFound, map[string]interface{}{
 			"Service": serviceName})
@@ -113,8 +128,8 @@ func FindOperationDescriptor(serviceName string, opName string) (OperationDescri
 }
 
 // FindServiceDescriptor - find a service descriptor that has been registered with the name
-func FindServiceDescriptor(serviceName string) (*ServiceDescriptor, error) {
-	sd := allServices[serviceName]
+func (rsimpl *RegistrationServiceImpl)FindServiceDescriptor(serviceName string) (*ServiceDescriptor, error) {
+	sd := rsimpl.AllServices[serviceName]
 	if sd == nil {
 		return nil, e.MakeBplusError(context.TODO(), e.ServiceNotFound, map[string]interface{}{
 			"Service": serviceName})

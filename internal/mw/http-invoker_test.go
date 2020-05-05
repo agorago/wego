@@ -3,8 +3,8 @@ package mw_test
 import (
 	"context"
 	"fmt"
-	bplusc "github.com/agorago/wego/context"
-	bpluserr "github.com/agorago/wego/err"
+	wegocontext "github.com/agorago/wego/context"
+	wegoe "github.com/agorago/wego/err"
 	"github.com/agorago/wego/fw"
 	"github.com/agorago/wego/internal/mw"
 	"github.com/agorago/wego/internal/testutils"
@@ -26,7 +26,7 @@ func setupServer(testString string) context.Context {
 	ctx = fw.SetOperationDescriptor(ctx, od)
 
 	input := testutils.Input{In: testString}
-	ctx = bplusc.SetPayload(ctx, &input)
+	ctx = wegocontext.SetPayload(ctx, &input)
 	return ctx
 }
 
@@ -39,7 +39,7 @@ func TestHTTPInvoker(t *testing.T) {
 	ctx := setupServer(testing)
 	ctx = mw.HTTPInvoker(ctx, nil)
 
-	o := bplusc.GetResponsePayload(ctx)
+	o := wegocontext.GetResponsePayload(ctx)
 	output, ok := o.(*testutils.Output)
 	if !ok {
 		log.Printf("Error in casting the output to type Output. Type = %#v\n", o)
@@ -58,8 +58,8 @@ func TestHTTPInvokerWithError(t *testing.T) {
 	ctx := setupServer(testing)
 	ctx = mw.HTTPInvoker(ctx, nil)
 
-	er := bplusc.GetError(ctx)
-	er1, ok := er.(bpluserr.BPlusError)
+	er := wegocontext.GetError(ctx)
+	er1, ok := er.(wegoe.BPlusError)
 	if !ok {
 		log.Printf("Error in casting the error to type BPlusError. Type = %#v\n", er)
 		t.Fail()

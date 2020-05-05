@@ -6,7 +6,6 @@ import (
 	"github.com/agorago/wego/config"
 	wegohttp "github.com/agorago/wego/http"
 	"github.com/agorago/wego/internal/testutils"
-	"github.com/agorago/wego/stateentity"
 	"github.com/magiconair/properties/assert"
 	"log"
 	"net/http"
@@ -16,13 +15,13 @@ import (
 
 func TestRegisterSubType(t *testing.T) {
 	os.Setenv("BPLUS.PORT", "5000")
-	testutils.SetupOrder()
+	_,sep := testutils.SetupOrder()
 	go func() {
 		a := ":" + config.Value("bplus.port")
 		log.Printf("Starting server at address %s\n", a)
 		http.ListenAndServe(a, wegohttp.HTTPHandler)
 	}()
-	sep := stateentity.MakeStateEntityProxy()
+
 	ctx := context.TODO()
 	order := &testutils.Order{}
 	o, e := sep.Create(ctx, "order", order)

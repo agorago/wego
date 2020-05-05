@@ -8,8 +8,8 @@ import (
 	"text/template"
 )
 
-func swaggergen(service string, templateFile string, targetFile string) error {
-	sd, err := fw.FindServiceDescriptor(service)
+func swaggergen(wego fw.RegistrationService,service string, templateFile string, targetFile string) error {
+	sd, err := wego.FindServiceDescriptor(service)
 	if err != nil {
 		return err
 	}
@@ -34,7 +34,7 @@ func swaggergen(service string, templateFile string, targetFile string) error {
 
 // main - this main will need to be invoked by a service after it first loaded its BPLUS configurations
 // this builds the swagger docs for a specified service that was configured in BPlus
-func SwaggerMain() {
+func SwaggerMain(wego fw.RegistrationService){
 	if len(os.Args) != 4 {
 		log.Fatalf("Usage: %s service-name template-file target-file", os.Args[0])
 		os.Exit(1)
@@ -42,7 +42,7 @@ func SwaggerMain() {
 	serviceName := os.Args[1]
 	templateFile := os.Args[2]
 	targetFile := os.Args[3]
-	err := swaggergen(serviceName, templateFile, targetFile)
+	err := swaggergen(wego,serviceName, templateFile, targetFile)
 	if err != nil {
 		log.Fatalf("Cannot generate the file. Error = %s\n", err)
 		os.Exit(2)

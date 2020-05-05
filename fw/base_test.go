@@ -58,7 +58,7 @@ func (my myTestServiceImpl) MyTestMethod(ctx context.Context, m *myTestRequest) 
 
 var myTestInstance = myTestServiceImpl{}
 
-func registerService(clientSide bool) fw.ServiceDescriptor {
+func registerService(clientSide bool) (fw.RegistrationService,fw.ServiceDescriptor) {
 	pds := []fw.ParamDescriptor{
 		{
 			Name:        "ctx",
@@ -96,20 +96,21 @@ func registerService(clientSide bool) fw.ServiceDescriptor {
 	if !clientSide {
 		sd.ServiceToInvoke = myTestInstance
 	}
-	fw.RegisterService("TestService", sd)
-	return sd
+	rs := fw.MakeRegistrationService()
+	rs.RegisterService("TestService", sd)
+	return rs,sd
 }
 
 func TestRegisterService(t *testing.T) {
 	var s string
 	registerOps(&s)
-	sd := registerService(false)
-	x, err := fw.FindServiceDescriptor("TestService")
+	rs,sd := registerService(false)
+	x, err := rs.FindServiceDescriptor("TestService")
 	if err != nil {
 		log.Printf("Unable to find service descriptor.Error = %s\n", err.Error())
 		t.Fail()
 	}
-	od, err := fw.FindOperationDescriptor("TestService", "MyTestMethod")
+	od, err := rs.FindOperationDescriptor("TestService", "MyTestMethod")
 	if err != nil {
 		log.Printf("Unable to find operation descriptor.Error = %s\n", err.Error())
 		t.Fail()
@@ -122,10 +123,10 @@ func TestRegisterService(t *testing.T) {
 func TestRegisterServiceForClientSide(t *testing.T) {
 	var s string
 	registerOps(&s)
-	sd := registerService(true)
+	rs,sd := registerService(true)
 
 	assert.NotEqual(t, sd.Operations[0].Name, s)
-	_, err := fw.FindOperationDescriptor("TestService", "foo")
+	_, err := rs.FindOperationDescriptor("TestService", "foo")
 	if err == nil {
 		log.Printf("It is not expected to find the foo method\n")
 		t.Fail()
@@ -139,8 +140,8 @@ func TestRegisterServiceForClientSide(t *testing.T) {
 }
 
 func TestFindServiceDescriptorService(t *testing.T) {
-	registerService(false)
-	_, err := fw.FindServiceDescriptor("xxx")
+	rs,_ := registerService(false)
+	_, err := rs.FindServiceDescriptor("xxx")
 	if err == nil {
 		log.Printf("It is not expected to find the xxx service\n")
 		t.Fail()

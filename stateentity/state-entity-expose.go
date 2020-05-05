@@ -9,7 +9,19 @@ import (
 	e "github.com/agorago/wego/internal/err"
 )
 
-func (str SubTypeRegistration) setupStateEntityService() {
+type StateEntityRegistrationService interface{
+	RegisterSubType(str SubTypeRegistration)
+}
+type stateEntityRegistrationServiceImpl struct{
+	WegoRegistrationService fw.RegistrationService
+}
+
+func MakeStateEntityRegistrationService(wegoRegistrationService fw.RegistrationService) StateEntityRegistrationService{
+	return stateEntityRegistrationServiceImpl{
+		WegoRegistrationService: wegoRegistrationService,
+	}
+}
+func  (sers stateEntityRegistrationServiceImpl)setupStateEntityService(str SubTypeRegistration) {
 	var subtypemaker = func(ctx context.Context) (interface{}, error) {
 		return str.StateEntitySubTypeMaker(ctx)
 	}
@@ -93,5 +105,6 @@ func (str SubTypeRegistration) setupStateEntityService() {
 		Name:            str.Name,
 		Operations:      ods,
 	}
-	fw.RegisterService(str.Name, sd)
+
+	sers.WegoRegistrationService.RegisterService(str.Name, sd)
 }

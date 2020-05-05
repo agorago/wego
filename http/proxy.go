@@ -6,9 +6,25 @@ import (
 	"github.com/agorago/wego/internal/mw"
 )
 
+// ProxyService - it proxies a request for a service and an operation and returns a result.
+// Calls the HTTP service and passes all the parameters to it.
+// Converts the return values from the request back with error handling included.
+type ProxyService interface{
+	ProxyRequest(ctx context.Context, service string, operation string, params ...interface{}) (interface{}, error)
+}
+
+func MakeProxyService(registrationService fw.RegistrationService)ProxyService{
+	return proxyServiceImpl{
+		registrationService: registrationService,
+	}
+}
+type proxyServiceImpl struct{
+	registrationService fw.RegistrationService
+}
+
 // ProxyRequest - create a proxy that invokes the service and operation remotely.
-func ProxyRequest(ctx context.Context, service string, operation string, params ...interface{}) (interface{}, error) {
-	od, err := fw.FindOperationDescriptor(service, operation)
+func (p proxyServiceImpl)ProxyRequest(ctx context.Context, service string, operation string, params ...interface{}) (interface{}, error) {
+	od, err := p.registrationService.FindOperationDescriptor(service, operation)
 	if err != nil {
 		return nil, err
 	}

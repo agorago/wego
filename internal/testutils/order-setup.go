@@ -2,6 +2,8 @@ package testutils
 
 import (
 	"context"
+	"github.com/agorago/wego/fw"
+	wegohttp "github.com/agorago/wego/http"
 	"github.com/agorago/wego/log"
 	"github.com/agorago/wego/stateentity"
 	"github.com/agorago/wego/stm"
@@ -118,7 +120,7 @@ func (actionParamTypeMaker) MakeParam(ctx context.Context) (interface{}, error) 
 	return &ActionParam{}, nil
 }
 
-func SetupOrder() {
+func SetupOrder() (fw.RegistrationService,stateentity.StateEntityProxy){
 	var err error
 	registerPreprocessor()
 	registerActions()
@@ -126,7 +128,6 @@ func SetupOrder() {
 	if err != nil {
 		log.Error(context.Background(), "FATAL: Cannot create STM")
 	}
-	log.Info(context.Background(), " Registering payments \n")
 
 	var registration = stateentity.SubTypeRegistration{
 		Name:                    "order",
@@ -136,5 +137,11 @@ func SetupOrder() {
 		StateEntityRepo:         repo,
 		OrderSTMChooser:         stmChooser,
 	}
-	stateentity.RegisterSubType(registration)
+
+	rs := fw.MakeRegistrationService()
+	proxyService := wegohttp.MakeProxyService(rs)
+	proxy := stateentity.MakeStateEntityProxy(proxyService)
+	sers := stateentity.MakeStateEntityRegistrationService(rs)
+	sers.RegisterSubType(registration)
+	return rs,proxy
 }

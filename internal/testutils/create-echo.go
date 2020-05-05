@@ -89,13 +89,15 @@ func CreateEcho() fw.ServiceDescriptor {
 	return service
 }
 
-func StartServer() {
-	fw.RegisterService("EchoService", CreateEcho())
+func StartServer() (fw.RegistrationService,fw.ServiceDescriptor){
+	rs := fw.MakeRegistrationService()
+	sd := CreateEcho()
+	rs.RegisterService("EchoService", sd)
 
 	go func() {
 		a := ":" + config.Value("bplus.port")
 		log.Printf("Starting server at address %s\n", a)
 		http.ListenAndServe(a, wegohttp.HTTPHandler)
 	}()
-
+	return rs,sd
 }

@@ -16,10 +16,11 @@ func TestOperationSetup(t *testing.T) {
 	defer func() {
 		os.Unsetenv("BPLUS.PORT")
 	}()
-	testutils.StartServer()
+	rs,_ := testutils.StartServer()
+	proxy := wegohttp.MakeProxyService(rs)
 
 	// access the exposed service via proxy
-	ret, err := wegohttp.ProxyRequest(context.TODO(), "EchoService", "Echo", &testutils.Input{In: "hello"})
+	ret, err := proxy.ProxyRequest(context.TODO(), "EchoService", "Echo", &testutils.Input{In: "hello"})
 	if err != nil {
 		log.Printf("Error in issuing an Http request. Error = %s", err.Error())
 		t.Fail()
@@ -35,7 +36,7 @@ func TestOperationSetup(t *testing.T) {
 	assert.Equal(t, out.Out, "hello")
 
 	// give an error input
-	ret, err = wegohttp.ProxyRequest(context.TODO(), "EchoService", "Echo", &testutils.Input{In: "xxx"})
+	ret, err = proxy.ProxyRequest(context.TODO(), "EchoService", "Echo", &testutils.Input{In: "xxx"})
 	if err == nil {
 		log.Printf("Error in issuing an Http request. Error = %s", err.Error())
 		t.Fail()
