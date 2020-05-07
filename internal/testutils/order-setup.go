@@ -2,8 +2,9 @@ package testutils
 
 import (
 	"context"
+	"fmt"
+	wego "github.com/agorago/wego"
 	"github.com/agorago/wego/fw"
-	wegohttp "github.com/agorago/wego/http"
 	"github.com/agorago/wego/log"
 	"github.com/agorago/wego/stateentity"
 	"github.com/agorago/wego/stm"
@@ -120,7 +121,7 @@ func (actionParamTypeMaker) MakeParam(ctx context.Context) (interface{}, error) 
 	return &ActionParam{}, nil
 }
 
-func SetupOrder() (fw.RegistrationService,stateentity.StateEntityProxy){
+func SetupOrder()fw.CommandCatalog{
 	var err error
 	registerPreprocessor()
 	registerActions()
@@ -137,11 +138,11 @@ func SetupOrder() (fw.RegistrationService,stateentity.StateEntityProxy){
 		StateEntityRepo:         repo,
 		OrderSTMChooser:         stmChooser,
 	}
-
-	rs := fw.MakeRegistrationService()
-	proxyService := wegohttp.MakeProxyService(rs)
-	proxy := stateentity.MakeStateEntityProxy(proxyService)
-	sers := stateentity.MakeStateEntityRegistrationService(rs)
+	commandCatalog,err := fw.MakeInitializedCommandCatalog(wego.MakeWegoInitializer())
+	if err != nil {
+		panic(fmt.Sprint("WeGO cannot initialize. Error ",err))
+	}
+	sers := commandCatalog.Command(wego.StateEntityRegistrationService).(stateentity.StateEntityRegistrationService)
 	sers.RegisterSubType(registration)
-	return rs,proxy
+	return commandCatalog
 }

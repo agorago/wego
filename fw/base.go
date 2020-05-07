@@ -54,59 +54,58 @@ type ServiceDescriptor struct {
 	Name            string      // The name of the service.
 	Description     string      // description of the service
 	ServiceToInvoke interface{} // a pointer to the actual service to invoke
-	Operations      []OperationDescriptor // All operations exposed by the service
+	Operations      []OperationDescriptor // All transports exposed by the service
 }
 
 type RegistrationService interface{
 	RegisterService(ID string, sd ServiceDescriptor)
 	FindOperationDescriptor(serviceName string, opName string) (OperationDescriptor, error)
 	FindServiceDescriptor(serviceName string) (*ServiceDescriptor, error)
+	RegisterTransport(id string,transport Transport)
 }
 
 type RegistrationServiceImpl struct{
 	AllServices map[string]*ServiceDescriptor
+	AllTransports map[string]Transport
 }
 
 func MakeRegistrationService() RegistrationService{
 	return &RegistrationServiceImpl{
 		 make(map[string]*ServiceDescriptor),
+		 make(map[string]Transport),
 	}
 }
 
 // RegisterService - call this function to register a service with an ID
 func (rsimpl *RegistrationServiceImpl)RegisterService(ID string, sd ServiceDescriptor) {
 	rsimpl.AllServices[ID] = &sd
-	sd.setupService()
+	rsimpl.setupService(&sd)
 }
 
-func (sd *ServiceDescriptor) setupService() {
+func (rs RegistrationServiceImpl) setupService(sd *ServiceDescriptor) {
 	for _, od := range sd.Operations {
 		od.Service = *sd
-		od.setupOperation(sd.ServiceToInvoke == nil) // if the service to invoke is null then
+		rs.setupOperation(od,(sd.ServiceToInvoke == nil))
+		// if the service to invoke is null then
 		// all transports are disabled for this service registration. It is only used to
 		// update the local registry of available services. (useful to invoke using proxy etc.)
 	}
 }
 
-// OperationRegistration - any function that registers the operations and accomplishes
-// something
-type OperationRegistration func(OperationDescriptor)
+// Transport - any function that exposes a transport at the operation level
+type Transport func(OperationDescriptor)
 
-var operations struct {
-	Operations []OperationRegistration
+// RegisterTransport - Register a transport as an extension to WEGO
+func (rs RegistrationServiceImpl) RegisterTransport(id string, transport Transport) {
+	rs.AllTransports[id] = transport
 }
 
-// RegisterOperations - Register extension to BPlus with definied operations here
-func RegisterOperations(or OperationRegistration) {
-	operations.Operations = append(operations.Operations, or)
-}
-
-func (od OperationDescriptor) setupOperation(disableTransport bool) {
+func (rs RegistrationServiceImpl) setupOperation(od OperationDescriptor,disableTransport bool) {
 	if disableTransport {
 		return
 	}
-	for _, op := range operations.Operations {
-		op(od)
+	for _, transport := range rs.AllTransports {
+		transport(od)
 	}
 }
 

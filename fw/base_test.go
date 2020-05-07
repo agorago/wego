@@ -41,8 +41,8 @@ func loggerMiddleware(ctx context.Context, chain *fw.MiddlewareChain) context.Co
 	return ctx
 }
 
-func registerOps(visitedOp *string) {
-	fw.RegisterOperations(
+func registerTransport(wego fw.RegistrationService,visitedOp *string) {
+	wego.RegisterTransport("dummy",
 		func(descriptor fw.OperationDescriptor) {
 			*visitedOp = descriptor.Name
 		})
@@ -58,7 +58,7 @@ func (my myTestServiceImpl) MyTestMethod(ctx context.Context, m *myTestRequest) 
 
 var myTestInstance = myTestServiceImpl{}
 
-func registerService(clientSide bool) (fw.RegistrationService,fw.ServiceDescriptor) {
+func registerService(clientSide bool, s *string) (fw.RegistrationService,fw.ServiceDescriptor) {
 	pds := []fw.ParamDescriptor{
 		{
 			Name:        "ctx",
@@ -97,14 +97,18 @@ func registerService(clientSide bool) (fw.RegistrationService,fw.ServiceDescript
 		sd.ServiceToInvoke = myTestInstance
 	}
 	rs := fw.MakeRegistrationService()
+	if s != nil {
+		registerTransport(rs,s)
+	}
 	rs.RegisterService("TestService", sd)
 	return rs,sd
 }
 
 func TestRegisterService(t *testing.T) {
 	var s string
-	registerOps(&s)
-	rs,sd := registerService(false)
+
+	rs,sd := registerService(false, &s)
+
 	x, err := rs.FindServiceDescriptor("TestService")
 	if err != nil {
 		log.Printf("Unable to find service descriptor.Error = %s\n", err.Error())
@@ -122,9 +126,8 @@ func TestRegisterService(t *testing.T) {
 
 func TestRegisterServiceForClientSide(t *testing.T) {
 	var s string
-	registerOps(&s)
-	rs,sd := registerService(true)
 
+	rs,sd := registerService(true,&s)
 	assert.NotEqual(t, sd.Operations[0].Name, s)
 	_, err := rs.FindOperationDescriptor("TestService", "foo")
 	if err == nil {
@@ -140,7 +143,7 @@ func TestRegisterServiceForClientSide(t *testing.T) {
 }
 
 func TestFindServiceDescriptorService(t *testing.T) {
-	rs,_ := registerService(false)
+	rs,_ := registerService(false,nil)
 	_, err := rs.FindServiceDescriptor("xxx")
 	if err == nil {
 		log.Printf("It is not expected to find the xxx service\n")

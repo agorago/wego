@@ -2,6 +2,7 @@ package test
 
 import (
 	"flag"
+	"github.com/agorago/wego/fw"
 	"os"
 	"testing"
 
@@ -21,18 +22,22 @@ func init() {
 }
 
 // BDDSuite - the actual bdd suite that contains the step definitions
-type BDDSuite func(*godog.Suite)
+type BDDSuite func(fw.CommandCatalog,*godog.Suite)
 
 // BDD - the method that invokes the goDog BDD suite of tests
-func BDD(m *testing.M, bddsuite BDDSuite) {
+func BDD(m *testing.M,bddsuite BDDSuite, initializers ...fw.Initializer) {
 	flag.Parse()
 	opt.Paths = flag.Args()
-
-	go cmd.Serve() // this is important. Else the server wont start. It is also important that
+	commandCatalog,httphandler,err := cmd.InitApp(initializers...)
+	if err != nil{
+		panic("Cannot run test. Error = " + err.Error())
+	}
+	go cmd.ServeHandle(httphandler)
+	// this is important. Else the server wont start. It is also important that
 	// the server is not running in the foreground since we need to initiate the tests after this
 
 	status := godog.RunWithOptions("godogs", func(s *godog.Suite) {
-		bddsuite(s)
+		bddsuite(commandCatalog, s)
 	}, opt)
 
 	if st := m.Run(); st > status {

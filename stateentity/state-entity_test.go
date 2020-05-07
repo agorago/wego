@@ -3,9 +3,10 @@ package stateentity_test
 import (
 	"context"
 	"fmt"
+	"github.com/agorago/wego"
 	"github.com/agorago/wego/config"
-	wegohttp "github.com/agorago/wego/http"
 	"github.com/agorago/wego/internal/testutils"
+	"github.com/agorago/wego/stateentity"
 	"github.com/magiconair/properties/assert"
 	"log"
 	"net/http"
@@ -15,13 +16,14 @@ import (
 
 func TestRegisterSubType(t *testing.T) {
 	os.Setenv("BPLUS.PORT", "5000")
-	_,sep := testutils.SetupOrder()
+	commandCatalog := testutils.SetupOrder()
+	httpHandler := commandCatalog.Command(wego.WegoHTTPHandler).(http.Handler)
 	go func() {
 		a := ":" + config.Value("bplus.port")
 		log.Printf("Starting server at address %s\n", a)
-		http.ListenAndServe(a, wegohttp.HTTPHandler)
+		http.ListenAndServe(a, httpHandler)
 	}()
-
+	sep := commandCatalog.Command(wego.StateEntityProxy).(stateentity.StateEntityProxy)
 	ctx := context.TODO()
 	order := &testutils.Order{}
 	o, e := sep.Create(ctx, "order", order)

@@ -20,17 +20,23 @@ import (
 	nrgorilla "github.com/newrelic/go-agent/v3/integrations/nrgorilla"
 )
 
-// http package allows the hooks to HTTP. It creates a transport from
-// server configuration
+// http package allows the hooks to HTTP. It enables HTTP transport for all registered
+// WEGO services. To facilitate this, it registers itself as a transport in WEGO. Whenever
+// a new service is registered, this module is called to register all the operations
 
-// HTTPHandler - Grab hold of this to set up HTTP routes
-var HTTPHandler *mux.Router
 
-func init() {
-	HTTPHandler = mux.NewRouter()
+func InitializeHTTP(rs fw.RegistrationService)http.Handler {
+	HTTPHandler := mux.NewRouter()
 	HTTPHandler.Use(nrgorilla.Middleware(nr.NRApp))
-	// register the HTTP registration with BPlus as an extension
-	fw.RegisterOperations(setupOperation)
+	// register the HTTP transport with WEGO
+	rs.RegisterTransport("HTTP",func (od fw.OperationDescriptor){
+		if od.URL == "" {
+			return
+		}
+		handler := setupHTTPForOperation(od)
+		HTTPHandler.Methods(od.HTTPMethod).PathPrefix("/" + od.Service.Name).Path(od.URL).Handler(handler)
+	})
+	return HTTPHandler
 }
 
 type httpGenericResponse struct {
@@ -42,18 +48,15 @@ type httpod struct {
 	Od fw.OperationDescriptor
 }
 
-func setupOperation(od fw.OperationDescriptor) {
+func setupHTTPForOperation(od fw.OperationDescriptor) *httptransport.Server{
 	hod := httpod{Od: od}
-	if od.URL == "" {
-		return
-	}
 	handler := httptransport.NewServer(
 		hod.makeEndpoint(),
 		hod.decodeRequest,
 		encodeGenericResponse,
 	)
 	log.Infof(context.Background(), "setting up the service for %s%s\n", od.Service.Name, od.URL)
-	HTTPHandler.Methods(od.HTTPMethod).PathPrefix("/" + od.Service.Name).Path(od.URL).Handler(handler)
+	return handler
 }
 
 func (hod httpod) makeEndpoint() endpoint.Endpoint {

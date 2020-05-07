@@ -2,16 +2,17 @@ package testutils
 
 import (
 	"context"
+	"fmt"
+	wego "github.com/agorago/wego"
 	"github.com/agorago/wego/config"
 	e "github.com/agorago/wego/err"
 	"github.com/agorago/wego/fw"
-	wegohttp "github.com/agorago/wego/http"
 	"log"
 	"net/http"
 	"reflect"
 )
 
-// Set up a test echo service to facilitate testing of various components in BPlus
+// Set up a test echo service to facilitate testing of various components in WeGO
 type Service struct{}
 type Input struct {
 	In string
@@ -90,14 +91,20 @@ func CreateEcho() fw.ServiceDescriptor {
 }
 
 func StartServer() (fw.RegistrationService,fw.ServiceDescriptor){
-	rs := fw.MakeRegistrationService()
+	commandCatalog,err := fw.MakeInitializedCommandCatalog(wego.MakeWegoInitializer())
+	if err != nil {
+		panic(fmt.Sprintf("Application cannot start. Wego has not been able to start. Error = %v",err))
+	}
 	sd := CreateEcho()
+	rs := commandCatalog.Command(wego.WEGO).(fw.RegistrationService)
 	rs.RegisterService("EchoService", sd)
+
+	httphandler := commandCatalog.Command(wego.WegoHTTPHandler).(http.Handler)
 
 	go func() {
 		a := ":" + config.Value("bplus.port")
 		log.Printf("Starting server at address %s\n", a)
-		http.ListenAndServe(a, wegohttp.HTTPHandler)
+		http.ListenAndServe(a, httphandler)
 	}()
 	return rs,sd
 }
