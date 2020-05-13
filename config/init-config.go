@@ -9,6 +9,8 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -77,14 +79,35 @@ func walkTree(cpath string) {
 	})
 }
 
+func checkEnv(propname string)string{
+	propname = strings.ToUpper(strings.ReplaceAll(propname,".","__"))
+	fmt.Fprintf(os.Stderr,"propname = %s. value =%s\n",propname,os.Getenv(propname))
+	return os.Getenv(propname)
+}
+
 func Value(propname string) string {
+	if s := checkEnv(propname); s != ""{
+		return s
+	}
 	return viperConfig.GetString(propname)
 }
 
 func IntValue(propname string) int {
+	if s := checkEnv(propname); s != ""{
+		ret,err := strconv.Atoi(s)
+		if err == nil {
+			return ret
+		}
+	}
 	return viperConfig.GetInt(propname)
 }
 
 func BoolValue(propname string) bool {
+	if s := checkEnv(propname); s != ""{
+		ret,err := strconv.ParseBool(s)
+		if err == nil {
+			return ret
+		}
+	}
 	return viperConfig.GetBool(propname)
 }

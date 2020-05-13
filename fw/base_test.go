@@ -134,9 +134,9 @@ func TestRegisterServiceForClientSide(t *testing.T) {
 		log.Printf("It is not expected to find the foo method\n")
 		t.Fail()
 	}
-	bpluserr, ok := err.(wegoe.BPlusError)
+	bpluserr, ok := err.(wegoe.WeGOError)
 	if !ok {
-		log.Printf("Error returned is expected to be of type BPlusError\n")
+		log.Printf("Error returned is expected to be of type WeGOError\n")
 		t.Fail()
 	}
 	assert.Equal(t, bpluserr.ErrorCode, int(e.OperationNotFound))

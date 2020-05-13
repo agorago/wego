@@ -86,9 +86,9 @@ func TestServiceInvokerWithErrors(t *testing.T) {
 
 	e := bplusc.GetError(ctx)
 
-	err1, ok := e.(bpluserr.BPlusError)
+	err1, ok := e.(bpluserr.WeGOError)
 	if !ok {
-		log.Printf("Error in casting the error to type BPlusError. Type = %#v\n", e)
+		log.Printf("Error in casting the error to type WeGOError. Type = %#v\n", e)
 		t.Fail()
 		return
 	}
@@ -117,9 +117,9 @@ func TestServiceInvokerHeaderNoValueSet(t *testing.T) {
 
 	e := bplusc.GetError(ctx)
 
-	err1, ok := e.(bpluserr.BPlusError)
+	err1, ok := e.(bpluserr.WeGOError)
 	if !ok {
-		log.Printf("Error in casting the error to type BPlusError. Type = %#v\n", e)
+		log.Printf("Error in casting the error to type WeGOError. Type = %#v\n", e)
 		t.Fail()
 		return
 	}
@@ -133,9 +133,9 @@ func TestServiceInvokerWithBadMethodName(t *testing.T) {
 
 	e := bplusc.GetError(ctx)
 
-	err1, ok := e.(bpluserr.BPlusError)
+	err1, ok := e.(bpluserr.WeGOError)
 	if !ok {
-		log.Printf("Error in casting the error to type BPlusError. Type = %#v\n", e)
+		log.Printf("Error in casting the error to type WeGOError. Type = %#v\n", e)
 		t.Fail()
 		return
 	}
@@ -150,9 +150,9 @@ func TestServiceInvokerWithInvalidPayload(t *testing.T) {
 
 	e := bplusc.GetError(ctx)
 
-	err1, ok := e.(bpluserr.BPlusError)
+	err1, ok := e.(bpluserr.WeGOError)
 	if !ok {
-		log.Printf("Error in casting the error to type BPlusError. Type = %#v\n", e)
+		log.Printf("Error in casting the error to type WeGOError. Type = %#v\n", e)
 		t.Fail()
 		return
 	}

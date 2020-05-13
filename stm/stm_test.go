@@ -182,9 +182,9 @@ func TestInvalidEvent(t *testing.T) {
 	ts := invoke(t, &to, "", nil).(*testOrder)
 	assert.Equal(t, ts.GetState(), "created", "STM-TEST: State change not successful")
 	_, er := fsm.Process(context.TODO(), ts, "close", nil)
-	e, ok := er.(err.BPlusError)
+	e, ok := er.(err.WeGOError)
 	if !ok {
-		fmt.Fprintf(os.Stderr, "Error not castable to BPlusError!\n")
+		fmt.Fprintf(os.Stderr, "Error not castable to WeGOError!\n")
 		t.Fail()
 	}
 	code := int(wegoe.InvalidEvent)
@@ -198,9 +198,9 @@ func TestInvalidState(t *testing.T) {
 	assert.Equal(t, ts.GetState(), "created", "STM-TEST: State change not successful")
 	ts.SetState("INVALID") // set it to an invalid State
 	_, er := fsm.Process(context.TODO(), ts, "confirm", nil)
-	e, ok := er.(err.BPlusError)
+	e, ok := er.(err.WeGOError)
 	if !ok {
-		fmt.Fprintf(os.Stderr, "Error not castable to BPlusError!\n")
+		fmt.Fprintf(os.Stderr, "Error not castable to WeGOError!\n")
 		t.Fail()
 	}
 	code := int(wegoe.InvalidState)
@@ -209,9 +209,9 @@ func TestInvalidState(t *testing.T) {
 
 func TestInvalidFilename(t *testing.T) {
 	_, er := stm.MakeStm("test1.json", nil)
-	e, ok := er.(err.BPlusError)
+	e, ok := er.(err.WeGOError)
 	if !ok {
-		fmt.Fprintf(os.Stderr, "Error not castable to BPlusError!\n")
+		fmt.Fprintf(os.Stderr, "Error not castable to WeGOError!\n")
 		t.Fail()
 	}
 	code := int(wegoe.CannotReadFile)
@@ -220,9 +220,9 @@ func TestInvalidFilename(t *testing.T) {
 
 func TestUnparseableFilename(t *testing.T) {
 	_, er := stm.MakeStm("test-unparseable.json", nil)
-	e, ok := er.(err.BPlusError)
+	e, ok := er.(err.WeGOError)
 	if !ok {
-		fmt.Fprintf(os.Stderr, "Error not castable to BPlusError!\n")
+		fmt.Fprintf(os.Stderr, "Error not castable to WeGOError!\n")
 		t.Fail()
 	}
 	code := int(wegoe.UnparseableFile)

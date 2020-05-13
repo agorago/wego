@@ -73,8 +73,8 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor) (interface{}, e
 	return nil, nil
 }
 
-func extractErrorResponse(ctx context.Context, resp *http.Response, body []byte) bpluse.BPlusError {
-	er := bpluse.BPlusError{}
+func extractErrorResponse(ctx context.Context, resp *http.Response, body []byte) bpluse.WeGOError {
+	er := bpluse.WeGOError{}
 	uerr := json.Unmarshal(body, &er)
 	if uerr != nil {
 		// cannot unmarshal the body into a bplus err. So create an error.

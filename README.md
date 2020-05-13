@@ -1,10 +1,10 @@
-# WEGO
+# WeGO
 
 A Micro Services Framework 
 
 # Introduction
 
-WEGO is a flexible (yet opinionated) framework that is suitable for rapid development of micro services. The 
+WeGO is a flexible (yet opinionated) framework that is suitable for rapid development of micro services. The 
 GOLANG architect has a few important responsibilities:
 1. Make a choice from various frameworks that exist in the GO LANG ecosystem.
 2. Standardize them and 
@@ -12,7 +12,11 @@ GOLANG architect has a few important responsibilities:
 GOLANG has a nice ecosystem of packages that solves specific problems very well. When it comes to writing
 Micro services, the developer has the onus of stitching them all together to make them perform the work. This 
 presents a few challenges:
-1. The author has to decide  
+1. The author has to decide which frameworks to use
+2. After deciding on the framework, the developer has to make decisions on the best practices around using 
+the chosen  framework. 
+
+WeGO does both these things for you.
 
 The chief benefit of WEGO is that it comes integrated with different frameworks that have been standardized such as: 
 - gorilla MUX (for HTTP)
@@ -22,7 +26,7 @@ The chief benefit of WEGO is that it comes integrated with different frameworks 
 - Viper (for configuration management)
 - Nick Snyder's go-i18n 
 
-Besides integration with frameworks, BPlus accomplishes the following:
+Besides integration with frameworks, WeGO accomplishes the following:
 * Provide a standardized folder structure for development.
 * Allows developers to focus on business logic without being bothered about how services are exposed via HTTP etc.
 * Facilitates interface service separation
@@ -42,24 +46,24 @@ Besides integration with frameworks, BPlus accomplishes the following:
 
 # Modularized code base
 
-BPlus is a modularized code base with a base framework and several set of plug-ins. All the plug-ins
+WeGO is a modularized code base with a base framework and several set of plug-ins. All the plug-ins
 are shipped together in one GO Module. However, it is easy to dissociate them if the need so arises.
 
 # Folder Structure
-BPlus is best implemented using a folder structure as follows:
+WeGO is best implemented using a folder structure as follows:
 $ mkdir src
 $ cd src
-$ git clone intelligentb.gitlab.com/bplus (get the actual git repo url)
-$ git clone intelligentb.gitlab.com/code-gen (get the actual git repo url)
+$ git clone github.com/agorago/wego (get the actual git repo url)
+$ git clone github.com/agorago/wego-gen (get the actual git repo url)
 $ mkdir configs
 
-All included git projects within Intelligent B including BPlus will be under src. Reference to other Intelligent B 
+All included git projects will be under src. Reference to other WeGO
 projects will be relative. For example, you will create a relative path to BPlus in your module by typing the 
 following:
 $ cd src/my-service
-$ go mod edit --alter intelligentb.gitlab.com/devops/bplus=../bplus
+$ go mod edit --alter github.com/agorago/wego=../wego
 
-This establishes the relative path to bplus from your service and allows changing of the bplus code without 
+This establishes the relative path to WeGO from your service and allows changing of the WeGO code without 
 requiring "go" to extract the latest code from gitlab.
 
 ## Project Types
@@ -111,6 +115,4 @@ dependencies of the __run__ target. Hence triggering step#6 above automatically 
 step#5.
 
 
-# Deployment Process
 
-The services can be tested in isolation 

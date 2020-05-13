@@ -43,9 +43,9 @@ func TestOperationSetup(t *testing.T) {
 		return
 	}
 
-	bpluserr, ok := err.(e.BPlusError)
+	bpluserr, ok := err.(e.WeGOError)
 	if !ok {
-		log.Printf("Error in casting the error to BPlusError. Error = %s", err.Error())
+		log.Printf("Error in casting the error to WeGOError. Error = %s", err.Error())
 		t.Fail()
 		return
 	}

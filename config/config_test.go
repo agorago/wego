@@ -46,6 +46,21 @@ func ExampleEnvOverride() {
 	// prod-value3
 }
 
+// ExampleEnv__Override - tests an environment override with __ instead of .
+func ExampleEnvOverrideWith__(){
+	os.Setenv(config.ENVVAR, "prod")
+	os.Setenv("CONFIG_TEST__PROPERTY2", "env--value2")
+	config.InitConfig("test-configs/env")
+	fmt.Println(config.Value("config_test.property1"))
+	fmt.Println(config.Value("config_test.property2"))
+	fmt.Println(config.Value("config_test.property3"))
+	os.Unsetenv("CONFIG_TEST.PROPERTY2")
+	// Output:
+	// default-value1
+	// env--value2
+	// prod-value3
+}
+
 /*
 func ExampleEtcdOverride(){
 	os.Setenv(config.ENVVAR, "prod")

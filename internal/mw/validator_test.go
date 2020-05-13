@@ -61,7 +61,7 @@ func TestInvalidv10validator(t *testing.T) {
 	ctx = wegocontext.SetPayload(ctx, request)
 	ctx = chain.DoContinue(ctx)
 	err := wegocontext.GetError(ctx)
-	e1, ok := err.(wegoe.BPlusError)
+	e1, ok := err.(wegoe.WeGOError)
 	if !ok {
 		log.Errorf(ctx, "Cannot cast the error into Bplus error. Err = %#v", err)
 		t.Fail()

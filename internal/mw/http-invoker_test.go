@@ -59,9 +59,9 @@ func TestHTTPInvokerWithError(t *testing.T) {
 	ctx = mw.HTTPInvoker(ctx, nil)
 
 	er := wegocontext.GetError(ctx)
-	er1, ok := er.(wegoe.BPlusError)
+	er1, ok := er.(wegoe.WeGOError)
 	if !ok {
-		log.Printf("Error in casting the error to type BPlusError. Type = %#v\n", er)
+		log.Printf("Error in casting the error to type WeGOError. Type = %#v\n", er)
 		t.Fail()
 		return
 	}

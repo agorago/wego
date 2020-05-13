@@ -13,8 +13,8 @@ type HttpCodeProvider interface {
 	GetHttpCode() int
 }
 
-// BPlusError - defines the error structure of all return values
-type BPlusError struct {
+// WeGOError - defines the error structure of all return values
+type WeGOError struct {
 	ErrorCode     int
 	ErrorMessage  string
 	HTTPErrorCode int
@@ -33,27 +33,27 @@ const (
 	Warning
 )
 
-func (val BPlusError) GetHttpCode() int {
+func (val WeGOError) GetHttpCode() int {
 	return val.HTTPErrorCode
 }
 
-func (val BPlusError) Error() string {
+func (val WeGOError) Error() string {
 	ret, _ := json.Marshal(val)
 	return string(ret)
 }
 
 // Make403 - make a 403 error
-func Make403(code int, message string) BPlusError {
-	return BPlusError{HTTPErrorCode: 403, ErrorCode: code, ErrorMessage: message, LogLevel: Error}
+func Make403(code int, message string) WeGOError {
+	return WeGOError{HTTPErrorCode: 403, ErrorCode: code, ErrorMessage: message, LogLevel: Error}
 }
 
 // MakeErr - Make a generic error
-func MakeErr(ctx context.Context, ll LogLevel, code int, msgCode string, args map[string]interface{}) BPlusError {
+func MakeErr(ctx context.Context, ll LogLevel, code int, msgCode string, args map[string]interface{}) WeGOError {
 	return MakeErrWithHTTPCode(ctx, ll, code, msgCode, http.StatusInternalServerError, args)
 }
 
 // MakeErrWithHTTPCode - Make a generic error with http error code
-func MakeErrWithHTTPCode(ctx context.Context, ll LogLevel, code int, msgCode string, hTTPError int, args map[string]interface{}) BPlusError {
+func MakeErrWithHTTPCode(ctx context.Context, ll LogLevel, code int, msgCode string, hTTPError int, args map[string]interface{}) WeGOError {
 	msg := msgCode
 
 	//msg = fmt.Sprintf(message, params...)
@@ -62,7 +62,7 @@ func MakeErrWithHTTPCode(ctx context.Context, ll LogLevel, code int, msgCode str
 		msg = m
 	}
 
-	return BPlusError{
+	return WeGOError{
 		ErrorCode:     code,
 		ErrorMessage:  msg,
 		LogLevel:      ll,

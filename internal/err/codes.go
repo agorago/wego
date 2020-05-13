@@ -9,30 +9,30 @@ import (
 
 // It is recommended that each module define its own error file
 
-func internalMakeWegoError(ctx context.Context, ll wegoe.LogLevel, e WegoErrorCode, httpErrorCode int, args map[string]interface{}) wegoe.BPlusError {
+func internalMakeWegoError(ctx context.Context, ll wegoe.LogLevel, e WegoErrorCode, httpErrorCode int, args map[string]interface{}) wegoe.WeGOError {
 	return wegoe.MakeErrWithHTTPCode(ctx, ll, int(e), e.String(), httpErrorCode, args)
 }
 
 // MakeBplusError - returns a customized CAFUError for BPlus
-func MakeBplusError(ctx context.Context, e WegoErrorCode, args map[string]interface{}) wegoe.BPlusError {
+func MakeBplusError(ctx context.Context, e WegoErrorCode, args map[string]interface{}) wegoe.WeGOError {
 	return internalMakeWegoError(ctx, wegoe.Error, e, http.StatusInternalServerError, args)
 
 }
 
 // MakeBplusWarning - returns a customized CAFUError for BPlus
-func MakeBplusWarning(ctx context.Context, e WegoErrorCode, args map[string]interface{}) wegoe.BPlusError {
+func MakeBplusWarning(ctx context.Context, e WegoErrorCode, args map[string]interface{}) wegoe.WeGOError {
 	return internalMakeWegoError(ctx, wegoe.Warning, e, http.StatusInternalServerError, args)
 
 }
 
 // MakeBplusErrorWithErrorCode - returns a customized CAFUError for BPlus
-func MakeBplusErrorWithErrorCode(ctx context.Context, httpErrorCode int, e WegoErrorCode, args map[string]interface{}) wegoe.BPlusError {
+func MakeBplusErrorWithErrorCode(ctx context.Context, httpErrorCode int, e WegoErrorCode, args map[string]interface{}) wegoe.WeGOError {
 	return internalMakeWegoError(ctx, wegoe.Error, e, httpErrorCode, args)
 
 }
 
 // MakeBplusWarningWithErrorCode - returns a customized CAFUError for BPlus
-func MakeBplusWarningWithErrorCode(ctx context.Context, httpErrorCode int, e WegoErrorCode, args map[string]interface{}) wegoe.BPlusError {
+func MakeBplusWarningWithErrorCode(ctx context.Context, httpErrorCode int, e WegoErrorCode, args map[string]interface{}) wegoe.WeGOError {
 	return internalMakeWegoError(ctx, wegoe.Warning, e, httpErrorCode, args)
 
 }

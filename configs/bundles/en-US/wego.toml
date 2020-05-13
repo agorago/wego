@@ -1,4 +1,4 @@
-[bplus.errors]
+[wego.errors]
 ServiceNotFound=                     "Service {{.Service}} is not found"
 OperationNotFound=                   "Operation {{.Operation}} in service {{.Service}} not found"
 DecodingError=                       "Error in decoding the request. error = {{.Error}}"
