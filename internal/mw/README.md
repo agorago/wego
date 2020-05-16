@@ -1,11 +1,11 @@
-# The BPlus Middlewares & Entry Points
+# The WeGO Middlewares & Entry Points
 
-This package contains the middlewares and entry points for BPlus. 
+This package contains the middlewares and entry points for WeGO. 
 
 
-# BPlus Entry Point
+# WeGO Entry Point
 
-An entry point is the point of entry to invoke Bplus services or proxies. There are two entry points - one for 
+An entry point is the point of entry to invoke WeGO services or proxies. There are two entry points - one for 
 the server side and the other one for invoking a proxy. 
 
 The entry point is responsible to set up the other middlewares and start the [middleware chain.](../../fw/README.md)
@@ -45,7 +45,7 @@ __OperationDescriptor.OpRequestMaker__ is used to construct the request payload 
 used to fill it up from the JSON string. The resulting struct is put as a payload into the context 
 object using: 
 ```go
-bplusc.SetPayload()
+wegocontext.SetPayload()
 ```
 
 The payload then becomes available for other middlewares and terminators. This is the first of the 

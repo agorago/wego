@@ -1,6 +1,6 @@
-# BPlus Logging
+# WeGO Logging
 
-The BPlus logger uses zap to perform logging at the following levels:
+The WeGO logger uses zap to perform logging at the following levels:
 * Debug - Mostly used in development mode.
 * Info - Can be useful to trace the flow of logic. 
 * Warn - For Warning messages. Useful to find problems within code paths
@@ -33,9 +33,9 @@ printed to the console.
 
 The following fields are also enabled or disabled as per configuration:
 * caller - this gives additional information about the caller of the log. (goland code source, line # etc.). 
-This is optional and can be configured using the configuration value "bplus.disable_caller". 
+This is optional and can be configured using the configuration value "wego.disable_caller". 
 * stacktrace - this gives additional information about the entire call stack trace to the logger. This is
-configured using the configuration value "bplus.disable_stacktrace'
+configured using the configuration value "wego.disable_stacktrace'
 
 # Signatures
 
@@ -63,8 +63,8 @@ The configuration system allows the logging to be configured. Some of them are m
 on additional fields above). Here is a full list of applicable logger configurations:
 
 There are some more configurations such as the ones below:
-* bplus.development_mode - true/false puts zap in development mode
-* bplus.log_level - info/debug/error/warn the level used for logging. 
-* bplus.disable_stacktrace - true/false
-* bplus.disable_caller - true/false
+* wego.development_mode - true/false puts zap in development mode
+* wego.log_level - info/debug/error/warn the level used for logging. 
+* wego.disable_stacktrace - true/false
+* wego.disable_caller - true/false
 

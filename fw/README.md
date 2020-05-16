@@ -11,8 +11,8 @@ transport.
 at the client side or the server side. 
 
 
-The operation is invoked in 
-response to a request at a transport layer. The core framework package provides the following features:
+The operation is invoked in response to a request at a transport layer. The core framework 
+package provides the following features:
 0. Instantiate the framework along with a DI bean factory. DI in GO has thus far been provided by 
 wiring frameworks that There is no core bean factory within GO. Hence
 it becomes difficult to do things like Auto-wiring in the style of th
@@ -31,13 +31,13 @@ the internal/mw package for more information about middleware chains.
 A service can have one or more multiple methods called Operations. Each operation can in turn 
 support parameters. 
 
-All BPlus services register here. They can register in two modes:
+All WeGO services register here. They can register in two modes:
 1. Client Mode - the actual service information is registered. However the service is not exposed
 in this mode using any transport. e
 2. Server Mode -  the service is not only registered. It is also exposed via a transport layer such as HTTP. 
 
-Client mode is useful if it is intended to invoke the service using the Proxy framework that BPlus supports.
-However in this mode,  transports are not supported. Consequently, the service will not be available for 
+Client mode is useful if it is intended to invoke the service using the Proxy framework that WeGO supports.
+However, in this mode,  transports are not supported. Consequently, the service will not be available for 
 remote invocation via HTTP or other means.  Services can only be registered in server mode in one executable.
 In other executables, the service is registered only as in client mode.
 
@@ -58,7 +58,7 @@ Transports are discussed a little later.
 
 Operation descriptors describe the operation that belongs to the service. The operation would be typically
 exposed by the transport. Since an operation is accessible from outside, it will expose a URL. Operations
-are invoked by BPlus when the transport is accessed. (for example when someone invokes the HTTP URL)
+are invoked by WeGO when the transport is accessed. (for example when someone invokes the HTTP URL)
 
 Operation descriptor gives details about the operation such as the following:
 name - used to actually invoke the operation from the service reference in ServiceDescriptor
@@ -77,7 +77,7 @@ configure the transport end points. For example, the HTTP end point is configure
 
 Transports are extensions to the core framework and are implemented using an OperationRegistration. 
 Transports register themselves with the core framework by using RegisterOperation. The transports will then
-be provided an opportunity to register every operation that is registered with BPlus. This happens only 
+be provided an opportunity to register every operation that is registered with WeGO. This happens only 
 when the service is registed in server-mode. 
 
 # Param Descriptor

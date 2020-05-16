@@ -36,13 +36,13 @@ Besides integration with frameworks, WeGO accomplishes the following:
 * Enforces a common set of middlewares. For details see the [discussion on middleware](internal/mw/README.md)
 * Facilitates rapid development using a code generator. For details see the 
 [discussion on code-gen](https://gitlab.intelligentb.com/devops/code-gen/README.md)
-* Implements a state machine. See [the BPlus State Machine](stm/README.md)
+* Implements a state machine. See [the WeGO State Machine](stm/README.md)
 * Provides a consistent way of handling Errors. See [Error Handling](err/README.md)
 * Provides the following functionalities as horizontal services. (a growing set)
-    # Logging. See [BPlus Logging](log/README.md)
+    # Logging. See [WeGO Logging](log/README.md)
     # Auditing (not implemented yet)
-    # Monitoring. See [BPlus integration with New Relic](new-relic.md)
-    # Configuration Management. See [BPlus approach to Configuration Management](config.md)
+    # Monitoring. See [WeGO integration with New Relic](new-relic.md)
+    # Configuration Management. See [WeGO approach to Configuration Management](config.md)
 
 # Modularized code base
 
@@ -58,7 +58,7 @@ $ git clone github.com/agorago/wego-gen (get the actual git repo url)
 $ mkdir configs
 
 All included git projects will be under src. Reference to other WeGO
-projects will be relative. For example, you will create a relative path to BPlus in your module by typing the 
+projects will be relative. For example, you will create a relative path to WeGO in your module by typing the 
 following:
 $ cd src/my-service
 $ go mod edit --alter github.com/agorago/wego=../wego

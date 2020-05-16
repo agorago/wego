@@ -1,18 +1,18 @@
 # Error Handling Framework
 
-BPlus error handling framework has the following features:
+WeGO error handling framework has the following features:
 1. Support for JSON based error messages.
 2. Error handling message code along with a message. This enables consumers to take action depending on the
 error that has been emitted.
-3. It integrates with BPlus http transport to specify the correct HTTP error codes that need to be emitted.
+3. It integrates with WeGO http transport to specify the correct HTTP error codes that need to be emitted.
 4. Support for warnings and errors. Sometimes an error is not bad. It can just be a warning and can contain
 valid  return values in addition to the warning.
-5. Internationalization support - integrates with the i18n module of BPlus.
+5. Internationalization support - integrates with the i18n module of WeGO.
 
 # Typical usage
 
-The BPLUS error handling framework is typically not used directly by the services. Instead, we recommend that 
-services have their own error handling wrapper which generates BPlusError types from error codes whose 
+The WeGO error handling framework is typically not used directly by the services. Instead, we recommend that 
+services have their own error handling wrapper which generates WegoError types from error codes whose 
 numeric ranges can be fixed for specific services. For example service 1 might have a range starting from 2000 
 and service 2 might have a range starting from 3000. This allows for a clean separation of error code ranges.
 

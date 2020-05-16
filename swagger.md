@@ -1,6 +1,6 @@
 # Swagger documentation
 
-BPlus supports a service driven spec i.e. it is possible to generate an Open API spec from the service.
+WeGO supports a service driven spec i.e. it is possible to generate an Open API spec from the service.
 
 # Enable Swagger documentation
 

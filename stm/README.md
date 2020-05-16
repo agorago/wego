@@ -15,7 +15,7 @@ can be modeled graphically and fed into a state machine using a JSON (or similar
 that the entity changes state in conformance to the workflow. At various points of the workflow code can get 
 called. This code can do specific actions.
 
-This gives a huge deal of flexibility to the service that is responsible for the entity. The BPlus state 
+This gives a huge deal of flexibility to the service that is responsible for the entity. The WeGO state 
 transition machine is a simple but effective way of managing entity workflows. 
 
 # Typical Life Cycle of a State Managed Transactional Entity 
@@ -31,8 +31,8 @@ State entities are modeled using a _state transition diagram_. (STD) State entit
 as nodes connected by events which are edges connecting the nodes. An entity can traverse from one 
 state to the next only by handling events that depict the edges. 
 
-# The BPlus State Machine (STM) - code 
-The BPlus state machine provides a way to implement a state machine by capturing the entire STD using a
+# The WeGO State Machine (STM) - code 
+The WeGO state machine provides a way to implement a state machine by capturing the entire STD using a
 JSON. 
 
 In code, this is done by invoking the _makeStm_ method. 
@@ -85,7 +85,7 @@ that have been called in an array. This is useful for testing and allows asserti
 
 # Actions
 
-There are four types of actions supported by the Bplus STM:
+There are four types of actions supported by the WeGO STM:
 * Transition Actions - an action that is called for every event
 * Preprocessor Action - which is called _before_ a state is entered
 * Postprocessor Action - which is called _after_ a state is exited 
