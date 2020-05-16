@@ -31,21 +31,21 @@ func  (sers stateEntityRegistrationServiceImpl)setupStateEntityService(str SubTy
 
 		stm, err := str.OrderSTMChooser(ctx)
 		if err != nil {
-			return nil, e.MakeBplusError(ctx, e.ErrorInObtainingSTM, map[string]interface{}{})
+			return nil, e.Error(ctx, e.ErrorInObtainingSTM, map[string]interface{}{})
 		}
 		eventID := wegocontext.Value(ctx, "Eventid")
 		if eventID == nil {
-			return nil, e.MakeBplusError(ctx, e.EventNotFoundInRequest, map[string]interface{}{})
+			return nil, e.Error(ctx, e.EventNotFoundInRequest, map[string]interface{}{})
 		}
 
 		eID, ok := eventID.(string)
 		if !ok {
-			return nil, e.MakeBplusError(ctx, e.EventNotFoundInRequest, map[string]interface{}{})
+			return nil, e.Error(ctx, e.EventNotFoundInRequest, map[string]interface{}{})
 		}
 
 		var ptm = stm.ParamTypeMaker(eID)
 		if ptm == nil {
-			return nil, e.MakeBplusError(ctx, e.EventNotFoundInRequest, map[string]interface{}{})
+			return nil, e.Error(ctx, e.EventNotFoundInRequest, map[string]interface{}{})
 		}
 
 		return ptm.MakeParam(ctx)

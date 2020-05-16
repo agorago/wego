@@ -3,8 +3,8 @@ package mw_test
 import (
 	"context"
 	"github.com/magiconair/properties/assert"
-	bplusc "github.com/agorago/wego/context"
-	bpluserr "github.com/agorago/wego/err"
+	wegocontext "github.com/agorago/wego/context"
+	wegoe "github.com/agorago/wego/err"
 	"github.com/agorago/wego/fw"
 	"github.com/agorago/wego/internal/mw"
 	"github.com/agorago/wego/internal/testutils"
@@ -20,7 +20,7 @@ func setupContext(testString string) context.Context {
 	ctx = fw.SetOperationDescriptor(ctx, od)
 
 	input := testutils.Input{In: testString}
-	ctx = bplusc.SetPayload(ctx, &input)
+	ctx = wegocontext.SetPayload(ctx, &input)
 	return ctx
 }
 
@@ -32,7 +32,7 @@ func setupContextWithInvalidPayload(testString string) context.Context {
 	ctx = fw.SetOperationDescriptor(ctx, od)
 
 	input := map[string]interface{}{"In": testString}
-	ctx = bplusc.SetPayload(ctx, &input)
+	ctx = wegocontext.SetPayload(ctx, &input)
 	return ctx
 }
 
@@ -45,13 +45,13 @@ func setupContextWithBadMethodName(testString string) context.Context {
 	ctx = fw.SetOperationDescriptor(ctx, od)
 
 	input := testutils.Input{In: testString}
-	ctx = bplusc.SetPayload(ctx, &input)
+	ctx = wegocontext.SetPayload(ctx, &input)
 	return ctx
 }
 
 func setupContextHeader(testString string) context.Context {
 	ctx := setupContextHeaderNoValueSet(testString)
-	ctx = bplusc.Add(ctx, "Input", testString)
+	ctx = wegocontext.Add(ctx, "Input", testString)
 	return ctx
 }
 
@@ -69,7 +69,7 @@ func TestServiceInvoker(t *testing.T) {
 	ctx := setupContext(testing)
 	ctx = mw.ServiceInvoker(ctx, nil)
 
-	o := bplusc.GetResponsePayload(ctx)
+	o := wegocontext.GetResponsePayload(ctx)
 	output, ok := o.(testutils.Output)
 	if !ok {
 		log.Printf("Error in casting the output to type Output. Type = %#v\n", o)
@@ -84,9 +84,9 @@ func TestServiceInvokerWithErrors(t *testing.T) {
 	ctx := setupContext(testing)
 	ctx = mw.ServiceInvoker(ctx, nil)
 
-	e := bplusc.GetError(ctx)
+	e := wegocontext.GetError(ctx)
 
-	err1, ok := e.(bpluserr.WeGOError)
+	err1, ok := e.(wegoe.WeGOError)
 	if !ok {
 		log.Printf("Error in casting the error to type WeGOError. Type = %#v\n", e)
 		t.Fail()
@@ -100,7 +100,7 @@ func TestServiceInvokerHeader(t *testing.T) {
 	ctx := setupContextHeader(testing)
 	ctx = mw.ServiceInvoker(ctx, nil)
 
-	o := bplusc.GetResponsePayload(ctx)
+	o := wegocontext.GetResponsePayload(ctx)
 	output, ok := o.(testutils.Output)
 	if !ok {
 		log.Printf("Error in casting the output to type Output. Type = %#v\n", o)
@@ -115,9 +115,9 @@ func TestServiceInvokerHeaderNoValueSet(t *testing.T) {
 	ctx := setupContextHeaderNoValueSet(testing)
 	ctx = mw.ServiceInvoker(ctx, nil)
 
-	e := bplusc.GetError(ctx)
+	e := wegocontext.GetError(ctx)
 
-	err1, ok := e.(bpluserr.WeGOError)
+	err1, ok := e.(wegoe.WeGOError)
 	if !ok {
 		log.Printf("Error in casting the error to type WeGOError. Type = %#v\n", e)
 		t.Fail()
@@ -131,9 +131,9 @@ func TestServiceInvokerWithBadMethodName(t *testing.T) {
 	ctx := setupContextWithBadMethodName(testing)
 	ctx = mw.ServiceInvoker(ctx, nil)
 
-	e := bplusc.GetError(ctx)
+	e := wegocontext.GetError(ctx)
 
-	err1, ok := e.(bpluserr.WeGOError)
+	err1, ok := e.(wegoe.WeGOError)
 	if !ok {
 		log.Printf("Error in casting the error to type WeGOError. Type = %#v\n", e)
 		t.Fail()
@@ -148,9 +148,9 @@ func TestServiceInvokerWithInvalidPayload(t *testing.T) {
 	ctx := setupContextWithInvalidPayload(testing)
 	ctx = mw.ServiceInvoker(ctx, nil)
 
-	e := bplusc.GetError(ctx)
+	e := wegocontext.GetError(ctx)
 
-	err1, ok := e.(bpluserr.WeGOError)
+	err1, ok := e.(wegoe.WeGOError)
 	if !ok {
 		log.Printf("Error in casting the error to type WeGOError. Type = %#v\n", e)
 		t.Fail()

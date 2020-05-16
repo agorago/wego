@@ -63,7 +63,7 @@ func TestInvalidv10validator(t *testing.T) {
 	err := wegocontext.GetError(ctx)
 	e1, ok := err.(wegoe.WeGOError)
 	if !ok {
-		log.Errorf(ctx, "Cannot cast the error into Bplus error. Err = %#v", err)
+		log.Errorf(ctx, "Cannot cast the error into WeGO error. Err = %#v", err)
 		t.Fail()
 		return
 	}

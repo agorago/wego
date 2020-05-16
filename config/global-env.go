@@ -7,10 +7,11 @@ import (
 // Constants for the variables used in this file
 const (
 	CONFIGPATHVAR        = "CONFIGPATH"
-	DEFAULTLANGUAGEVAR   = "DEFAULTLANGUAGE"
+	DEFAULTLANGUAGEVAR   = "wego.default_language"
 	ENVVAR               = "ENV"
-	ETCD_ENDPOINTVAR     = "BPLUS.ETCD_ENDPOINT"
-	ETCD_POLLINGDELAYVAR = "BPLUS.ETCD_POLLING_DELAY"
+	ETCD_ENDPOINTVAR     = "wego.etcd_endpoint"
+	ETCD_POLLINGDELAYVAR = "wego.etcd_polling_delay"
+	APPLICATIONNAMEVAR   = "wego.application_name"
 )
 
 func GetEtcdEndPoint() string {
@@ -45,9 +46,9 @@ func GetEnv() string {
 }
 
 func GetApplicationName() string {
-	app := Value("application_name")
+	app := Value(APPLICATIONNAMEVAR)
 	if app == "" {
-		return "bplus"
+		return "wego"
 	}
 	return app
 }

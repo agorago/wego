@@ -46,7 +46,7 @@ func Sync() {
 }
 
 func determineLogLevel() zapcore.Level {
-	loglevel := config.Value("bplus.log_level")
+	loglevel := config.Value("wego.log_level")
 	if loglevel == "" {
 		return zapcore.InfoLevel
 	}
@@ -66,15 +66,15 @@ func determineLogLevel() zapcore.Level {
 }
 
 func getDisableCaller() bool {
-	return config.BoolValue("bplus.disable_caller")
+	return config.BoolValue("wego.disable_caller")
 }
 
 func getDisableStackTrace() bool {
-	return config.BoolValue("bplus.disable_stacktrace")
+	return config.BoolValue("wego.disable_stacktrace")
 }
 
 func getDevelopmentMode() bool {
-	return config.BoolValue("bplus.development_mode")
+	return config.BoolValue("wego.development_mode")
 }
 
 func encoderConfig() zapcore.EncoderConfig {

@@ -32,8 +32,8 @@ func swaggergen(wego fw.RegistrationService,service string, templateFile string,
 	return nil
 }
 
-// main - this main will need to be invoked by a service after it first loaded its BPLUS configurations
-// this builds the swagger docs for a specified service that was configured in BPlus
+// main - this main will need to be invoked by a service after it first loaded its WeGO configurations
+// this builds the swagger docs for a specified service that was configured in WeGO
 func SwaggerMain(wego fw.RegistrationService){
 	if len(os.Args) != 4 {
 		log.Fatalf("Usage: %s service-name template-file target-file", os.Args[0])

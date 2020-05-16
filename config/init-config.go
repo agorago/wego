@@ -81,7 +81,6 @@ func walkTree(cpath string) {
 
 func checkEnv(propname string)string{
 	propname = strings.ToUpper(strings.ReplaceAll(propname,".","__"))
-	fmt.Fprintf(os.Stderr,"propname = %s. value =%s\n",propname,os.Getenv(propname))
 	return os.Getenv(propname)
 }
 

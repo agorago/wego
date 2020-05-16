@@ -34,14 +34,14 @@ func _() {
 	_ = x[ErrorInInvokingService-1023]
 }
 
-const _BPlusErrorCode_name = "bplus.errors.ServiceNotFoundbplus.errors.OperationNotFoundbplus.errors.DecodingErrorbplus.errors.CannotGenerateHTTPRequestbplus.errors.CannotGenerateHTTPRequest1bplus.errorsbplus.errors.CannotGenerateHTTPRequestForPayloadbplus.errors.ParamsNotExpectedbplus.errors.HTTPCallFailedbplus.errors.CannotReadResponseBodybplus.errors.CannotMakeStateEntitybplus.errors.ErrorInDecodingbplus.errors.ErrorInAutoStatebplus.errors.AutoStateNotConfiguredbplus.errors.InvalidStatebplus.errors.InvalidEventbplus.errors.CannotReadFilebplus.errors.EventNotFoundInRequestbplus.errors.ParameterMissingInRequestbplus.errors.ErrorInObtainingSTMbplus.errors.Non200StatusCodeReturnedbplus.errors.ValidationErrorbplus.error.UnparseableFilebplus.error.ErrorInInvokingService"
+const _WegoErrorCode_name = "wego.errors.ServiceNotFoundwego.errors.OperationNotFoundwego.errors.DecodingErrorwego.errors.CannotGenerateHTTPRequestwego.errors.CannotGenerateHTTPRequest1wego.errorswego.errors.CannotGenerateHTTPRequestForPayloadwego.errors.ParamsNotExpectedwego.errors.HTTPCallFailedwego.errors.CannotReadResponseBodywego.errors.CannotMakeStateEntitywego.errors.ErrorInDecodingwego.errors.ErrorInAutoStatewego.errors.AutoStateNotConfiguredwego.errors.InvalidStatewego.errors.InvalidEventwego.errors.CannotReadFilewego.errors.EventNotFoundInRequestwego.errors.ParameterMissingInRequestwego.errors.ErrorInObtainingSTMwego.errors.Non200StatusCodeReturnedwego.errors.ValidationErrorwego.error.UnparseableFilewego.error.ErrorInInvokingService"
 
-var _BPlusErrorCode_index = [...]uint16{0, 28, 58, 84, 122, 161, 173, 221, 251, 278, 313, 347, 375, 404, 439, 464, 489, 516, 551, 589, 621, 658, 686, 713, 747}
+var _WegoErrorCode_index = [...]uint16{0, 27, 56, 81, 118, 156, 167, 214, 243, 269, 303, 336, 363, 391, 425, 449, 473, 499, 533, 570, 601, 637, 664, 690, 723}
 
 func (i WegoErrorCode) String() string {
 	i -= 1000
-	if i < 0 || i >= WegoErrorCode(len(_BPlusErrorCode_index)-1) {
+	if i < 0 || i >= WegoErrorCode(len(_WegoErrorCode_index)-1) {
 		return "WegoErrorCode(" + strconv.FormatInt(int64(i+1000), 10) + ")"
 	}
-	return _BPlusErrorCode_name[_BPlusErrorCode_index[i]:_BPlusErrorCode_index[i+1]]
+	return _WegoErrorCode_name[_WegoErrorCode_index[i]:_WegoErrorCode_index[i+1]]
 }

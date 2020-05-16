@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 
-	bplusc "github.com/agorago/wego/context"
+	wegocontext "github.com/agorago/wego/context"
 	fw "github.com/agorago/wego/fw"
 	e "github.com/agorago/wego/internal/err"
 )
@@ -20,13 +20,13 @@ func decoder(ctx context.Context, chain *fw.MiddlewareChain) context.Context {
 		return chain.DoContinue(ctx)
 	}
 	var request, _ = od.OpRequestMaker(ctx)
-	r := bplusc.GetPayload(ctx).(io.ReadCloser)
+	r := wegocontext.GetPayload(ctx).(io.ReadCloser)
 	if err := json.NewDecoder(r).Decode(&request); err != nil {
-		return bplusc.SetError(ctx, e.MakeBplusErrorWithErrorCode(ctx, http.StatusBadRequest, e.DecodingError, map[string]interface{}{
+		return wegocontext.SetError(ctx, e.HTTPError(ctx, http.StatusBadRequest, e.DecodingError, map[string]interface{}{
 			"Error": err.Error()}))
 	}
 
-	ctx = bplusc.SetPayload(ctx, request)
+	ctx = wegocontext.SetPayload(ctx, request)
 	ctx = chain.DoContinue(ctx)
 	return ctx
 }

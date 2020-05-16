@@ -20,7 +20,7 @@ func Serve(initializers ...fw.Initializer) {
 
 // Serve - start a server for serving HTTP requests
 func ServeHandle(httphandler http.Handler ) {
-	a := fmt.Sprintf(":%s", config.Value("bplus.port"))
+	a := fmt.Sprintf(":%s", config.Value("wego.port"))
 	log.Printf("Starting server at address %s", a)
 	log.Fatal(http.ListenAndServe(a, httphandler))
 }

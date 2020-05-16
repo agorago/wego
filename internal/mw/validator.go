@@ -47,7 +47,7 @@ func v10validator(ctx context.Context, chain *fw.MiddlewareChain) context.Contex
 			ctx = chain.DoContinue(ctx)
 			return ctx
 		}
-		return wegocontext.SetError(ctx, e.MakeBplusErrorWithErrorCode(ctx, http.StatusBadRequest, e.ValidationError,
+		return wegocontext.SetError(ctx, e.HTTPError(ctx, http.StatusBadRequest, e.ValidationError,
 			map[string]interface{}{
 				"Error": encodeV10Errors(er)}))
 	}

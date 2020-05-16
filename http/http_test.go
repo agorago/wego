@@ -12,9 +12,9 @@ import (
 )
 
 func TestOperationSetup(t *testing.T) {
-	os.Setenv("BPLUS.PORT", "5000")
+	os.Setenv("WEGO.PORT", "5000")
 	defer func() {
-		os.Unsetenv("BPLUS.PORT")
+		os.Unsetenv("WEGO.PORT")
 	}()
 	rs,_ := testutils.StartServer()
 	proxy := wegohttp.MakeProxyService(rs)
@@ -43,13 +43,13 @@ func TestOperationSetup(t *testing.T) {
 		return
 	}
 
-	bpluserr, ok := err.(e.WeGOError)
+	wegoerr, ok := err.(e.WeGOError)
 	if !ok {
 		log.Printf("Error in casting the error to WeGOError. Error = %s", err.Error())
 		t.Fail()
 		return
 	}
 
-	assert.Equal(t, bpluserr.HTTPErrorCode, 400)
+	assert.Equal(t, wegoerr.HTTPErrorCode, 400)
 
 }

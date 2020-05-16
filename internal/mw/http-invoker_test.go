@@ -31,9 +31,9 @@ func setupServer(testString string) context.Context {
 }
 
 func TestHTTPInvoker(t *testing.T) {
-	os.Setenv("BPLUS.PORT", "5000")
+	os.Setenv("WEGO.PORT", "5000")
 	defer func() {
-		os.Unsetenv("BPLUS.PORT")
+		os.Unsetenv("WEGO.PORT")
 	}()
 	const testing = "testing"
 	ctx := setupServer(testing)
@@ -50,9 +50,9 @@ func TestHTTPInvoker(t *testing.T) {
 }
 
 func TestHTTPInvokerWithError(t *testing.T) {
-	os.Setenv("BPLUS.PORT", "5000")
+	os.Setenv("WEGO.PORT", "5000")
 	defer func() {
-		os.Unsetenv("BPLUS.PORT")
+		os.Unsetenv("WEGO.PORT")
 	}()
 	const testing = "xxx"
 	ctx := setupServer(testing)

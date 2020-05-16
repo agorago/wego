@@ -102,7 +102,7 @@ func StartServer() (fw.RegistrationService,fw.ServiceDescriptor){
 	httphandler := commandCatalog.Command(wego.WegoHTTPHandler).(http.Handler)
 
 	go func() {
-		a := ":" + config.Value("bplus.port")
+		a := ":" + config.Value("wego.port")
 		log.Printf("Starting server at address %s\n", a)
 		http.ListenAndServe(a, httphandler)
 	}()

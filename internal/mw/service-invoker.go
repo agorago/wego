@@ -53,7 +53,7 @@ func makeArg(ctx context.Context, param fw.ParamDescriptor) (interface{}, error)
 	case fw.HEADER:
 		s, ok := wegocontext.Value(ctx, param.Name).(string)
 		if !ok {
-			return nil, e.MakeBplusErrorWithErrorCode(ctx, http.StatusBadRequest,
+			return nil, e.HTTPError(ctx, http.StatusBadRequest,
 				e.ParameterMissingInRequest, map[string]interface{}{
 					"Param": param.Name})
 		}
@@ -76,7 +76,7 @@ func invoke(ctx context.Context, any interface{}, name string, args []interface{
 	defer func() {
 		if r := recover(); r != nil {
 			log.Errorf(ctx, "Service Invocation Exception. Panic'ed during reflection.  Error = %#v\n", r)
-			retErr = e.MakeBplusErrorWithErrorCode(ctx, http.StatusInternalServerError,
+			retErr = e.HTTPError(ctx, http.StatusInternalServerError,
 				e.ErrorInInvokingService, map[string]interface{}{
 					"OperationName": name, "Error": r})
 		}

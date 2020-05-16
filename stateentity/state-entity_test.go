@@ -15,11 +15,11 @@ import (
 )
 
 func TestRegisterSubType(t *testing.T) {
-	os.Setenv("BPLUS.PORT", "5000")
+	os.Setenv("WEGO.PORT", "5000")
 	commandCatalog := testutils.SetupOrder()
 	httpHandler := commandCatalog.Command(wego.WegoHTTPHandler).(http.Handler)
 	go func() {
-		a := ":" + config.Value("bplus.port")
+		a := ":" + config.Value("wego.port")
 		log.Printf("Starting server at address %s\n", a)
 		http.ListenAndServe(a, httpHandler)
 	}()

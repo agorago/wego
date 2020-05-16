@@ -13,22 +13,22 @@ import (
 // These should not used in the service or middleware
 // Instead use the associated convenience functions. Hence all of them are private
 const (
-	responseError   = "BPLUS-RESPONSE-ERROR"
-	requestPayload  = "BPLUS-REQUEST-PAYLOAD"
-	responsePayload = "BPLUS-RESPONSE-PAYLOAD"
+	responseError   = "WEGO-RESPONSE-ERROR"
+	requestPayload  = "WEGO-REQUEST-PAYLOAD"
+	responsePayload = "WEGO-RESPONSE-PAYLOAD"
 
-	RemoteAddr       = "BPLUS-REMOTE-ADDRESS"
-	RequestURI       = "BPLUS-REQUEST-URI"
-	URL              = "BPLUS-URL"
-	Method           = "BPLUS-METHOD"
-	TransferEncoding = "BPLUS-TRANSFER-ENCODING"
-	ContentLength    = "BPLUS-CONTENT-LENGTH"
-	Host             = "BPLUS-HOST"
-	TraceID          = "BPLUS-TRACE_ID"
-	TrajectoryID     = "BPLUS-TRAJECTORY-ID"
-	UserPrincipal    = "BPLUS-USER-PRINCIPAL"
+	RemoteAddr       = "WEGO-REMOTE-ADDRESS"
+	RequestURI       = "WEGO-REQUEST-URI"
+	URL              = "WEGO-URL"
+	Method           = "WEGO-METHOD"
+	TransferEncoding = "WEGO-TRANSFER-ENCODING"
+	ContentLength    = "WEGO-CONTENT-LENGTH"
+	Host             = "WEGO-HOST"
+	TraceID          = "WEGO-TRACE_ID"
+	TrajectoryID     = "WEGO-TRAJECTORY-ID"
+	UserPrincipal    = "WEGO-USER-PRINCIPAL"
 
-	allKeys = "BPLUS-ALL-KEYS"
+	allKeys = "WEGO-ALL-KEYS"
 )
 
 // utilities to manipulate the context

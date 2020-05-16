@@ -7,7 +7,7 @@ import (
 	fw "github.com/agorago/wego/fw"
 )
 
-// Entrypoint - The server-side entry point for invoking any service registered in BPlus
+// Entrypoint - The server-side entry point for invoking any service registered in WeGO
 func Entrypoint(ctx context.Context) (interface{}, error) {
 	// set up the middleware
 	od := fw.GetOperationDescriptor(ctx)

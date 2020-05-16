@@ -64,7 +64,7 @@ type StateEntity interface {
 func (stm *Stm) populate(bytes []byte) error {
 	stm.States = make(map[string]State)
 	if err := json.Unmarshal(bytes, &stm.States); err != nil {
-		return e.MakeBplusError(context.TODO(), e.UnparseableFile, nil)
+		return e.Error(context.TODO(), e.UnparseableFile, nil)
 	}
 	return nil
 }
@@ -78,7 +78,7 @@ func MakeStm(filename string, actionCatalog map[string]interface{}) (*Stm, error
 	}
 	dat, err := ioutil.ReadFile(filename)
 	if err != nil {
-		return nil, e.MakeBplusError(context.TODO(), e.CannotReadFile,
+		return nil, e.Error(context.TODO(), e.CannotReadFile,
 			map[string]interface{}{
 				"File": filename, "Error": err.Error()})
 	}
@@ -107,14 +107,14 @@ func (stm Stm) Process(ctx context.Context, stateEntity StateEntity, event strin
 	}
 	stateInfo, exists := stm.States[stateTransitionInfo.OldState]
 	if !exists {
-		return stateEntity, e.MakeBplusError(ctx, e.InvalidState, map[string]interface{}{
+		return stateEntity, e.Error(ctx, e.InvalidState, map[string]interface{}{
 			"State": stateTransitionInfo.OldState})
 	}
 
 	eventInfo, exists := stateInfo.Events[event]
 
 	if !exists {
-		return nil, e.MakeBplusError(ctx, e.InvalidEvent, map[string]interface{}{
+		return nil, e.Error(ctx, e.InvalidEvent, map[string]interface{}{
 			"Event": event, "State": stateTransitionInfo.OldState})
 	}
 	stateTransitionInfo.NewState = eventInfo.NewStateID
@@ -144,7 +144,7 @@ func (stm Stm) checkIfAutomaticState(ctx context.Context, info StateTransitionIn
 	currentState := stateEntity.GetState()
 	stateInfo, exists := stm.States[currentState]
 	if !exists {
-		return stateEntity, e.MakeBplusError(ctx, e.InvalidState, map[string]interface{}{
+		return stateEntity, e.Error(ctx, e.InvalidState, map[string]interface{}{
 			"State": currentState})
 	}
 	if !stateInfo.Automatic {
@@ -152,12 +152,12 @@ func (stm Stm) checkIfAutomaticState(ctx context.Context, info StateTransitionIn
 	}
 	autoStateProcessor := stm.lookupAutoState(currentState, AutomaticStateSuffix)
 	if autoStateProcessor == nil {
-		return stateEntity, e.MakeBplusError(ctx, e.AutoStateNotConfigured, map[string]interface{}{
+		return stateEntity, e.Error(ctx, e.AutoStateNotConfigured, map[string]interface{}{
 			"State": currentState})
 	}
 	event, err := autoStateProcessor.Process(ctx, stateEntity)
 	if err != nil {
-		return stateEntity, e.MakeBplusError(ctx, e.ErrorInAutoState, map[string]interface{}{
+		return stateEntity, e.Error(ctx, e.ErrorInAutoState, map[string]interface{}{
 			"State": currentState, "Error": err.Error()})
 	}
 	return stm.Process(ctx, stateEntity, event, info.Param)

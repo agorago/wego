@@ -43,7 +43,7 @@ type OperationDescriptor struct {
 	RequestType         interface{}
 	ResponseType        interface{}
 	OpMiddleware        []Middleware // specific middleware required by this operation. These will be
-	// invoked before the operation is invoked by BPlus
+	// invoked before the operation is invoked by the WeGO Pipeline
 	HTTPMethod      string
 	ProxyMiddleware []Middleware // this is only used on the proxy side and not on the server side.
 	Params          []ParamDescriptor
@@ -113,7 +113,7 @@ func (rs RegistrationServiceImpl) setupOperation(od OperationDescriptor,disableT
 func (rsimpl *RegistrationServiceImpl)FindOperationDescriptor(serviceName string, opName string) (OperationDescriptor, error) {
 	sd := rsimpl.AllServices[serviceName]
 	if sd == nil {
-		return OperationDescriptor{}, e.MakeBplusError(context.TODO(), e.ServiceNotFound, map[string]interface{}{
+		return OperationDescriptor{}, e.Error(context.TODO(), e.ServiceNotFound, map[string]interface{}{
 			"Service": serviceName})
 	}
 	for _, od := range sd.Operations {
@@ -122,7 +122,7 @@ func (rsimpl *RegistrationServiceImpl)FindOperationDescriptor(serviceName string
 			return od, nil
 		}
 	}
-	return OperationDescriptor{}, e.MakeBplusError(context.TODO(), e.OperationNotFound, map[string]interface{}{
+	return OperationDescriptor{}, e.Error(context.TODO(), e.OperationNotFound, map[string]interface{}{
 		"Operation": opName, "Service": serviceName})
 }
 
@@ -130,7 +130,7 @@ func (rsimpl *RegistrationServiceImpl)FindOperationDescriptor(serviceName string
 func (rsimpl *RegistrationServiceImpl)FindServiceDescriptor(serviceName string) (*ServiceDescriptor, error) {
 	sd := rsimpl.AllServices[serviceName]
 	if sd == nil {
-		return nil, e.MakeBplusError(context.TODO(), e.ServiceNotFound, map[string]interface{}{
+		return nil, e.Error(context.TODO(), e.ServiceNotFound, map[string]interface{}{
 			"Service": serviceName})
 	}
 	return sd, nil

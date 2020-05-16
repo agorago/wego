@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/agorago/wego/config"
-	bpluse "github.com/agorago/wego/err"
+	wegoe "github.com/agorago/wego/err"
 	"github.com/agorago/wego/log"
 
-	bplusc "github.com/agorago/wego/context"
+	wegocontext "github.com/agorago/wego/context"
 	fw "github.com/agorago/wego/fw"
 	e "github.com/agorago/wego/internal/err"
 
@@ -23,36 +23,36 @@ func HTTPInvoker(ctx context.Context, _ *fw.MiddlewareChain) context.Context {
 	od := fw.GetOperationDescriptor(ctx)
 	resp, err := httpInvoker(ctx, od)
 
-	ctx = bplusc.SetResponsePayload(ctx, resp)
-	ctx = bplusc.SetError(ctx, err)
+	ctx = wegocontext.SetResponsePayload(ctx, resp)
+	ctx = wegocontext.SetError(ctx, err)
 	return ctx
 }
 
 func httpInvoker(ctx context.Context, od fw.OperationDescriptor) (interface{}, error) {
 	var req *http.Request
 	var err error
-	var URL = "http://localhost:" + config.Value("bplus.port")
+	var URL = "http://localhost:" + config.Value("wego.port")
 	if s := config.Value(od.Service.Name + "_hostname_port"); s != "" {
 		URL = "http://" + s
 	}
 	URL += "/" + od.Service.Name + od.URL
-	payload := bplusc.GetPayload(ctx)
+	payload := wegocontext.GetPayload(ctx)
 	req, err = createRequest(ctx, od.HTTPMethod, URL, payload)
 	if err != nil {
 		return nil, err
 	}
-	bplusc.CopyHeadersToHTTPRequest(ctx, req)
+	wegocontext.CopyHeadersToHTTPRequest(ctx, req)
 	client := &http.Client{}
 	resp, err := client.Do(req)
 
 	if err != nil {
-		return nil, e.MakeBplusError(ctx, e.HTTPCallFailed, map[string]interface{}{
+		return nil, e.Error(ctx, e.HTTPCallFailed, map[string]interface{}{
 			"Error": err.Error()})
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return nil, e.MakeBplusError(ctx, e.CannotReadResponseBody, map[string]interface{}{
+		return nil, e.Error(ctx, e.CannotReadResponseBody, map[string]interface{}{
 			"Error": err.Error()})
 	}
 
@@ -65,7 +65,7 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor) (interface{}, e
 		var responsePayload, _ = od.OpResponseMaker(ctx)
 		err = json.Unmarshal(body, &responsePayload)
 		if err != nil {
-			return nil, e.MakeBplusError(ctx, e.ResponseUnmarshalException, map[string]interface{}{
+			return nil, e.Error(ctx, e.ResponseUnmarshalException, map[string]interface{}{
 				"Error": err.Error()})
 		}
 		return responsePayload, nil
@@ -73,12 +73,12 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor) (interface{}, e
 	return nil, nil
 }
 
-func extractErrorResponse(ctx context.Context, resp *http.Response, body []byte) bpluse.WeGOError {
-	er := bpluse.WeGOError{}
+func extractErrorResponse(ctx context.Context, resp *http.Response, body []byte) wegoe.WeGOError {
+	er := wegoe.WeGOError{}
 	uerr := json.Unmarshal(body, &er)
 	if uerr != nil {
-		// cannot unmarshal the body into a bplus err. So create an error.
-		return e.MakeBplusErrorWithErrorCode(ctx, resp.StatusCode, e.Non200StatusCodeReturned, map[string]interface{}{
+		// cannot unmarshal the body into a WeGO err. So create an error.
+		return e.HTTPError(ctx, resp.StatusCode, e.Non200StatusCodeReturned, map[string]interface{}{
 			"StatusCode": resp.StatusCode, "Body": fmt.Sprintf("%s", body),
 		})
 	}
@@ -90,7 +90,7 @@ func createRequest(ctx context.Context, method string, URL string, payload inter
 
 	buf, err = constructBytes(payload)
 	if err != nil {
-		return nil, e.MakeBplusError(ctx, e.CannotGenerateHTTPRequest, map[string]interface{}{
+		return nil, e.Error(ctx, e.CannotGenerateHTTPRequest, map[string]interface{}{
 			"Error": payload})
 	}
 

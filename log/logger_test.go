@@ -2,7 +2,7 @@ package log_test
 
 import (
 	"context"
-	bplusc "github.com/agorago/wego/context"
+	wegocontext "github.com/agorago/wego/context"
 	log "github.com/agorago/wego/log"
 	"testing"
 )
@@ -10,7 +10,7 @@ import (
 /*
 func TestError(t *testing.T) {
 	ctx := context.TODO()
-	ctx = bplusc.Add(ctx,bplusc.TraceID,"TRACEID123")
+	ctx = wegocontext.Add(ctx,wegocontext.TraceID,"TRACEID123")
 	out := capturer.CaptureOutput(func() {
 		log.Error(ctx, "message")
 	})
@@ -26,7 +26,7 @@ func TestError(t *testing.T) {
 */
 func TestErrorWithFields(t *testing.T) {
 	ctx := context.TODO()
-	ctx = bplusc.Add(ctx, bplusc.TraceID, "TRACEID123")
+	ctx = wegocontext.Add(ctx, wegocontext.TraceID, "TRACEID123")
 	log.ErrorWithFields(ctx, map[string]string{
 		"foo": "bar",
 	}, "message",
@@ -35,13 +35,13 @@ func TestErrorWithFields(t *testing.T) {
 
 func TestWarn(t *testing.T) {
 	ctx := context.TODO()
-	ctx = bplusc.Add(ctx, bplusc.TraceID, "TRACEID123")
+	ctx = wegocontext.Add(ctx, wegocontext.TraceID, "TRACEID123")
 	log.Warn(ctx, "message")
 }
 
 func TestWarnWithFields(t *testing.T) {
 	ctx := context.TODO()
-	ctx = bplusc.Add(ctx, bplusc.TraceID, "TRACEID123")
+	ctx = wegocontext.Add(ctx, wegocontext.TraceID, "TRACEID123")
 	log.WarnWithFields(ctx, map[string]string{
 		"foo": "bar",
 	}, "message",
@@ -50,13 +50,13 @@ func TestWarnWithFields(t *testing.T) {
 
 func TestInfo(t *testing.T) {
 	ctx := context.TODO()
-	ctx = bplusc.Add(ctx, bplusc.TraceID, "TRACEID123")
+	ctx = wegocontext.Add(ctx, wegocontext.TraceID, "TRACEID123")
 	log.Info(ctx, "message")
 }
 
 func TestInfoWithFields(t *testing.T) {
 	ctx := context.TODO()
-	ctx = bplusc.Add(ctx, bplusc.TraceID, "TRACEID123")
+	ctx = wegocontext.Add(ctx, wegocontext.TraceID, "TRACEID123")
 	log.InfoWithFields(ctx, map[string]string{
 		"foo": "bar",
 	}, "message",
