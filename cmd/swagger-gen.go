@@ -2,14 +2,24 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/agorago/wego"
 	"github.com/agorago/wego/fw"
 	"log"
 	"os"
 	"text/template"
 )
 
-func swaggergen(wego fw.RegistrationService,service string, templateFile string, targetFile string) error {
-	sd, err := wego.FindServiceDescriptor(service)
+func swaggergen(service string, templateFile string, targetFile string,initializers ...fw.Initializer) error {
+
+	commandCatalog,err := fw.MakeInitializedCommandCatalog(initializers...)
+	if err != nil {
+		return err
+	}
+	rs,err := wego.GetWego(commandCatalog)
+	if err != nil {
+		return err
+	}
+	sd, err := rs.FindServiceDescriptor(service)
 	if err != nil {
 		return err
 	}
@@ -34,7 +44,7 @@ func swaggergen(wego fw.RegistrationService,service string, templateFile string,
 
 // main - this main will need to be invoked by a service after it first loaded its WeGO configurations
 // this builds the swagger docs for a specified service that was configured in WeGO
-func SwaggerMain(wego fw.RegistrationService){
+func SwaggerMain(initializers ...fw.Initializer){
 	if len(os.Args) != 4 {
 		log.Fatalf("Usage: %s service-name template-file target-file", os.Args[0])
 		os.Exit(1)
@@ -42,7 +52,7 @@ func SwaggerMain(wego fw.RegistrationService){
 	serviceName := os.Args[1]
 	templateFile := os.Args[2]
 	targetFile := os.Args[3]
-	err := swaggergen(wego,serviceName, templateFile, targetFile)
+	err := swaggergen(serviceName, templateFile, targetFile, initializers...)
 	if err != nil {
 		log.Fatalf("Cannot generate the file. Error = %s\n", err)
 		os.Exit(2)

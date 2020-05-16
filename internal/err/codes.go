@@ -40,7 +40,7 @@ func HTTPWarning(ctx context.Context, httpErrorCode int, e WegoErrorCode, args m
 // WegoErrorCode - A WeGO error code
 type WegoErrorCode int
 
-// enumeration for B Plus Error codes
+// enumeration for WeGO Error codes
 const (
 	ServiceNotFound                     WegoErrorCode = iota + 1000 // wego.errors.ServiceNotFound
 	OperationNotFound                                               // wego.errors.OperationNotFound
