@@ -12,8 +12,9 @@ import (
 	util "github.com/agorago/wego/util"
 )
 
+type ServiceInvoker struct{}
 // since this is the last middleware we would not invoke the chain anymore
-func ServiceInvoker(ctx context.Context, _ *fw.MiddlewareChain) context.Context {
+func (ServiceInvoker)Intercept(ctx context.Context, _ *fw.MiddlewareChain) context.Context {
 	var hasResponse = false
 
 	od := fw.GetOperationDescriptor(ctx)

@@ -4,6 +4,7 @@ import (
 	"context"
 	e "github.com/agorago/wego/err"
 	wegohttp "github.com/agorago/wego/http"
+	"github.com/agorago/wego/internal/mw"
 	"github.com/agorago/wego/internal/testutils"
 	"gopkg.in/go-playground/assert.v1"
 	"log"
@@ -17,7 +18,8 @@ func TestOperationSetup(t *testing.T) {
 		os.Unsetenv("WEGO.PORT")
 	}()
 	rs,_ := testutils.StartServer()
-	proxy := wegohttp.MakeProxyService(rs)
+	pep := mw.MakeProxyEntrypoint()
+	proxy := wegohttp.MakeProxyService(rs,pep)
 
 	// access the exposed service via proxy
 	ret, err := proxy.ProxyRequest(context.TODO(), "EchoService", "Echo", &testutils.Input{In: "hello"})

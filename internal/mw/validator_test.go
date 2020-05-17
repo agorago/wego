@@ -20,8 +20,8 @@ type A struct {
 
 func TestNoPayloadv10validator(t *testing.T) {
 	chain := fw.MakeChain()
-	chain.Add(v10validator)
-	chain.Add(terminator)
+	chain.Add(V10Validator{})
+
 	ctx := context.Background()
 
 	ctx = chain.DoContinue(ctx)
@@ -33,8 +33,8 @@ func TestValidv10validator(t *testing.T) {
 	var request A
 
 	chain := fw.MakeChain()
-	chain.Add(v10validator)
-	chain.Add(terminator)
+	chain.Add(V10Validator{})
+
 	ctx := context.Background()
 	r := []byte(`{
     "b": 1,
@@ -50,8 +50,8 @@ func TestValidv10validator(t *testing.T) {
 func TestInvalidv10validator(t *testing.T) {
 	var request A
 	chain := fw.MakeChain()
-	chain.Add(v10validator)
-	chain.Add(terminator)
+	chain.Add(V10Validator{})
+
 	ctx := context.Background()
 
 	r := []byte(`{

@@ -5,6 +5,7 @@ import (
 	"github.com/agorago/wego/fw"
 	wegohttp "github.com/agorago/wego/http"
 	_ "github.com/agorago/wego/i18n" // init i18n functions
+	"github.com/agorago/wego/internal/mw"
 	"github.com/agorago/wego/stateentity"
 	"net/http"
 )
@@ -27,12 +28,14 @@ func (wegoinit)ModuleName()string{
 // The WEGO initializer
 func (wegoinit)Initialize(commandCatalog fw.CommandCatalog)(fw.CommandCatalog,error){
 	wego := fw.MakeRegistrationService()
-	httphandler := wegohttp.InitializeHTTP(wego)
+	ep := mw.MakeEntrypoint()
+	httphandler := wegohttp.InitializeHTTP(wego,ep)
 	commandCatalog.RegisterCommand(WegoHTTPHandler,httphandler)
 	commandCatalog.RegisterCommand(WEGO,wego)
 
 	// create proxy - basic proxy and state entity proxy
-	proxyService := wegohttp.MakeProxyService(wego)
+	pep := mw.MakeProxyEntrypoint()
+	proxyService := wegohttp.MakeProxyService(wego,pep)
 	stateEntityProxy := stateentity.MakeStateEntityProxy(proxyService)
 	commandCatalog.RegisterCommand(StateEntityProxy,stateEntityProxy)
 	commandCatalog.RegisterCommand(ProxyService,proxyService)

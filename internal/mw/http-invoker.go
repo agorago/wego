@@ -17,9 +17,10 @@ import (
 	"net/http"
 )
 
+type HTTPInvoker struct{}
 // HTTPInvoker - invokes the service via HTTP. The last middleware in the proxy
 // middleware chain
-func HTTPInvoker(ctx context.Context, _ *fw.MiddlewareChain) context.Context {
+func (HTTPInvoker)Intercept(ctx context.Context, _ *fw.MiddlewareChain) context.Context {
 	od := fw.GetOperationDescriptor(ctx)
 	resp, err := httpInvoker(ctx, od)
 

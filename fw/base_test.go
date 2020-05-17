@@ -33,8 +33,10 @@ type myTestServiceApi interface {
 }
 
 type myTestServiceImpl struct{}
+type LoggerMiddleware struct{}
 
-func loggerMiddleware(ctx context.Context, chain *fw.MiddlewareChain) context.Context {
+
+func (LoggerMiddleware)Intercept(ctx context.Context, chain *fw.MiddlewareChain) context.Context {
 	log.Printf("pre log message")
 	ctx = chain.DoContinue(ctx)
 	log.Printf("post log message")
@@ -71,6 +73,7 @@ func registerService(clientSide bool, s *string) (fw.RegistrationService,fw.Serv
 			Description: "myTestRequest",
 		},
 	}
+	loggerMiddleware := LoggerMiddleware{}
 	ods := []fw.OperationDescriptor{
 		{
 			Name:                "MyTestMethod", // the actual name of the test above

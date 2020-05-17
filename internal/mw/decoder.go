@@ -12,8 +12,8 @@ import (
 )
 
 // decodes a readcloser and makes it into a payload using the operation descriptor's payload maker
-
-func decoder(ctx context.Context, chain *fw.MiddlewareChain) context.Context {
+type Decoder struct{}
+func (Decoder)Intercept(ctx context.Context, chain *fw.MiddlewareChain) context.Context {
 
 	od := fw.GetOperationDescriptor(ctx)
 	if od.OpRequestMaker == nil {

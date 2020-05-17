@@ -67,7 +67,8 @@ func setupContextHeaderNoValueSet(testString string) context.Context {
 func TestServiceInvoker(t *testing.T) {
 	const testing = "testing"
 	ctx := setupContext(testing)
-	ctx = mw.ServiceInvoker(ctx, nil)
+	si := mw.ServiceInvoker{}
+	ctx = si.Intercept(ctx, nil)
 
 	o := wegocontext.GetResponsePayload(ctx)
 	output, ok := o.(testutils.Output)
@@ -82,7 +83,8 @@ func TestServiceInvoker(t *testing.T) {
 func TestServiceInvokerWithErrors(t *testing.T) {
 	const testing = "xxx"
 	ctx := setupContext(testing)
-	ctx = mw.ServiceInvoker(ctx, nil)
+	si := mw.ServiceInvoker{}
+	ctx = si.Intercept(ctx, nil)
 
 	e := wegocontext.GetError(ctx)
 
@@ -98,7 +100,8 @@ func TestServiceInvokerWithErrors(t *testing.T) {
 func TestServiceInvokerHeader(t *testing.T) {
 	const testing = "testing"
 	ctx := setupContextHeader(testing)
-	ctx = mw.ServiceInvoker(ctx, nil)
+	si := mw.ServiceInvoker{}
+	ctx = si.Intercept(ctx, nil)
 
 	o := wegocontext.GetResponsePayload(ctx)
 	output, ok := o.(testutils.Output)
@@ -113,7 +116,8 @@ func TestServiceInvokerHeader(t *testing.T) {
 func TestServiceInvokerHeaderNoValueSet(t *testing.T) {
 	const testing = "testing"
 	ctx := setupContextHeaderNoValueSet(testing)
-	ctx = mw.ServiceInvoker(ctx, nil)
+	si := mw.ServiceInvoker{}
+	ctx = si.Intercept(ctx, nil)
 
 	e := wegocontext.GetError(ctx)
 
@@ -129,7 +133,8 @@ func TestServiceInvokerHeaderNoValueSet(t *testing.T) {
 func TestServiceInvokerWithBadMethodName(t *testing.T) {
 	const testing = "testing"
 	ctx := setupContextWithBadMethodName(testing)
-	ctx = mw.ServiceInvoker(ctx, nil)
+	si := mw.ServiceInvoker{}
+	ctx = si.Intercept(ctx, nil)
 
 	e := wegocontext.GetError(ctx)
 
@@ -146,7 +151,8 @@ func TestServiceInvokerWithBadMethodName(t *testing.T) {
 func TestServiceInvokerWithInvalidPayload(t *testing.T) {
 	const testing = "testing"
 	ctx := setupContextWithInvalidPayload(testing)
-	ctx = mw.ServiceInvoker(ctx, nil)
+	si := mw.ServiceInvoker{}
+	ctx = si.Intercept(ctx, nil)
 
 	e := wegocontext.GetError(ctx)
 

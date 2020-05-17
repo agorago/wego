@@ -31,7 +31,8 @@ func init() {
 		})
 }
 
-func v10validator(ctx context.Context, chain *fw.MiddlewareChain) context.Context {
+type V10Validator struct{}
+func (V10Validator)Intercept(ctx context.Context, chain *fw.MiddlewareChain) context.Context {
 	request := wegocontext.GetPayload(ctx)
 	if request == nil {
 		return chain.DoContinue(ctx)

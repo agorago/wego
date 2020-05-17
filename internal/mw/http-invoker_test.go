@@ -37,7 +37,8 @@ func TestHTTPInvoker(t *testing.T) {
 	}()
 	const testing = "testing"
 	ctx := setupServer(testing)
-	ctx = mw.HTTPInvoker(ctx, nil)
+	hi := mw.HTTPInvoker{}
+	ctx = hi.Intercept(ctx, nil)
 
 	o := wegocontext.GetResponsePayload(ctx)
 	output, ok := o.(*testutils.Output)
@@ -56,7 +57,8 @@ func TestHTTPInvokerWithError(t *testing.T) {
 	}()
 	const testing = "xxx"
 	ctx := setupServer(testing)
-	ctx = mw.HTTPInvoker(ctx, nil)
+	hi := mw.HTTPInvoker{}
+	ctx = hi.Intercept(ctx, nil)
 
 	er := wegocontext.GetError(ctx)
 	er1, ok := er.(wegoe.WeGOError)

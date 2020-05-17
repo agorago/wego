@@ -2,10 +2,12 @@ package fw
 
 import "context"
 
-// Sets up the middleware that would be used throughout B Plus
+// Sets up the middleware that would be used throughout WeGO
 
-// Middleware - can be used as the Middleware for any B Plus chain
-type Middleware func(context.Context, *MiddlewareChain) context.Context
+// Middleware - can be used as the Middleware for any WeGO pipeline
+type Middleware interface{
+	Intercept(context.Context, *MiddlewareChain) context.Context
+}
 
 // MiddlewareChain - a middleware chain that
 type MiddlewareChain struct {
@@ -26,12 +28,15 @@ func MakeChain() MiddlewareChain {
 // ctx = chain.DoContinue()
 // return ctx
 func (chain *MiddlewareChain) DoContinue(ctx context.Context) context.Context {
+	if len(chain.middlewares) <= chain.index {
+		return ctx
+	}
 	next := chain.middlewares[chain.index]
 	chain.index++
-	return next(ctx, chain)
+	return next.Intercept(ctx, chain)
 }
 
 // Add - add a new middleware into the chain
-func (chain *MiddlewareChain) Add(m Middleware) {
-	chain.middlewares = append(chain.middlewares, m)
+func (chain *MiddlewareChain) Add(m ...Middleware) {
+	chain.middlewares = append(chain.middlewares, m...)
 }

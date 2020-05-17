@@ -7,19 +7,33 @@ import (
 	fw "github.com/agorago/wego/fw"
 )
 
-// Entrypoint - The server-side entry point for invoking any service registered in WeGO
-func Entrypoint(ctx context.Context) (interface{}, error) {
+type Entrypoint interface {
+	Invoke(ctx context.Context) (interface{}, error)
+}
+type EntrypointImpl struct{
+	PreMiddlewares  []fw.Middleware
+	PostMiddlewares []fw.Middleware
+}
+func MakeEntrypoint() Entrypoint{
+	decoder := Decoder{}
+	v10validator := V10Validator{}
+	serviceInvoker := ServiceInvoker{}
+	return EntrypointImpl{
+		PreMiddlewares: []fw.Middleware{decoder,v10validator},
+		PostMiddlewares: []fw.Middleware{serviceInvoker},
+	}
+}
+
+// Invoke - The server-side entry point for invoking any service registered in WeGO
+func (ep EntrypointImpl)Invoke(ctx context.Context) (interface{}, error) {
 	// set up the middleware
 	od := fw.GetOperationDescriptor(ctx)
 	chain := fw.MakeChain()
-	chain.Add(decoder)
-	chain.Add(v10validator)
+	chain.Add(ep.PreMiddlewares...)
 	if od.OpMiddleware != nil {
-		for _, mid := range od.OpMiddleware {
-			chain.Add(mid)
-		}
+		chain.Add(od.OpMiddleware...)
 	}
-	chain.Add(ServiceInvoker)
+	chain.Add(ep.PostMiddlewares...)
 	return startChain(ctx, chain)
 }
 

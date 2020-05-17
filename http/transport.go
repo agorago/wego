@@ -25,7 +25,7 @@ import (
 // a new service is registered, this module is called to register all the operations
 
 
-func InitializeHTTP(rs fw.RegistrationService)http.Handler {
+func InitializeHTTP(rs fw.RegistrationService, ep mw.Entrypoint)http.Handler {
 	HTTPHandler := mux.NewRouter()
 	HTTPHandler.Use(nrgorilla.Middleware(nr.NRApp))
 	// register the HTTP transport with WEGO
@@ -33,7 +33,7 @@ func InitializeHTTP(rs fw.RegistrationService)http.Handler {
 		if od.URL == "" {
 			return
 		}
-		handler := setupHTTPForOperation(od)
+		handler := setupHTTPForOperation(od,ep)
 		HTTPHandler.Methods(od.HTTPMethod).PathPrefix("/" + od.Service.Name).Path(od.URL).Handler(handler)
 	})
 	return HTTPHandler
@@ -46,10 +46,11 @@ type httpGenericResponse struct {
 
 type httpod struct {
 	Od fw.OperationDescriptor
+	Ep mw.Entrypoint
 }
 
-func setupHTTPForOperation(od fw.OperationDescriptor) *httptransport.Server{
-	hod := httpod{Od: od}
+func setupHTTPForOperation(od fw.OperationDescriptor,ep mw.Entrypoint) *httptransport.Server{
+	hod := httpod{Od: od,Ep: ep,}
 	handler := httptransport.NewServer(
 		hod.makeEndpoint(),
 		hod.decodeRequest,
@@ -66,7 +67,7 @@ func (hod httpod) makeEndpoint() endpoint.Endpoint {
 		ctx = wegoc.Enhance(ctx, r)
 		ctx = wegoc.SetPayload(ctx, r.Body)
 
-		resp, err := mw.Entrypoint(ctx)
+		resp, err := hod.Ep.Invoke(ctx)
 		return httpGenericResponse{resp, err}, nil
 	}
 }

@@ -13,13 +13,16 @@ type ProxyService interface{
 	ProxyRequest(ctx context.Context, service string, operation string, params ...interface{}) (interface{}, error)
 }
 
-func MakeProxyService(registrationService fw.RegistrationService)ProxyService{
+func MakeProxyService(registrationService fw.RegistrationService,
+	proxyEntrypoint mw.ProxyEntrypoint)ProxyService{
 	return proxyServiceImpl{
 		registrationService: registrationService,
+		proxyEntrypoint: proxyEntrypoint,
 	}
 }
 type proxyServiceImpl struct{
 	registrationService fw.RegistrationService
+	proxyEntrypoint mw.ProxyEntrypoint
 }
 
 // ProxyRequest - create a proxy that invokes the service and operation remotely.
@@ -28,5 +31,5 @@ func (p proxyServiceImpl)ProxyRequest(ctx context.Context, service string, opera
 	if err != nil {
 		return nil, err
 	}
-	return mw.ProxyEntrypoint(ctx, od, params...)
+	return p.proxyEntrypoint.Invoke(ctx, od, params...)
 }
