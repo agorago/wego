@@ -4,10 +4,8 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/agorago/wego/config"
-	wegoe "github.com/agorago/wego/err"
-	"github.com/agorago/wego/log"
-
 	wegocontext "github.com/agorago/wego/context"
+	wegoe "github.com/agorago/wego/err"
 	fw "github.com/agorago/wego/fw"
 	e "github.com/agorago/wego/internal/err"
 
@@ -58,7 +56,7 @@ func httpInvoker(ctx context.Context, od fw.OperationDescriptor) (interface{}, e
 	}
 
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
-		log.Warnf(ctx, "The status code is %d.Body is %s\n", resp.StatusCode, body)
+		// log.Warnf(ctx, "The status code is %d.Body is %s\n", resp.StatusCode, body)
 		return nil, extractErrorResponse(ctx, resp, body)
 	}
 
